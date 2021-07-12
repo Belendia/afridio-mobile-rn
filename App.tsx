@@ -8,108 +8,52 @@
  * @format
  */
 
- import React from 'react';
- import {
-   SafeAreaView,
-   ScrollView,
-   StatusBar,
-   StyleSheet,
-   Text,
-   useColorScheme,
-   View,
- } from 'react-native';
+/* global __DEV__ */
 
- import {
-   Colors,
-   DebugInstructions,
-   Header,
-   LearnMoreLinks,
-   ReloadInstructions,
- } from 'react-native/Libraries/NewAppScreen';
+import React from 'react';
+import {StatusBar, StyleSheet, useColorScheme} from 'react-native';
+import {ThemeProvider} from 'react-native-elements';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+// import reactotron from 'reactotron-react-native';
+import {Provider} from 'react-redux';
 
- const Section: React.FC<{
-   title: string;
- }> = ({children, title}) => {
-   const isDarkMode = useColorScheme() === 'dark';
-   return (
-     <View style={styles.sectionContainer}>
-       <Text
-         style={[
-           styles.sectionTitle,
-           {
-             color: isDarkMode ? Colors.white : Colors.black,
-           },
-         ]}>
-         {title}
-       </Text>
-       <Text
-         style={[
-           styles.sectionDescription,
-           {
-             color: isDarkMode ? Colors.light : Colors.dark,
-           },
-         ]}>
-         {children}
-       </Text>
-     </View>
-   );
- };
+import Navigation from './src/navigation';
+import {theme} from './src/components/Themed';
+import {store} from './src/redux/store';
 
- const App = () => {
-   const isDarkMode = useColorScheme() === 'dark';
+function setup() {
+  if (__DEV__) {
+    import('./reactotron.config').then(() => {
+      // reactotron.clear!();
+      console.log('Reactotron Configured');
+    });
+  }
+}
 
-   const backgroundStyle = {
-     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-   };
+setup();
 
-   return (
-     <SafeAreaView style={backgroundStyle}>
-       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-       <ScrollView
-         contentInsetAdjustmentBehavior="automatic"
-         style={backgroundStyle}>
-         <Header />
-         <View
-           style={{
-             backgroundColor: isDarkMode ? Colors.black : Colors.white,
-           }}>
-           <Section title="Step One">
-             Edit <Text style={styles.highlight}>App.js</Text> to change this
-             screen and then come back to see your edits.
-           </Section>
-           <Section title="See Your Changes">
-             <ReloadInstructions />
-           </Section>
-           <Section title="Debug">
-             <DebugInstructions />
-           </Section>
-           <Section title="Learn More">
-             Read the docs to discover what to do next:
-           </Section>
-           <LearnMoreLinks />
-         </View>
-       </ScrollView>
-     </SafeAreaView>
-   );
- };
+const App = () => {
+  // const colorScheme = useColorScheme();
+  const colorScheme = 'dark';
 
- const styles = StyleSheet.create({
-   sectionContainer: {
-     marginTop: 32,
-     paddingHorizontal: 24,
-   },
-   sectionTitle: {
-     fontSize: 24,
-     fontWeight: '600',
-   },
-   sectionDescription: {
-     marginTop: 8,
-     fontSize: 18,
-     fontWeight: '400',
-   },
-   highlight: {
-     fontWeight: '700',
-   },
- });
+  return (
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={theme} useDark={colorScheme === 'dark'}>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </ThemeProvider>
+      </Provider>
+    </SafeAreaProvider>
+  );
+};
 
- export default App;
+// const App = __DEV__ ? reactotron.overlay(AppWithStore) : AppWithStore;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
+export default App;
