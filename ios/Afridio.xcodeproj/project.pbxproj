@@ -12,7 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7B69863C269A28F800993560 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B69863B269A28F800993560 /* dummy.swift */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		7B8B88B9269CB10B00D6D2AD /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B8B88B8269CB10A00D6D2AD /* BootSplash.storyboard */; };
 		8F193A19271AD044BDD97951 /* libPods-Afridio-AfridioTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0449F12874C7D015788ADFD0 /* libPods-Afridio-AfridioTests.a */; };
 		F0AD0D51ED4D06131BBC2BDD /* libPods-Afridio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B7294774C0F63D748B407AAA /* libPods-Afridio.a */; };
 /* End PBXBuildFile section */
@@ -41,7 +41,7 @@
 		20566632887A0086C4F12051 /* Pods-Afridio.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Afridio.debug.xcconfig"; path = "Target Support Files/Pods-Afridio/Pods-Afridio.debug.xcconfig"; sourceTree = "<group>"; };
 		657C2A37F969C0F07FD20CE4 /* Pods-Afridio-AfridioTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Afridio-AfridioTests.release.xcconfig"; path = "Target Support Files/Pods-Afridio-AfridioTests/Pods-Afridio-AfridioTests.release.xcconfig"; sourceTree = "<group>"; };
 		7B69863B269A28F800993560 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Afridio/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7B8B88B8269CB10A00D6D2AD /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = Afridio/BootSplash.storyboard; sourceTree = "<group>"; };
 		B7294774C0F63D748B407AAA /* libPods-Afridio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Afridio.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA692093714276804106FB9A /* Pods-Afridio-AfridioTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Afridio-AfridioTests.debug.xcconfig"; path = "Target Support Files/Pods-Afridio-AfridioTests/Pods-Afridio-AfridioTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -88,11 +88,11 @@
 		13B07FAE1A68108700A75B9A /* Afridio */ = {
 			isa = PBXGroup;
 			children = (
+				7B8B88B8269CB10A00D6D2AD /* BootSplash.storyboard */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				7B69863B269A28F800993560 /* dummy.swift */,
 			);
@@ -245,7 +245,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				7B8B88B9269CB10B00D6D2AD /* BootSplash.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,12 +10,13 @@
 
 /* global __DEV__ */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StatusBar, StyleSheet, useColorScheme} from 'react-native';
 import {ThemeProvider} from 'react-native-elements';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 // import reactotron from 'reactotron-react-native';
 import {Provider} from 'react-redux';
+import RNBootSplash from 'react-native-bootsplash';
 
 import Navigation from './src/navigation';
 import {theme} from './src/components/Themed';
@@ -35,6 +36,16 @@ setup();
 const App = () => {
   // const colorScheme = useColorScheme();
   const colorScheme = 'dark';
+
+  useEffect(() => {
+    const init = async () => {
+      // …do multiple sync or async tasks
+    };
+
+    init().finally(async () => {
+      await RNBootSplash.hide({fade: true});
+    });
+  }, []);
 
   return (
     <SafeAreaProvider>
