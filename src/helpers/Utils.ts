@@ -50,3 +50,9 @@ export const getTrack = (media: Media, currentTrackIndex: number) => {
   }
   return formatedTrack;
 };
+
+export const getQueryParam = (url: String, param: string) => {
+  var result = url.match(new RegExp('(\\?|&)' + param + '(\\[\\])?=([^&]*)'));
+
+  return result ? result[3] : false;
+};

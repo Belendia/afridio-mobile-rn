@@ -7,6 +7,7 @@ import {Media} from '../../../types';
 import {Action} from '../rootReducer';
 import AfridioApiService from '../../services/network/AfridioApiService';
 import {authLogout} from './authSlice';
+import {getQueryParam} from '../../helpers/Utils';
 
 type MediaReducerType = {
   media: Media | null;
@@ -121,11 +122,9 @@ export const getMediaListByFormatEpic = (action$: Observable<Action<any>>) =>
       return AfridioApiService.mediaListByFormat(slug, page).pipe(
         map(res => {
           if (res.next) {
-            let params = new URL(res.next).searchParams;
-
             const r = {
               results: res.results,
-              next: params.get('page'),
+              next: getQueryParam(res.next, 'page'),
             };
             return getMediaListByFormatSuccess(r);
           }
@@ -133,7 +132,6 @@ export const getMediaListByFormatEpic = (action$: Observable<Action<any>>) =>
           return getMediaListByFormatSuccess(res);
         }),
         catchError(err => {
-          console.log(err);
           let message = 'Something went wrong';
           if (err && err._status === 'Offline') {
             message = err._message;
