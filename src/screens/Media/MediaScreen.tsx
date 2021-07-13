@@ -8,7 +8,9 @@ import {RootStoreType} from '../../redux/rootReducer';
 import {
   setShowMiniPlayer,
   startToGetMedia,
-  startToSetPlayback,
+  startSetCurrentTrack,
+  setPlaylistMedia,
+  startTogglePlay,
 } from '../../redux/slices';
 import {
   ProgressBar,
@@ -18,21 +20,23 @@ import {
   PlayerContainer,
   Backdrop,
 } from '../../components';
+import {getTrack} from '../../helpers/Utils';
 
 const MediaScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
 
-  const {loading, media, currentTrackIndex, isPlaying, error} = useSelector(
-    (state: RootStoreType) => ({
+  const {loading, media, playlistMedia, currentTrackIndex, isPlaying, error} =
+    useSelector((state: RootStoreType) => ({
       loading: state.mediaReducer.loading,
       media: state.mediaReducer.media,
+      playlistMedia: state.playlistReducer.playlistMedia,
       currentTrackIndex: state.playlistReducer.currentTrackIndex,
       isPlaying: state.playlistReducer.isPlaying,
+
       error: state.mediaReducer.error,
-    }),
-  );
+    }));
 
   const fetchData = useCallback(() => {
     if (route.params?.slug) {
@@ -58,8 +62,19 @@ const MediaScreen = () => {
   }, [isPlaying]);
 
   const onTogglePlay = useCallback(() => {
-    if (media) {
-      dispatch(startToSetPlayback(!isPlaying));
+    /**
+     *  Check what is played is different from the media that is displayed
+     *  in media screen. If so, set the media in the playlist.
+     **/
+    if (playlistMedia === null) {
+      dispatch(setPlaylistMedia(media));
+      dispatch(startSetCurrentTrack(getTrack(media!, 0)));
+    } else if (media?.slug !== playlistMedia?.slug) {
+      // what is playing is the same as the what is displayed in media screen
+      dispatch(setPlaylistMedia(media));
+      dispatch(startSetCurrentTrack(getTrack(media!, 0)));
+    } else {
+      dispatch(startTogglePlay(!isPlaying));
     }
   }, [media, isPlaying]);
 
@@ -76,7 +91,11 @@ const MediaScreen = () => {
       <View style={styles.bannerContainer}>
         <Backdrop images={media.images} />
       </View>
-      <Content media={media} isPlaying={isPlaying} onPlayPress={onTogglePlay} />
+      <Content
+        media={media}
+        isPlaying={media.slug === playlistMedia?.slug ? isPlaying : false}
+        onPlayPress={onTogglePlay}
+      />
     </PlayerContainer>
   ) : (
     <PlayerContainer>

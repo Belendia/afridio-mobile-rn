@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black600,
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
-    paddingBottom: 5,
+    paddingVertical: 5,
   },
   cardDetails: {
     paddingLeft: 10,

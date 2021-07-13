@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
+import TrackPlayer, {useTrackPlayerProgress} from 'react-native-track-player';
 
 import {View, Text} from '../Themed';
 import {RootStoreType} from '../../redux/rootReducer';
@@ -13,7 +14,7 @@ import {colors} from '../../constants/Colors';
 import {
   setMediaSlug,
   setShowMiniPlayer,
-  startToSetPlayback,
+  startTogglePlay,
 } from '../../redux/slices';
 import {navigate} from '../../services/navigation/NavigationService';
 import {Cover} from '../Media/Cover';
@@ -21,69 +22,62 @@ import {Size} from '../../constants/Options';
 
 const MiniPlayer = memo(() => {
   const dispatch = useDispatch();
+  const {position, duration} = useTrackPlayerProgress();
 
-  // const videoRef = useRef<Video>();
-  // const [sound, setSound] = useState<Sound | null>(null);
+  const {
+    playlistMedia,
+    currentTrackIndex,
+    isPlaying,
+    tabBarHeight,
+    showMiniPlayer,
+  } = useSelector((state: RootStoreType) => ({
+    playlistMedia: state.playlistReducer.playlistMedia,
+    currentTrackIndex: state.playlistReducer.currentTrackIndex,
+    isPlaying: state.playlistReducer.isPlaying,
+    showMiniPlayer: state.playlistReducer.showMiniPlayer,
+    tabBarHeight: state.layoutReducer.tabBarHeight,
+  }));
 
-  const {media, currentTrackIndex, isPlaying, tabBarHeight, showMiniPlayer} =
-    useSelector((state: RootStoreType) => ({
-      media: state.mediaReducer.media,
-      currentTrackIndex: state.playlistReducer.currentTrackIndex,
-      isPlaying: state.playlistReducer.isPlaying,
-      showMiniPlayer: state.playlistReducer.showMiniPlayer,
-      tabBarHeight: state.layoutReducer.tabBarHeight,
-    }));
+  const getProgress = useCallback(() => {
+    if (duration === 0) {
+      return 0;
+    }
 
-  // const getProgress = useCallback(() => {
-  //   if (
-  //     playerState?.durationMillis === null ||
-  //     playerState?.positionMillis === null
-  //   ) {
-  //     return 0;
-  //   }
-
-  //   return (playerState?.positionMillis / playerState?.durationMillis) * 100;
-  // }, [playerState]);
-
-  // useEffect(() => {
-  //   // playCurrentMedia();
-  //   if (media && showMiniPlayer) {
-  //     Player.load(media, selectedTrackIndex, false, onPlaybackStatusUpdate);
-  //   }
-  // }, [media, selectedTrackIndex, showMiniPlayer]);
+    return (position / duration) * 100;
+  }, [position, duration]);
 
   const onTogglePlay = useCallback(() => {
-    if (media) {
-      dispatch(startToSetPlayback(!isPlaying));
+    if (playlistMedia) {
+      dispatch(startTogglePlay(!isPlaying));
     }
-  }, [media, isPlaying]);
+  }, [playlistMedia, isPlaying]);
 
   const onPressMiniPlayer = useCallback(() => {
-    dispatch(setMediaSlug(media?.slug));
+    dispatch(setMediaSlug(playlistMedia?.slug));
     navigate('MediaScreen', {
-      slug: media?.slug,
+      slug: playlistMedia?.slug,
     });
     dispatch(setShowMiniPlayer(false));
-  }, [media?.slug]);
+  }, [playlistMedia?.slug]);
 
-  if (!media || showMiniPlayer === false) {
+  if (!playlistMedia || showMiniPlayer === false) {
     return <></>;
   }
 
   return (
     <TouchableWithoutFeedback onPress={onPressMiniPlayer}>
       <View style={[styles.container, {bottom: tabBarHeight}]}>
-        {/* <View style={[styles.progress, { width: `${getProgress()}%` }]} /> */}
-        <View style={[styles.progress, {width: `100%`}]} />
+        <View style={[styles.progress, {width: `${getProgress()}%`}]} />
+
         <View style={styles.row}>
-          <Cover images={media?.images} size={Size.Small} />
+          <Cover images={playlistMedia?.images} size={Size.Small} />
           <View style={styles.rightContainer}>
             <View style={styles.nameContainer}>
               <Text
                 style={styles.title}
                 numberOfLines={1}
                 ellipsizeMode={'tail'}>
-                {media?.title}
+                {playlistMedia?.title}
               </Text>
             </View>
 
@@ -145,7 +139,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: 100,
-    justifyContent: 'space-around',
+    justifyContent: 'flex-end',
+    paddingRight: 10,
     backgroundColor: 'transparent',
   },
   title: {
