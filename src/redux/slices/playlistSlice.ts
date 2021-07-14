@@ -83,13 +83,13 @@ const playlistSlice = createSlice({
 
 const resetAndPlay = async (currentTrack: Track) => {
   try {
+    // await TrackPlayer.reset()
     // await TrackPlayer.add(currentTrack);
+    // TrackPlayer.play();
     setupPlayer()
       .then(() => TrackPlayer.reset())
       .then(() => TrackPlayer.add(currentTrack))
       .then(() => TrackPlayer.play());
-    // setupPlayer();
-    // TrackPlayer.play();
   } catch (e) {
     throw Error(e);
   }
@@ -99,10 +99,6 @@ export const setCurrentTrackEpic = (action$: Observable<Action<any>>) =>
   action$.pipe(
     ofType(startSetCurrentTrack.type),
     switchMap(({payload}) => {
-      console.log('!!!!!!!!!!!!!!!!!');
-      console.log(payload);
-      console.log('!!!!!!!!!!!!!!!!!');
-
       return from(resetAndPlay(payload)).pipe(
         mergeMap(res =>
           //used mergeMap to dispatch two actions
