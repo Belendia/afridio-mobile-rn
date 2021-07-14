@@ -5,6 +5,7 @@ import {
   setCurrentTrack,
   setCurrentTrackIndex,
   setIsPlaying,
+  setPlaylistMedia,
 } from '../../redux/slices/playlistSlice';
 import {getTrack} from '../../helpers/Utils';
 // import  setupPlayer  from './SetupPlayer';
@@ -76,21 +77,18 @@ module.exports = async function () {
     const {currentTrack, currentTrackIndex, loop, playlistMedia} =
       playlistReducer;
 
-    console.log('position = ', position);
-    console.log('loop = ', loop);
-    console.log('currentTrackIndex = ', currentTrackIndex);
-
     if (position > 0) {
       if (loop) {
         backgroundPlayback(currentTrack, currentTrackIndex);
       } else {
         if (playlistMedia) {
           if (currentTrackIndex === playlistMedia.tracks.length - 1) {
-            console.log(
-              'currentTrackIndex === playlistMedia.tracks.length - 1',
-              currentTrackIndex === playlistMedia.tracks.length - 1,
-            );
-            backgroundPlayback(getTrack(playlistMedia, 0), 0);
+            // When we reach on the final track, we reset everything.
+            TrackPlayer.reset();
+            store.dispatch(setIsPlaying(false));
+            store.dispatch(setCurrentTrackIndex(0));
+            store.dispatch(setCurrentTrack(null));
+            store.dispatch(setPlaylistMedia(null));
           } else {
             backgroundPlayback(
               getTrack(playlistMedia, currentTrackIndex + 1),
