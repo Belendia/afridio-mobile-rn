@@ -41,7 +41,7 @@ export const getTrack = (media: Media, currentTrackIndex: number) => {
       formatedTrack.url = track.file_url;
     }
     formatedTrack.id = track.slug;
-    formatedTrack.title = media.title + ' ' + track.name;
+    formatedTrack.title = media.title + ' - ' + track.name;
     formatedTrack.artist = media.authors
       ? media.authors.map(a => a.name).join(', ')
       : '';
