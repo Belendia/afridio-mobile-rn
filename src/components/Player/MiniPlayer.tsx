@@ -24,19 +24,14 @@ const MiniPlayer = memo(() => {
   const dispatch = useDispatch();
   const {position, duration} = useTrackPlayerProgress();
 
-  const {
-    playlistMedia,
-    currentTrackIndex,
-    isPlaying,
-    tabBarHeight,
-    showMiniPlayer,
-  } = useSelector((state: RootStoreType) => ({
-    playlistMedia: state.playlistReducer.playlistMedia,
-    currentTrackIndex: state.playlistReducer.currentTrackIndex,
-    isPlaying: state.playlistReducer.isPlaying,
-    showMiniPlayer: state.playlistReducer.showMiniPlayer,
-    tabBarHeight: state.layoutReducer.tabBarHeight,
-  }));
+  const {playlistMedia, isPlaying, tabBarHeight, showMiniPlayer} = useSelector(
+    (state: RootStoreType) => ({
+      playlistMedia: state.playlistReducer.playlistMedia,
+      isPlaying: state.playlistReducer.isPlaying,
+      showMiniPlayer: state.playlistReducer.showMiniPlayer,
+      tabBarHeight: state.layoutReducer.tabBarHeight,
+    }),
+  );
 
   const getProgress = useCallback(() => {
     if (duration === 0) {

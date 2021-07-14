@@ -1,29 +1,12 @@
-import TrackPlayer, {Track} from 'react-native-track-player';
+import TrackPlayer from 'react-native-track-player';
 import {store} from '../../redux/store';
 
 import {
-  setCurrentTrack,
-  setCurrentTrackIndex,
+  setCurrentTrackSlug,
   setIsPlaying,
+  setPlaylistMedia,
 } from '../../redux/slices/playlistSlice';
-import {getTrack} from '../../helpers/Utils';
-// import  setupPlayer  from './SetupPlayer';
-
-let flag = false;
-
-async function backgroundPlayback(track: Track, currentTrackIndex: number) {
-  if (flag) return;
-  flag = true;
-
-  setTimeout(() => (flag = false), 250);
-  await TrackPlayer.reset();
-  await TrackPlayer.add(track);
-  // setupPlayer().then(() => TrackPlayer.add(track));
-  store.dispatch(setCurrentTrack(track));
-  store.dispatch(setCurrentTrackIndex(currentTrackIndex));
-  TrackPlayer.play();
-  store.dispatch(setIsPlaying(true));
-}
+import {getNextTrackSlug, getPreviousTrackSlug} from '../../helpers/Utils';
 
 module.exports = async function () {
   TrackPlayer.addEventListener('remote-play', () => {
@@ -37,68 +20,38 @@ module.exports = async function () {
   });
 
   TrackPlayer.addEventListener('remote-next', () => {
-    let {playlistReducer} = store.getState();
-    let {currentTrackIndex, playlistMedia} = playlistReducer;
+    const {playlistReducer} = store.getState();
+    const {currentTrackSlug, playlistMedia} = playlistReducer;
 
-    if (playlistMedia) {
-      if (currentTrackIndex === playlistMedia.tracks.length - 1) {
-        backgroundPlayback(getTrack(playlistMedia, 0), 0);
-      } else {
-        backgroundPlayback(
-          getTrack(playlistMedia, currentTrackIndex + 1),
-          currentTrackIndex + 1,
-        );
-      }
+    if (playlistMedia?.tracks) {
+      const nextTrackSlug = getNextTrackSlug(
+        playlistMedia?.tracks,
+        currentTrackSlug,
+      );
+      if (nextTrackSlug) TrackPlayer.skip(nextTrackSlug);
     }
   });
 
   TrackPlayer.addEventListener('remote-previous', () => {
     const {playlistReducer} = store.getState();
-    const {currentTrackIndex, playlistMedia} = playlistReducer;
+    const {currentTrackSlug, playlistMedia} = playlistReducer;
 
-    if (playlistMedia) {
-      if (currentTrackIndex === 0) {
-        backgroundPlayback(
-          getTrack(playlistMedia, playlistMedia.tracks.length - 1),
-          playlistMedia.tracks.length - 1,
-        );
-      } else {
-        backgroundPlayback(
-          getTrack(playlistMedia, currentTrackIndex - 1),
-          currentTrackIndex - 1,
-        );
-      }
+    if (playlistMedia?.tracks) {
+      const nextTrackSlug = getPreviousTrackSlug(
+        playlistMedia?.tracks,
+        currentTrackSlug,
+      );
+      if (nextTrackSlug) TrackPlayer.skip(nextTrackSlug);
     }
   });
 
-  TrackPlayer.addEventListener('playback-queue-ended', ({position}) => {
-    const {playlistReducer} = store.getState();
-    const {currentTrack, currentTrackIndex, loop, playlistMedia} =
-      playlistReducer;
+  TrackPlayer.addEventListener('playback-track-changed', ({nextTrack}) => {
+    store.dispatch(setCurrentTrackSlug(nextTrack));
+  });
 
-    console.log('position = ', position);
-    console.log('loop = ', loop);
-    console.log('currentTrackIndex = ', currentTrackIndex);
-
-    if (position > 0) {
-      if (loop) {
-        backgroundPlayback(currentTrack, currentTrackIndex);
-      } else {
-        if (playlistMedia) {
-          if (currentTrackIndex === playlistMedia.tracks.length - 1) {
-            console.log(
-              'currentTrackIndex === playlistMedia.tracks.length - 1',
-              currentTrackIndex === playlistMedia.tracks.length - 1,
-            );
-            backgroundPlayback(getTrack(playlistMedia, 0), 0);
-          } else {
-            backgroundPlayback(
-              getTrack(playlistMedia, currentTrackIndex + 1),
-              currentTrackIndex + 1,
-            );
-          }
-        }
-      }
-    }
+  TrackPlayer.addEventListener('playback-queue-ended', ({position, track}) => {
+    TrackPlayer.reset();
+    store.dispatch(setIsPlaying(false));
+    store.dispatch(setPlaylistMedia(null));
   });
 };

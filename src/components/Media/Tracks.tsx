@@ -8,36 +8,36 @@ import {Text} from '../Themed';
 import {colors} from '../../constants/Colors';
 import {RootStoreType} from '../../redux/rootReducer';
 import {
-  startSetCurrentTrack,
+  startSetTracks,
   setPlaylistMedia,
-  setCurrentTrackIndex,
+  setCurrentTrackSlug,
 } from '../../redux/slices';
 import {getTrack} from '../../helpers/Utils';
 
 const Tracks = () => {
   const dispatch = useDispatch();
 
-  const {media, playlistMedia, currentTrackIndex} = useSelector(
+  const {media, playlistMedia, currentTrackSlug} = useSelector(
     (state: RootStoreType) => ({
       media: state.mediaReducer.media,
       playlistMedia: state.playlistReducer.playlistMedia,
-      currentTrackIndex: state.playlistReducer.currentTrackIndex,
+      currentTrackSlug: state.playlistReducer.currentTrackSlug,
     }),
   );
 
   const setTrack = useCallback(index => {
     if (media?.slug === playlistMedia?.slug) {
       // what is playing is the same as the what is displayed in media screen
-      dispatch(startSetCurrentTrack(getTrack(playlistMedia!, index)));
-      dispatch(setCurrentTrackIndex(index));
+      dispatch(startSetTracks(getTrack(playlistMedia!, index)));
+      dispatch(setCurrentTrackSlug(index));
     } else {
       /**
        *  What is played is different from the media that is displayed
        *  in media screen. So set the media in the playlist.
        **/
       dispatch(setPlaylistMedia(media));
-      dispatch(startSetCurrentTrack(getTrack(media!, index)));
-      dispatch(setCurrentTrackIndex(index));
+      dispatch(startSetTracks(getTrack(media!, index)));
+      dispatch(setCurrentTrackSlug(index));
     }
   }, []);
 
@@ -52,7 +52,7 @@ const Tracks = () => {
             titleStyle={[
               {color: colors.red300},
               media.slug === playlistMedia?.slug &&
-                index === currentTrackIndex && {color: colors.red400},
+                item.slug === currentTrackSlug && {color: colors.red400},
             ]}
             avatarStyle={[
               {
@@ -69,7 +69,7 @@ const Tracks = () => {
                 }),
               },
               media.slug === playlistMedia?.slug &&
-                index === currentTrackIndex && {borderColor: colors.red400},
+                item.slug === currentTrackSlug && {borderColor: colors.red400},
             ]}
           />
           <ListItem.Content>
@@ -78,7 +78,7 @@ const Tracks = () => {
                 style={[
                   styles.title,
                   media.slug === playlistMedia?.slug &&
-                    index === currentTrackIndex && {color: colors.red400},
+                    item.slug === currentTrackSlug && {color: colors.red400},
                 ]}>
                 {item.name}
               </Text>
@@ -88,7 +88,7 @@ const Tracks = () => {
                 style={[
                   styles.duration,
                   media.slug === playlistMedia?.slug &&
-                    index === currentTrackIndex && {color: colors.red400},
+                    item.slug === currentTrackSlug && {color: colors.red400},
                 ]}>
                 {item.duration}
               </Text>

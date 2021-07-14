@@ -8,10 +8,9 @@ import {RootStoreType} from '../../redux/rootReducer';
 import {
   setShowMiniPlayer,
   startToGetMedia,
-  startSetCurrentTrack,
   setPlaylistMedia,
   startTogglePlay,
-  setCurrentTrackIndex,
+  startSetTracks,
 } from '../../redux/slices';
 import {
   ProgressBar,
@@ -21,23 +20,23 @@ import {
   PlayerContainer,
   Backdrop,
 } from '../../components';
-import {getTrack} from '../../helpers/Utils';
+import {getTracks} from '../../helpers/Utils';
 
 const MediaScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
 
-  const {loading, media, playlistMedia, currentTrackIndex, isPlaying, error} =
-    useSelector((state: RootStoreType) => ({
+  const {loading, media, playlistMedia, isPlaying, error} = useSelector(
+    (state: RootStoreType) => ({
       loading: state.mediaReducer.loading,
       media: state.mediaReducer.media,
       playlistMedia: state.playlistReducer.playlistMedia,
-      currentTrackIndex: state.playlistReducer.currentTrackIndex,
       isPlaying: state.playlistReducer.isPlaying,
 
       error: state.mediaReducer.error,
-    }));
+    }),
+  );
 
   const fetchData = useCallback(() => {
     if (route.params?.slug) {
@@ -69,8 +68,7 @@ const MediaScreen = () => {
      **/
     if (playlistMedia === null || media?.slug !== playlistMedia?.slug) {
       dispatch(setPlaylistMedia(media));
-      dispatch(startSetCurrentTrack(getTrack(media!, 0)));
-      dispatch(setCurrentTrackIndex(0));
+      dispatch(startSetTracks(getTracks(media!)));
     } else {
       dispatch(startTogglePlay(!isPlaying));
     }

@@ -1,4 +1,4 @@
-import {Image, Media} from '../../types';
+import {Image, Media, Track as PlaylistTrack} from '../../types';
 import {Track} from 'react-native-track-player';
 
 export const getPoster = (images: Image[]) => {
@@ -51,8 +51,68 @@ export const getTrack = (media: Media, currentTrackIndex: number) => {
   return formatedTrack;
 };
 
+export const getTracks = (media: Media) => {
+  if (Array.isArray(media.tracks)) {
+    const tracks = media.tracks.map(track => {
+      let formatedTrack: Track = {
+        id: 'no_audio',
+        url: require('../../assets/audio/no-track.mp3'),
+        title: 'No audio file found',
+        artist: 'Afridio',
+        artwork: require('../../assets/images/no-cover.png'),
+        duration: 3,
+      };
+
+      if (track && track.file_url) {
+        formatedTrack.url = track.file_url;
+      }
+      formatedTrack.id = track.slug;
+      formatedTrack.title = media.title + ' ' + track.name;
+      formatedTrack.artist = media.authors
+        ? media.authors.map(a => a.name).join(', ')
+        : '';
+      formatedTrack.artwork = getCover(media.images, false);
+      formatedTrack.duration = track.duration;
+      return formatedTrack;
+    });
+
+    return tracks;
+  }
+  return null;
+};
+
 export const getQueryParam = (url: String, param: string) => {
   var result = url.match(new RegExp('(\\?|&)' + param + '(\\[\\])?=([^&]*)'));
 
   return result ? result[3] : false;
+};
+
+export const getNextTrackSlug = (
+  tracks: PlaylistTrack[],
+  slug: string | null,
+) => {
+  let nextTrackSlug = null;
+
+  if (tracks && slug) {
+    let index = tracks.findIndex(t => t.slug === slug) + 1;
+    if (index > -1 && index < tracks.length) {
+      nextTrackSlug = tracks[index].slug;
+    }
+  }
+  return nextTrackSlug;
+};
+
+export const getPreviousTrackSlug = (
+  tracks: PlaylistTrack[],
+  slug: string | null,
+) => {
+  let nextTrackSlug = null;
+
+  if (tracks && slug) {
+    let index = tracks.findIndex(t => t.slug === slug) - 1;
+    if (index > -1 && index < tracks.length) {
+      nextTrackSlug = tracks[index].slug;
+    }
+  }
+  return nextTrackSlug;
 };

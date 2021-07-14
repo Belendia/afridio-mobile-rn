@@ -9,49 +9,40 @@ import setupPlayer from '../../services/player/SetupPlayer';
 
 type PlayerReducerType = {
   playlistMedia: Media | null;
-  currentTrack: Track;
+  currentTrackSlug: string | null;
   loop: boolean;
   isPlaying: boolean;
   showMiniPlayer: boolean;
-  currentTrackIndex: number;
 };
 
 const initialState: PlayerReducerType = {
   playlistMedia: null,
-  currentTrack: {
-    id: '',
-    title: '',
-    artist: '',
-    duration: 0,
-    artwork: '',
-    url: '',
-  },
+  currentTrackSlug: null,
   loop: false,
   isPlaying: false,
   showMiniPlayer: false,
-  currentTrackIndex: 0,
 };
 
 const playlistSlice = createSlice({
   name: 'playlist',
   initialState,
   reducers: {
-    setCurrentTrack: (state, action) => ({
+    setCurrentTrackSlug: (state, action) => ({
       ...state,
-      currentTrack: action.payload,
+      currentTrackSlug: action.payload,
       error: null,
     }),
-    startSetCurrentTrack: (state, _) => ({
+    startSetTracks: (state, _) => ({
       ...state,
       error: null,
     }),
-    setCurrentTrackSuccess: (state, action) => ({
+    setTracksSuccess: (state, action) => ({
       ...state,
       currentTrack: action.payload,
       isPlaying: true,
       error: null,
     }),
-    setCurrentTrackFailed: (state, action) => ({
+    setTracksFailed: (state, action) => ({
       ...state,
       error: action.payload,
     }),
@@ -70,10 +61,6 @@ const playlistSlice = createSlice({
       ...state,
       showMiniPlayer: action.payload,
     }),
-    setCurrentTrackIndex: (state, action) => ({
-      ...state,
-      currentTrackIndex: action.payload,
-    }),
     setPlaylistMedia: (state, action) => ({
       ...state,
       playlistMedia: action.payload,
@@ -81,31 +68,24 @@ const playlistSlice = createSlice({
   },
 });
 
-const resetAndPlay = async (currentTrack: Track) => {
+const resetAndPlay = async (tracks: Track[]) => {
   try {
-    // await TrackPlayer.reset()
-    // await TrackPlayer.add(currentTrack);
-    // TrackPlayer.play();
-    setupPlayer()
-      .then(() => TrackPlayer.reset())
-      .then(() => TrackPlayer.add(currentTrack))
-      .then(() => TrackPlayer.play());
+    await TrackPlayer.reset();
+    await TrackPlayer.add(tracks);
+    await TrackPlayer.play();
   } catch (e) {
     throw Error(e);
   }
 };
 
-export const setCurrentTrackEpic = (action$: Observable<Action<any>>) =>
+export const setTracksEpic = (action$: Observable<Action<any>>) =>
   action$.pipe(
-    ofType(startSetCurrentTrack.type),
+    ofType(startSetTracks.type),
     switchMap(({payload}) => {
       return from(resetAndPlay(payload)).pipe(
-        mergeMap(res =>
-          //used mergeMap to dispatch two actions
-          of(setCurrentTrackSuccess(payload)),
-        ),
+        mergeMap(res => of(setTracksSuccess(payload))),
         catchError(err => {
-          return of(setCurrentTrackFailed(err));
+          return of(setTracksFailed(err));
         }),
       );
     }),
@@ -130,18 +110,17 @@ export const togglePlayEpic = (action$: Observable<Action<any>>) =>
     }),
   );
 
-export const playlistEpics = [setCurrentTrackEpic, togglePlayEpic];
+export const playlistEpics = [setTracksEpic, togglePlayEpic];
 
 export const {
-  setCurrentTrack,
-  startSetCurrentTrack,
-  setCurrentTrackSuccess,
-  setCurrentTrackFailed,
+  setCurrentTrackSlug,
+  startSetTracks,
+  setTracksSuccess,
+  setTracksFailed,
   setLoop,
   startTogglePlay,
   setIsPlaying,
   setShowMiniPlayer,
-  setCurrentTrackIndex,
   setPlaylistMedia,
 } = playlistSlice.actions;
 
