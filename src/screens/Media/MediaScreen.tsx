@@ -11,6 +11,7 @@ import {
   startSetCurrentTrack,
   setPlaylistMedia,
   startTogglePlay,
+  setCurrentTrackIndex,
 } from '../../redux/slices';
 import {
   ProgressBar,
@@ -66,17 +67,14 @@ const MediaScreen = () => {
      *  Check what is played is different from the media that is displayed
      *  in media screen. If so, set the media in the playlist.
      **/
-    if (playlistMedia === null) {
+    if (playlistMedia === null || media?.slug !== playlistMedia?.slug) {
       dispatch(setPlaylistMedia(media));
       dispatch(startSetCurrentTrack(getTrack(media!, 0)));
-    } else if (media?.slug !== playlistMedia?.slug) {
-      // what is playing is the same as the what is displayed in media screen
-      dispatch(setPlaylistMedia(media));
-      dispatch(startSetCurrentTrack(getTrack(media!, 0)));
+      dispatch(setCurrentTrackIndex(0));
     } else {
       dispatch(startTogglePlay(!isPlaying));
     }
-  }, [media, isPlaying]);
+  }, [media, playlistMedia, isPlaying]);
 
   if (error && typeof error === 'string') {
     return <Error title={'Error'} message={error} onRetry={fetchData} />;

@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
-import TrackPlayer, {useTrackPlayerProgress} from 'react-native-track-player';
+import {useTrackPlayerProgress} from 'react-native-track-player';
 
 import {View, Text} from '../Themed';
 import {RootStoreType} from '../../redux/rootReducer';
