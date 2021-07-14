@@ -83,10 +83,13 @@ const playlistSlice = createSlice({
 
 const resetAndPlay = async (currentTrack: Track) => {
   try {
-    await TrackPlayer.reset();
-    await TrackPlayer.add(currentTrack);
-    setupPlayer().then(() => TrackPlayer.add(currentTrack));
-    TrackPlayer.play();
+    // await TrackPlayer.add(currentTrack);
+    setupPlayer()
+      .then(() => TrackPlayer.reset())
+      .then(() => TrackPlayer.add(currentTrack))
+      .then(() => TrackPlayer.play());
+    // setupPlayer();
+    // TrackPlayer.play();
   } catch (e) {
     throw Error(e);
   }
