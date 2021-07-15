@@ -18,9 +18,10 @@ export const getPoster = (images: Image[]) => {
 
 export const getCover = (images: Image[], urlObject: boolean = true) => {
   const cover = images?.filter(img => img.width === 300);
+
   if (cover && cover.length > 0 && cover[0].image) {
     if (urlObject) return {uri: cover[0].image};
-    else cover[0].image;
+    else return cover[0].image;
   }
   return require('../../assets/images/no-cover.png');
 };
