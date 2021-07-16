@@ -11,11 +11,7 @@ import {useTrackPlayerProgress} from 'react-native-track-player';
 import {View, Text} from '../Themed';
 import {RootStoreType} from '../../redux/rootReducer';
 import {colors} from '../../constants/Colors';
-import {
-  setMediaSlug,
-  setShowMiniPlayer,
-  startTogglePlay,
-} from '../../redux/slices';
+import {setShowMiniPlayer, startTogglePlay} from '../../redux/slices';
 import {navigate} from '../../services/navigation/NavigationService';
 import {Cover} from '../Media/Cover';
 import {Size} from '../../constants/Options';
@@ -24,19 +20,14 @@ const MiniPlayer = memo(() => {
   const dispatch = useDispatch();
   const {position, duration} = useTrackPlayerProgress();
 
-  const {
-    playlistMedia,
-    currentTrackIndex,
-    isPlaying,
-    tabBarHeight,
-    showMiniPlayer,
-  } = useSelector((state: RootStoreType) => ({
-    playlistMedia: state.playlistReducer.playlistMedia,
-    currentTrackIndex: state.playlistReducer.currentTrackIndex,
-    isPlaying: state.playlistReducer.isPlaying,
-    showMiniPlayer: state.playlistReducer.showMiniPlayer,
-    tabBarHeight: state.layoutReducer.tabBarHeight,
-  }));
+  const {playlistMedia, isPlaying, tabBarHeight, showMiniPlayer} = useSelector(
+    (state: RootStoreType) => ({
+      playlistMedia: state.playlistReducer.playlistMedia,
+      isPlaying: state.playlistReducer.isPlaying,
+      showMiniPlayer: state.playlistReducer.showMiniPlayer,
+      tabBarHeight: state.layoutReducer.tabBarHeight,
+    }),
+  );
 
   const getProgress = useCallback(() => {
     if (duration === 0) {
@@ -53,10 +44,8 @@ const MiniPlayer = memo(() => {
   }, [playlistMedia, isPlaying]);
 
   const onPressMiniPlayer = useCallback(() => {
-    dispatch(setMediaSlug(playlistMedia?.slug));
-    navigate('MediaScreen', {
-      slug: playlistMedia?.slug,
-    });
+    // dispatch(setMediaSlug(playlistMedia?.slug));
+    navigate('PlayerScreen', {});
     dispatch(setShowMiniPlayer(false));
   }, [playlistMedia?.slug]);
 

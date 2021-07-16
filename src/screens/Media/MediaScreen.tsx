@@ -58,7 +58,9 @@ const MediaScreen = () => {
   useEffect(() => {
     dispatch(setShowMiniPlayer(false));
     return () => {
-      dispatch(setShowMiniPlayer(isPlaying));
+      if (!route.params?.disableShowMiniPlayer) {
+        dispatch(setShowMiniPlayer(isPlaying));
+      }
     };
   }, [isPlaying]);
 
@@ -81,11 +83,11 @@ const MediaScreen = () => {
   }
 
   return loading ? (
-    <PlayerContainer>
+    <PlayerContainer iconName={'arrow-back'}>
       <ProgressBar />
     </PlayerContainer>
   ) : media ? (
-    <PlayerContainer>
+    <PlayerContainer iconName={'arrow-back'}>
       <View style={styles.bannerContainer}>
         <Backdrop images={media.images} />
       </View>
@@ -96,7 +98,7 @@ const MediaScreen = () => {
       />
     </PlayerContainer>
   ) : (
-    <PlayerContainer>
+    <PlayerContainer iconName="arrow-back">
       <NoData />
     </PlayerContainer>
   );

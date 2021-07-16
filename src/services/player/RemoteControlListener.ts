@@ -8,7 +8,6 @@ import {
   setPlaylistMedia,
 } from '../../redux/slices/playlistSlice';
 import {getTrack} from '../../helpers/Utils';
-// import  setupPlayer  from './SetupPlayer';
 
 let flag = false;
 

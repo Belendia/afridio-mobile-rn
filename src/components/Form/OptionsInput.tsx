@@ -6,20 +6,20 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {Text, View} from '../Themed';
 import {colors} from '../../constants/Colors';
 
-export type Option = {
+export type SexOption = {
   key: string;
   value: string;
 };
 
 type OptionsInputProps = {
   title: string;
-  values: Option[];
-  defaultValue?: Option | undefined;
+  values: SexOption[];
+  defaultValue?: SexOption | undefined;
   bottomDivider?: boolean | undefined;
   iconName: string;
   errorMessage?: string | undefined;
   style?: ViewStyle | undefined;
-  onPress?: ((option: Option) => void) | undefined;
+  onPress?: ((option: SexOption) => void) | undefined;
 };
 
 const OptionsInput = ({

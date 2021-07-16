@@ -57,3 +57,12 @@ export const getQueryParam = (url: String, param: string) => {
 
   return result ? result[3] : false;
 };
+
+export const secToTime = (secs: number) => {
+  if (secs < 0) {
+    return '0:00';
+  }
+  let minutes = Math.floor(secs / 60);
+  let seconds = Math.floor(secs % 60);
+  return seconds <= 9 ? `${minutes}:0${seconds}` : `${minutes}:${seconds}`;
+};

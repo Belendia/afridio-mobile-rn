@@ -5,12 +5,21 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 
 import {colors} from '../../constants/Colors';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type PlayerContainerProps = {
+  iconName: string;
+  showRightButton: boolean;
+  onRightButtonPressed?: () => void | undefined;
   children: ReactNode;
 };
 
-const PlayerContainer = ({children}: PlayerContainerProps) => {
+const PlayerContainer = ({
+  iconName,
+  showRightButton,
+  onRightButtonPressed,
+  children,
+}: PlayerContainerProps) => {
   const navigation = useNavigation();
 
   const goBack = useCallback(() => {
@@ -23,14 +32,32 @@ const PlayerContainer = ({children}: PlayerContainerProps) => {
       <Header
         leftComponent={
           <TouchableOpacity onPress={goBack}>
-            <Ionicons name="chevron-down" size={24} color="white" />
+            <Ionicons name={iconName} size={30} color="white" />
           </TouchableOpacity>
         }
         containerStyle={styles.header}
+        rightComponent={
+          showRightButton ? (
+            <TouchableOpacity
+              onPress={onRightButtonPressed && onRightButtonPressed}>
+              <MaterialIcons
+                name="playlist-play"
+                size={30}
+                color={colors.red200}
+              />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )
+        }
       />
       {children}
     </>
   );
+};
+
+PlayerContainer.defaultProps = {
+  showRightButton: false,
 };
 
 export {PlayerContainer};
