@@ -1,5 +1,5 @@
 import React, {useLayoutEffect, useCallback, useEffect} from 'react';
-import {BackHandler, ScrollView, StyleSheet} from 'react-native';
+import {BackHandler, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,7 +15,7 @@ import {
 import {RootStoreType} from '../../redux/rootReducer';
 import {colors} from '../../constants/Colors';
 import {Text, View} from '../../components/Themed';
-import {setMediaSlug, setShowMiniPlayer} from '../../redux/slices';
+import {setLoop, setMediaSlug, setShowMiniPlayer} from '../../redux/slices';
 import {navigate} from '../../services/navigation/NavigationService';
 
 export const PlayerScreen = () => {
@@ -23,13 +23,18 @@ export const PlayerScreen = () => {
   const navigation = useNavigation();
 
   //redux
-  const {playlistMedia, isPlaying, currentTrackIndex, tabBarHeight} =
+  const {playlistMedia, isPlaying, currentTrackIndex, loop, tabBarHeight} =
     useSelector((state: RootStoreType) => ({
       playlistMedia: state.playlistReducer.playlistMedia,
       isPlaying: state.playlistReducer.isPlaying,
       currentTrackIndex: state.playlistReducer.currentTrackIndex,
+      loop: state.playlistReducer.loop,
       tabBarHeight: state.layoutReducer.tabBarHeight,
     }));
+
+  const onLoopPressed = useCallback(() => {
+    dispatch(setLoop(!loop));
+  }, [loop]);
 
   const onPlaylistPressed = useCallback(() => {
     dispatch(setMediaSlug(playlistMedia?.slug));
@@ -85,7 +90,7 @@ export const PlayerScreen = () => {
           </View>
           <View style={styles.progressSliderWrapper}>
             <ProgressSlider style={styles.progressSlider} />
-            <SupportPlaybackControl onPlaylistPressed={onPlaylistPressed} />
+            <SupportPlaybackControl loop={loop} onLoopPressed={onLoopPressed} />
           </View>
           <View
             style={[styles.controlsContainer, {marginBottom: tabBarHeight}]}>

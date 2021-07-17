@@ -9,7 +9,6 @@ import {View} from '../Themed';
 import {
   startSetCurrentTrack,
   setCurrentTrackIndex,
-  setLoop,
   startTogglePlay,
 } from '../../redux/slices/playlistSlice';
 import {colors} from '../../constants/Colors';
@@ -22,12 +21,11 @@ export const PlaybackControl = () => {
   const dispatch = useDispatch();
   const {position, duration} = useTrackPlayerProgress();
 
-  const {playlistMedia, currentTrackIndex, isPlaying, loop} = useSelector(
+  const {playlistMedia, currentTrackIndex, isPlaying} = useSelector(
     (state: RootStoreType) => ({
       playlistMedia: state.playlistReducer.playlistMedia,
       currentTrackIndex: state.playlistReducer.currentTrackIndex,
       isPlaying: state.playlistReducer.isPlaying,
-      loop: state.playlistReducer.loop,
     }),
   );
 
@@ -80,10 +78,6 @@ export const PlaybackControl = () => {
       TrackPlayer.seekTo(skipPosition);
     }
   }, [isPlaying, position, duration]);
-
-  // const onLoopPress = () => {
-  //   dispatch(setLoop(!loop));
-  // };
 
   const onTogglePlay = useCallback(() => {
     if (playlistMedia) {

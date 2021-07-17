@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Chip} from 'react-native-elements';
 
 import {View} from '../Themed';
@@ -10,11 +9,13 @@ import {CheckboxList, CheckboxOption} from '../Form/CheckboxList';
 import {SpeedOptions} from '../../constants/Options';
 
 type SupportPlaybackControlProps = {
-  onPlaylistPressed: () => void;
+  loop: boolean;
+  onLoopPressed: () => void;
 };
 
 const SupportPlaybackControl = ({
-  onPlaylistPressed,
+  loop,
+  onLoopPressed,
 }: SupportPlaybackControlProps) => {
   const [showModal, setShowModal] = useState(false);
   const [speed, setSpeed] = useState<CheckboxOption>({key: 1, title: '1.0x'});
@@ -26,8 +27,12 @@ const SupportPlaybackControl = ({
 
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={onPlaylistPressed}>
-        <MaterialIcons name="playlist-play" size={30} color={colors.red200} />
+      <TouchableWithoutFeedback onPress={onLoopPressed}>
+        <Ionicons
+          name="repeat"
+          size={30}
+          color={loop ? colors.red800 : colors.black300}
+        />
       </TouchableWithoutFeedback>
       <Chip
         title={'Speed ' + speed.title}
