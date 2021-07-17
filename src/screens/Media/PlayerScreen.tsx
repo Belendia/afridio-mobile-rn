@@ -16,7 +16,6 @@ import {RootStoreType} from '../../redux/rootReducer';
 import {colors} from '../../constants/Colors';
 import {Text, View} from '../../components/Themed';
 import {setLoop, setMediaSlug, setShowMiniPlayer} from '../../redux/slices';
-import {navigate} from '../../services/navigation/NavigationService';
 
 export const PlayerScreen = () => {
   const dispatch = useDispatch();
@@ -38,7 +37,12 @@ export const PlayerScreen = () => {
 
   const onPlaylistPressed = useCallback(() => {
     dispatch(setMediaSlug(playlistMedia?.slug));
-    navigate('MediaScreen', {
+    /**
+     * If the media screen is called from the main player, the app
+     * should not show the mini player because when the main screen
+     * is closing, it will return back to the main player again.
+     */
+    navigation.navigate('MediaScreen', {
       slug: playlistMedia?.slug,
       disableShowMiniPlayer: true,
     });
