@@ -1,7 +1,9 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import TrackPlayer, {useTrackPlayerProgress} from 'react-native-track-player';
+
 import {getTrack} from '../../helpers/Utils';
 import {View} from '../Themed';
 import {
@@ -18,6 +20,7 @@ const WRAPPER_WIDTH = layout.window.width * 0.82;
 
 export const PlaybackControl = () => {
   const dispatch = useDispatch();
+  const {position, duration} = useTrackPlayerProgress();
 
   const {playlistMedia, currentTrackIndex, isPlaying, loop} = useSelector(
     (state: RootStoreType) => ({
@@ -58,10 +61,15 @@ export const PlaybackControl = () => {
     );
   }, [currentTrackIndex, playlistMedia]);
 
-  const onShufflePress = () => {
-    // RenderToast(`Shuffle: ${shuffle ? 'Off' : 'On'}`);
-    // setShuffle(!shuffle);
-  };
+  const onSkip10SecondsForwardPressed = useCallback(() => {
+    const skipPosition = position + 10 <= duration ? position + 10 : duration;
+    TrackPlayer.seekTo(skipPosition);
+  }, [position, duration]);
+
+  const onSkip10SecondsBackwardPressed = useCallback(() => {
+    const skipPosition = position - 10 > 0 ? position - 10 : 0;
+    TrackPlayer.seekTo(skipPosition);
+  }, [position, duration]);
 
   const onLoopPress = () => {
     // RenderToast(`Loop ${loop ? 'all tracks' : 'this track'}`);
@@ -76,7 +84,7 @@ export const PlaybackControl = () => {
 
   return (
     <View style={{...styles.mainWrapper, width: WRAPPER_WIDTH + 10}}>
-      <TouchableWithoutFeedback onPress={onShufflePress}>
+      <TouchableWithoutFeedback onPress={onSkip10SecondsBackwardPressed}>
         <MaterialIcons name="replay-10" size={30} style={styles.icon} />
       </TouchableWithoutFeedback>
       <MaterialIcons
@@ -102,7 +110,7 @@ export const PlaybackControl = () => {
           onPress={skipForward}
         />
       </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback onPress={onLoopPress}>
+      <TouchableWithoutFeedback onPress={onSkip10SecondsForwardPressed}>
         <MaterialIcons name="forward-10" size={30} style={styles.icon} />
       </TouchableWithoutFeedback>
     </View>
