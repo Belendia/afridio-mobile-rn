@@ -61,20 +61,19 @@ export const PlaybackControl = () => {
     );
   }, [currentTrackIndex, playlistMedia]);
 
-  const onSkip10SecondsForwardPressed = useCallback(() => {
-    const skipPosition = position + 10 <= duration ? position + 10 : duration;
+  const onSkip30SecondsForwardPressed = useCallback(() => {
+    const skipPosition = position + 30 <= duration ? position + 30 : duration;
     TrackPlayer.seekTo(skipPosition);
   }, [position, duration]);
 
-  const onSkip10SecondsBackwardPressed = useCallback(() => {
-    const skipPosition = position - 10 > 0 ? position - 10 : 0;
+  const onSkip30SecondsBackwardPressed = useCallback(() => {
+    const skipPosition = position - 30 > 0 ? position - 30 : 0;
     TrackPlayer.seekTo(skipPosition);
   }, [position, duration]);
 
-  const onLoopPress = () => {
-    // RenderToast(`Loop ${loop ? 'all tracks' : 'this track'}`);
-    dispatch(setLoop(!loop));
-  };
+  // const onLoopPress = () => {
+  //   dispatch(setLoop(!loop));
+  // };
 
   const onTogglePlay = useCallback(() => {
     if (playlistMedia) {
@@ -84,8 +83,8 @@ export const PlaybackControl = () => {
 
   return (
     <View style={{...styles.mainWrapper, width: WRAPPER_WIDTH + 10}}>
-      <TouchableWithoutFeedback onPress={onSkip10SecondsBackwardPressed}>
-        <MaterialIcons name="replay-10" size={30} style={styles.icon} />
+      <TouchableWithoutFeedback onPress={onSkip30SecondsBackwardPressed}>
+        <MaterialIcons name="replay-30" size={30} style={styles.icon} />
       </TouchableWithoutFeedback>
       <MaterialIcons
         name="skip-previous"
@@ -110,8 +109,8 @@ export const PlaybackControl = () => {
           onPress={skipForward}
         />
       </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback onPress={onSkip10SecondsForwardPressed}>
-        <MaterialIcons name="forward-10" size={30} style={styles.icon} />
+      <TouchableWithoutFeedback onPress={onSkip30SecondsForwardPressed}>
+        <MaterialIcons name="forward-30" size={30} style={styles.icon} />
       </TouchableWithoutFeedback>
     </View>
   );
