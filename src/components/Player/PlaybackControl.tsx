@@ -62,14 +62,24 @@ export const PlaybackControl = () => {
   }, [currentTrackIndex, playlistMedia]);
 
   const onSkip30SecondsForwardPressed = useCallback(() => {
-    const skipPosition = position + 30 <= duration ? position + 30 : duration;
-    TrackPlayer.seekTo(skipPosition);
-  }, [position, duration]);
+    if (playlistMedia) {
+      if (!isPlaying) {
+        dispatch(startTogglePlay(true));
+      }
+      const skipPosition = position + 30 <= duration ? position + 30 : duration;
+      TrackPlayer.seekTo(skipPosition);
+    }
+  }, [isPlaying, position, duration]);
 
   const onSkip30SecondsBackwardPressed = useCallback(() => {
-    const skipPosition = position - 30 > 0 ? position - 30 : 0;
-    TrackPlayer.seekTo(skipPosition);
-  }, [position, duration]);
+    if (playlistMedia) {
+      if (!isPlaying) {
+        dispatch(startTogglePlay(true));
+      }
+      const skipPosition = position - 30 > 0 ? position - 30 : 0;
+      TrackPlayer.seekTo(skipPosition);
+    }
+  }, [isPlaying, position, duration]);
 
   // const onLoopPress = () => {
   //   dispatch(setLoop(!loop));
