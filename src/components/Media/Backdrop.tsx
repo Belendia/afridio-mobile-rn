@@ -1,6 +1,6 @@
 import React, {memo} from 'react';
 import {StyleSheet, Image} from 'react-native';
-import Carousel from 'react-native-snap-carousel';
+import Carousel from 'pinar';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {View} from '../Themed';
@@ -37,8 +37,14 @@ const Backdrop = memo(
     } else if (poster && poster.length > 1) {
       backdrop = (
         <Carousel
-          data={poster}
-          renderItem={({item, index}) => (
+          height={248}
+          width={layout.window.width}
+          loop={true}
+          showsControls={false}
+          showsDots={false}
+          autoplay={true}
+          autoplayInterval={3000}>
+          {poster.map(item => (
             <View key={item.slug}>
               <Image
                 source={{uri: `${item.image}`}}
@@ -53,16 +59,8 @@ const Backdrop = memo(
                 style={styles.linearGradient}
               />
             </View>
-          )}
-          style={{height: 248}}
-          sliderWidth={layout.window.width}
-          itemWidth={layout.window.width}
-          loop={true}
-          loopClonesPerSide={2}
-          autoplay={true}
-          autoplayDelay={500}
-          autoplayInterval={3000}
-        />
+          ))}
+        </Carousel>
       );
     }
     return backdrop;

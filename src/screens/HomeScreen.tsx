@@ -2,7 +2,7 @@ import React, {useEffect, useCallback} from 'react';
 import {StyleSheet, FlatList, RefreshControl} from 'react-native';
 import {FeaturedMediaCard} from '../components/Cards/FeaturedMediaCard';
 import {useDispatch, useSelector} from 'react-redux';
-import Carousel from 'react-native-snap-carousel';
+import Carousel from 'pinar';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 
 import {View} from '../components/Themed';
@@ -70,19 +70,17 @@ const HomeScreen = () => {
           featuredMedias[0].medias &&
           featuredMedias[0].medias.length > 1 ? (
             <Carousel
-              data={featuredMedias[0].medias}
-              renderItem={({item, index}) => (
-                <FeaturedMediaCard key={item.slug} {...item} />
-              )}
-              style={{height: 248}}
-              sliderWidth={layout.window.width}
-              itemWidth={layout.window.width}
+              height={248}
+              width={layout.window.width}
               loop={true}
-              loopClonesPerSide={2}
+              showsControls={false}
+              showsDots={false}
               autoplay={true}
-              autoplayDelay={500}
-              autoplayInterval={5000}
-            />
+              autoplayInterval={5000}>
+              {featuredMedias[0].medias.map(item => (
+                <FeaturedMediaCard key={item.slug} {...item} />
+              ))}
+            </Carousel>
           ) : featuredMedias &&
             featuredMedias.length > 0 &&
             featuredMedias[0].medias &&
