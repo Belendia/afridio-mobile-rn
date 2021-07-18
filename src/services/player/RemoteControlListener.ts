@@ -8,16 +8,22 @@ import {
   setPlaylistMedia,
 } from '../../redux/slices/playlistSlice';
 import {getTrack} from '../../helpers/Utils';
+import {CheckboxOption} from '../../components';
 
 let flag = false;
 
-async function backgroundPlayback(track: Track, currentTrackIndex: number) {
+async function backgroundPlayback(
+  track: Track,
+  currentTrackIndex: number,
+  playbackSpeed: CheckboxOption,
+) {
   if (flag) return;
   flag = true;
 
   setTimeout(() => (flag = false), 250);
   await TrackPlayer.reset();
   await TrackPlayer.add(track);
+  await TrackPlayer.setRate(playbackSpeed.key);
   // setupPlayer().then(() => TrackPlayer.add(track));
   store.dispatch(setCurrentTrack(track));
   store.dispatch(setCurrentTrackIndex(currentTrackIndex));
@@ -38,15 +44,16 @@ module.exports = async function () {
 
   TrackPlayer.addEventListener('remote-next', () => {
     let {playlistReducer} = store.getState();
-    let {currentTrackIndex, playlistMedia} = playlistReducer;
+    let {currentTrackIndex, playlistMedia, playbackSpeed} = playlistReducer;
 
     if (playlistMedia) {
       if (currentTrackIndex === playlistMedia.tracks.length - 1) {
-        backgroundPlayback(getTrack(playlistMedia, 0), 0);
+        backgroundPlayback(getTrack(playlistMedia, 0), 0, playbackSpeed);
       } else {
         backgroundPlayback(
           getTrack(playlistMedia, currentTrackIndex + 1),
           currentTrackIndex + 1,
+          playbackSpeed,
         );
       }
     }
@@ -54,18 +61,20 @@ module.exports = async function () {
 
   TrackPlayer.addEventListener('remote-previous', () => {
     const {playlistReducer} = store.getState();
-    const {currentTrackIndex, playlistMedia} = playlistReducer;
+    const {currentTrackIndex, playlistMedia, playbackSpeed} = playlistReducer;
 
     if (playlistMedia) {
       if (currentTrackIndex === 0) {
         backgroundPlayback(
           getTrack(playlistMedia, playlistMedia.tracks.length - 1),
           playlistMedia.tracks.length - 1,
+          playbackSpeed,
         );
       } else {
         backgroundPlayback(
           getTrack(playlistMedia, currentTrackIndex - 1),
           currentTrackIndex - 1,
+          playbackSpeed,
         );
       }
     }
@@ -73,12 +82,17 @@ module.exports = async function () {
 
   TrackPlayer.addEventListener('playback-queue-ended', ({position}) => {
     const {playlistReducer} = store.getState();
-    const {currentTrack, currentTrackIndex, loop, playlistMedia} =
-      playlistReducer;
+    const {
+      currentTrack,
+      currentTrackIndex,
+      loop,
+      playlistMedia,
+      playbackSpeed,
+    } = playlistReducer;
 
     if (position > 0) {
       if (loop) {
-        backgroundPlayback(currentTrack, currentTrackIndex);
+        backgroundPlayback(currentTrack, currentTrackIndex, playbackSpeed);
       } else {
         if (playlistMedia) {
           if (currentTrackIndex === playlistMedia.tracks.length - 1) {
@@ -92,6 +106,7 @@ module.exports = async function () {
             backgroundPlayback(
               getTrack(playlistMedia, currentTrackIndex + 1),
               currentTrackIndex + 1,
+              playbackSpeed,
             );
           }
         }

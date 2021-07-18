@@ -2,11 +2,15 @@ import React, {useState} from 'react';
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Chip} from 'react-native-elements';
+import {useDispatch, useSelector} from 'react-redux';
+import TrackPlayer from 'react-native-track-player';
 
 import {View} from '../Themed';
 import {colors} from '../../constants/Colors';
 import {CheckboxList, CheckboxOption} from '../Form/CheckboxList';
 import {SpeedOptions} from '../../constants/Options';
+import {RootStoreType} from '../../redux/rootReducer';
+import {setPlaybackSpeed} from '../../redux/slices';
 
 type SupportPlaybackControlProps = {
   loop: boolean;
@@ -17,11 +21,17 @@ const SupportPlaybackControl = ({
   loop,
   onLoopPressed,
 }: SupportPlaybackControlProps) => {
+  const dispatch = useDispatch();
+
+  const {playbackSpeed} = useSelector((state: RootStoreType) => ({
+    playbackSpeed: state.playlistReducer.playbackSpeed,
+  }));
+
   const [showModal, setShowModal] = useState(false);
-  const [speed, setSpeed] = useState<CheckboxOption>({key: 1, title: '1.0x'});
 
   const onSelect = (option: CheckboxOption) => {
-    setSpeed(option);
+    dispatch(setPlaybackSpeed(option));
+    TrackPlayer.setRate(option.key);
     setShowModal(false);
   };
 
@@ -35,7 +45,7 @@ const SupportPlaybackControl = ({
         />
       </TouchableWithoutFeedback>
       <Chip
-        title={'Speed ' + speed.title}
+        title={'Speed ' + playbackSpeed.title}
         type="outline"
         titleStyle={{fontSize: 12}}
         buttonStyle={{padding: 5}}
@@ -46,7 +56,7 @@ const SupportPlaybackControl = ({
       </TouchableWithoutFeedback>
       <CheckboxList
         options={SpeedOptions}
-        value={speed}
+        value={playbackSpeed}
         show={showModal}
         onSelect={onSelect}
         onClose={() => setShowModal(false)}

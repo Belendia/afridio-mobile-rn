@@ -6,6 +6,7 @@ import TrackPlayer, {Track} from 'react-native-track-player';
 import {Action} from '../rootReducer';
 import {Media} from '../../../types';
 import setupPlayer from '../../services/player/SetupPlayer';
+import {CheckboxOption} from '../../components';
 
 type PlayerReducerType = {
   playlistMedia: Media | null;
@@ -14,6 +15,7 @@ type PlayerReducerType = {
   isPlaying: boolean;
   showMiniPlayer: boolean;
   currentTrackIndex: number;
+  playbackSpeed: CheckboxOption;
 };
 
 const initialState: PlayerReducerType = {
@@ -30,6 +32,7 @@ const initialState: PlayerReducerType = {
   isPlaying: false,
   showMiniPlayer: false,
   currentTrackIndex: 0,
+  playbackSpeed: {key: 1, title: '1.0x'},
 };
 
 const playlistSlice = createSlice({
@@ -77,6 +80,10 @@ const playlistSlice = createSlice({
     setPlaylistMedia: (state, action) => ({
       ...state,
       playlistMedia: action.payload,
+    }),
+    setPlaybackSpeed: (state, action) => ({
+      ...state,
+      playbackSpeed: action.payload,
     }),
   },
 });
@@ -143,6 +150,7 @@ export const {
   setShowMiniPlayer,
   setCurrentTrackIndex,
   setPlaylistMedia,
+  setPlaybackSpeed,
 } = playlistSlice.actions;
 
 export default playlistSlice.reducer;

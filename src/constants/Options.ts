@@ -6,10 +6,12 @@ export const SexOptions: SexOption[] = [
 ];
 
 export const SpeedOptions: CheckboxOption[] = [
-  {key: 0.5, title: '0.5x'},
-  {key: 1, title: '1.0x'},
-  {key: 2, title: '2.0x'},
-  {key: 3, title: '3.0x'},
+  {key: 0.75, title: '0.75x'},
+  {key: 1, title: '1.00x'},
+  {key: 1.25, title: '1.25x'},
+  {key: 1.5, title: '1.50x'},
+  {key: 1.75, title: '1.75x'},
+  {key: 2, title: '2.00x'},
 ];
 
 export const SettingsMoreOptions = [
