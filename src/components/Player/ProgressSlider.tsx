@@ -1,12 +1,12 @@
 import React, {useCallback, useState, useEffect} from 'react';
+import {Platform, ViewStyle} from 'react-native';
 import Slider from '@react-native-community/slider';
 import {useTrackPlayerProgress} from 'react-native-track-player';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
 import TrackPlayer from 'react-native-track-player';
+
 import layout from '../../constants/Layout';
 import {Text, View} from '../../components/Themed';
-import {ViewStyle} from 'react-native';
 import {colors} from '../../constants/Colors';
 import {secToTime} from '../../helpers/Utils';
 
@@ -70,7 +70,7 @@ const ProgressSlider = ({style}: ProgressSliderProps) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           width: SLIDER_WIDTH,
-          marginTop: -10,
+          marginTop: Platform.OS === 'ios' ? -5 : 0,
           backgroundColor: 'transparent',
         }}>
         <Text>{timePassed()}</Text>
