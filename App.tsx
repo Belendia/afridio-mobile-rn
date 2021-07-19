@@ -17,12 +17,10 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 // import reactotron from 'reactotron-react-native';
 import {Provider} from 'react-redux';
 import RNBootSplash from 'react-native-bootsplash';
-import TrackPlayer from 'react-native-track-player';
 
 import Navigation from './src/navigation';
 import {theme} from './src/components/Themed';
 import {store} from './src/redux/store';
-import {navigate} from './src/services/navigation/NavigationService';
 
 function setup() {
   if (__DEV__) {
@@ -48,21 +46,6 @@ const App = () => {
       await RNBootSplash.hide({fade: true});
     });
   }, []);
-
-  // useEffect(() => {
-  //   Linking.getInitialURL().then(url => handleUrl({url: url}));
-  //   Linking.addEventListener('url', handleUrl);
-  //   return () => Linking.removeEventListener('url', handleUrl);
-  // }, []);
-
-  // const handleUrl = async data => {
-  //   if (data.url === 'trackplayer://notification.click') {
-  //     const slug = await TrackPlayer.getCurrentTrack();
-  //     navigate('MediaScreen', {
-  //       slug: slug,
-  //     });
-  //   }
-  // };
 
   return (
     <SafeAreaProvider>

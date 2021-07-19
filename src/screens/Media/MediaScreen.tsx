@@ -40,7 +40,6 @@ const MediaScreen = () => {
     }));
 
   const fetchData = useCallback(() => {
-    console.log('Media screen slug ', route.params?.slug);
     if (route.params?.slug) {
       dispatch(startToGetMedia(route.params?.slug));
     } else {
