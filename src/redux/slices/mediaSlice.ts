@@ -101,9 +101,12 @@ export const getMediaEpic = (action$: Observable<Action<any>>) =>
           return getMediaSuccess(res);
         }),
         catchError(err => {
+          console.log(JSON.stringify(err));
           let message = 'Something went wrong';
           if (err && err._status === 'Offline') {
             message = err._message;
+          } else if (err && err._status === 404) {
+            message = 'Media not found';
           } else if (err && err._status === 401) {
             return of(authLogout('logout'));
           }

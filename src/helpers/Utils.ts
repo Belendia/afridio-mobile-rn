@@ -34,6 +34,7 @@ export const getTrack = (media: Media, currentTrackIndex: number) => {
     artist: 'Afridio',
     artwork: require('../../assets/images/no-cover.png'),
     duration: 3,
+    mediaSlug: '',
   };
   if (Array.isArray(media.tracks) && media.tracks.length > currentTrackIndex) {
     const track = media.tracks[currentTrackIndex];
@@ -41,13 +42,14 @@ export const getTrack = (media: Media, currentTrackIndex: number) => {
     if (track && track.file_url) {
       formatedTrack.url = track.file_url;
     }
-    formatedTrack.id = track.slug;
+    formatedTrack.id = track.slug; // track.slug;
     formatedTrack.title = media.title + ' - ' + track.name;
     formatedTrack.artist = media.authors
       ? media.authors.map(a => a.name).join(', ')
       : '';
     formatedTrack.artwork = getCover(media.images, false);
     formatedTrack.duration = track.duration;
+    formatedTrack.mediaSlug = media.slug;
   }
   return formatedTrack;
 };
