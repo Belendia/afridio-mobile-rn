@@ -8,7 +8,7 @@ const SearchIntro = React.memo(() => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Find the media you love</Text>
-      <Text style={styles.subheader}>from a lots of authors and artists</Text>
+      <Text style={styles.subheader}>from lots of authors and artists</Text>
     </View>
   );
 });

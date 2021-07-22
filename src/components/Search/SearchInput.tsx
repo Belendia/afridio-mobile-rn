@@ -3,7 +3,7 @@ import {Keyboard, StyleSheet, TextInput} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {colors} from '../../constants/Colors';
-import {Text, View} from '../Themed';
+import {View} from '../Themed';
 
 type SearchInputProps = {
   onChangeText: (value: string) => void;

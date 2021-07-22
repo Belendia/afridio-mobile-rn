@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black800,
   },
-
   scrollView: {
     backgroundColor: colors.black800,
   },
