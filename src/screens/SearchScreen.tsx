@@ -21,9 +21,16 @@ const SearchScreen = () => {
     [], //[getQuery],
   );
 
+  const handleOnTextInputFocus = useCallback((focus: boolean) => {
+    setShowIntro(focus);
+  }, []);
+
   return (
     <View style={styles.container}>
-      <SearchInput onChangeText={onChangeText} />
+      <SearchInput
+        onChangeText={onChangeText}
+        onFocus={handleOnTextInputFocus}
+      />
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         style={styles.scrollView}>

@@ -7,14 +7,16 @@ import {View} from '../Themed';
 
 type SearchInputProps = {
   onChangeText: (value: string) => void;
+  onFocus: (focus: boolean) => void;
 };
 
-const SearchInput = ({onChangeText}: SearchInputProps) => {
+const SearchInput = ({onChangeText, onFocus}: SearchInputProps) => {
   const [query, setQuery] = useState('');
   const searchInput = useRef<TextInput>(null);
 
   const handleClear = useCallback(() => {
     setQuery('');
+    searchInput.current?.blur();
     Keyboard.dismiss();
   }, []);
 
@@ -39,7 +41,8 @@ const SearchInput = ({onChangeText}: SearchInputProps) => {
         numberOfLines={1}
         value={query}
         onChangeText={handleQuery}
-        // onFocus={handleInputFocus}
+        onFocus={() => onFocus(true)}
+        onBlur={() => onFocus(false)}
         placeholder="Search media, authors and artists"
         placeholderTextColor={colors.red300}
         selectionColor={colors.white}
