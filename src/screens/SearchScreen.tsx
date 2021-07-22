@@ -1,68 +1,70 @@
-import React, { useState } from "react";
-import { StyleSheet, Platform, TextInput, FlatList } from "react-native";
-import { MediaListCard } from "../components";
+import React, {useCallback, useState, useRef} from 'react';
+import {StyleSheet, Keyboard, TextInput, ScrollView} from 'react-native';
+import {MediaListCard, ProgressBar, SearchIntro} from '../components';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import categories from "../../assets/data/categories";
-import { View } from "../components/Themed";
-import { colors } from "../constants/Colors";
+import {View} from '../components/Themed';
+import {colors} from '../constants/Colors';
 
 const SearchScreen = () => {
-  const [query, setQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState('');
+  const [showLoading, setShowLoading] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
+  const searchInput = useRef<TextInput>(null);
 
-  const handleTextInput = (text: string) => {
-    setQuery(text);
+  const handleQuery = useCallback(
+    (text: string) => {
+      setQuery(text);
+      // getQuery(text);
+    },
+    [], //[getQuery],
+  );
 
-    setTimeout(() => {
-      if (query.length) {
-        // this.props.actions.retrieveMoviesSearchResults(this.state.query, 1)
-        // .then(() => {
-        // 	const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 });
-        // 	const dataSource = ds.cloneWithRows(this.props.searchResults.results);
-        // 	this.setState({
-        // 		dataSource,
-        // 		isLoading: false
-        // 	});
-        // });
-      }
-    }, 500);
-  };
+  const handleClear = useCallback(() => {
+    // getQuery('');
+    setQuery('');
 
-  const retriveNextPage = () => {};
-
-  const renderFlatList = () => {
-    let flatList;
-    if (query) {
-      flatList = (
-        <FlatList
-          data={categories.items[0].movies}
-          renderItem={({ item }) => <MediaListCard movie={item} />}
-          onEndReached={(type) => retriveNextPage()}
-          onEndReachedThreshold={1200}
-        />
-      );
-    } else {
-      flatList = <View />;
-    }
-
-    return flatList;
-  };
+    Keyboard.dismiss();
+  }, []); //[getQuery]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchbox}>
-        <View style={styles.searchboxBorder}>
-          <TextInput
-            style={styles.textInput}
-            autoFocus
-            returnKeyType={"search"}
-            value={query}
-            onChangeText={(text) => handleTextInput(text)}
-            underlineColorAndroid="transparent"
+      <View style={styles.searchBarContainer}>
+        <MaterialIcons
+          // onPress={onPress}
+          style={[{bottom: 6}, styles.searchIcon]}
+          name="search"
+          size={26}
+          color={colors.red300}
+        />
+
+        <TextInput
+          ref={searchInput}
+          autoFocus
+          numberOfLines={1}
+          value={query}
+          onChangeText={handleQuery}
+          // onFocus={handleInputFocus}
+          placeholder="Search media, authors and artists"
+          placeholderTextColor={colors.red300}
+          selectionColor={colors.white}
+          style={styles.searchInput}
+        />
+        {query.length > 0 && (
+          <MaterialIcons
+            onPress={handleClear}
+            style={styles.clearIcon}
+            name="close"
+            size={28}
+            color={colors.red300}
           />
-        </View>
+        )}
       </View>
-      {!isLoading && renderFlatList()}
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        style={styles.scrollView}>
+        {(showIntro && <SearchIntro />) || (showLoading && <ProgressBar />)}
+      </ScrollView>
     </View>
   );
 };
@@ -74,26 +76,40 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black800,
   },
-  textInput: {
-    backgroundColor: colors.white,
-    ...Platform.select({
-      ios: {
-        height: 35,
-      },
-      android: {
-        height: 48,
-      },
-    }),
+  searchBarContainer: {
+    backgroundColor: colors.black700,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
-  searchboxBorder: {
-    borderRadius: 3,
-    backgroundColor: "white",
-    paddingHorizontal: 3,
+  searchIcon: {
+    bottom: 0,
+    padding: 14,
+    height: '100%',
+    textAlignVertical: 'center',
   },
-  searchbox: {
-    backgroundColor: colors.black600,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginBottom: 16,
+  searchInput: {
+    fontSize: 16,
+    color: colors.red200,
+    height: '100%',
+    marginLeft: 4,
+    width: '70%',
+    letterSpacing: 0.4,
+    marginTop: 2,
+  },
+  clearIcon: {
+    position: 'absolute',
+    padding: 11.5,
+    height: '100%',
+    textAlignVertical: 'center',
+    right: 0,
+    paddingRight: 16,
+  },
+  scrollView: {
+    backgroundColor: colors.black800,
+  },
+  scrollContent: {flexGrow: 1},
+  loading: {
+    ...StyleSheet.absoluteFillObject,
   },
 });

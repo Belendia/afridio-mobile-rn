@@ -22,3 +22,4 @@ export * from './Player/PlaybackControl';
 export * from './Player/ProgressSlider';
 export * from './Player/SupportPlaybackControl';
 export * from './Form/CheckboxList';
+export * from './Search/SearchIntro';
