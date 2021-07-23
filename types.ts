@@ -86,3 +86,17 @@ export type Media = {
   narrators: string[];
   images: Image[];
 };
+
+export type Genre = {
+  slug: string;
+  name: string;
+};
+
+export type Language = {
+  name: string;
+};
+
+export type Format = {
+  name: string;
+  sequence: number;
+};

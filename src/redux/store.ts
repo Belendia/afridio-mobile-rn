@@ -3,13 +3,20 @@ import {configureStore} from '@reduxjs/toolkit';
 
 import reactotron from '../../reactotron.config';
 import rootReducer from './rootReducer';
-import {authEpics, homeEpics, mediaEpics, playlistEpics} from './slices';
+import {
+  authEpics,
+  homeEpics,
+  mediaEpics,
+  playlistEpics,
+  searchEpics,
+} from './slices';
 
 export const rootEpic = combineEpics(
   ...authEpics,
   ...homeEpics,
   ...mediaEpics,
   ...playlistEpics,
+  ...searchEpics,
 );
 
 const epicMiddleware = createEpicMiddleware();

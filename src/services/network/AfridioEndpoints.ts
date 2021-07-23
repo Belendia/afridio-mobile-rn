@@ -1,5 +1,5 @@
 class AfridioEndpoints {
-  V1 = "v1";
+  V1 = 'v1';
 
   login = () => `${this.V1}/user/login/`;
   logout = () => `${this.V1}/user/logout/`;
@@ -15,6 +15,7 @@ class AfridioEndpoints {
   };
   home = () => `${this.V1}/home/`;
   resend = () => `${this.V1}/phone/resend/`;
+  searchBy = () => `${this.V1}/searchby/`;
 }
 
 export default new AfridioEndpoints();

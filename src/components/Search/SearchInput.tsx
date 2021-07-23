@@ -11,6 +11,7 @@ type SearchInputProps = {
 };
 
 const SearchInput = ({onChangeText, onFocus}: SearchInputProps) => {
+  const [focus, setFocus] = useState(false);
   const [query, setQuery] = useState('');
   const searchInput = useRef<TextInput>(null);
 
@@ -20,29 +21,40 @@ const SearchInput = ({onChangeText, onFocus}: SearchInputProps) => {
     Keyboard.dismiss();
   }, []);
 
+  const onInputBoxFocus = useCallback(
+    (val: boolean) => {
+      setFocus(val);
+      onFocus(val);
+    },
+    [focus],
+  );
+
   const handleQuery = useCallback((text: string) => {
     setQuery(text);
     onChangeText(text);
   }, []);
 
+  const onBackPress = useCallback(() => {
+    if (focus) handleClear();
+  }, [focus]);
   return (
     <View style={styles.searchBarContainer}>
       <MaterialIcons
-        // onPress={onPress}
+        onPress={onBackPress}
         style={[{bottom: 6}, styles.searchIcon]}
-        name="search"
+        name={focus ? 'arrow-back' : 'search'}
         size={26}
         color={colors.red300}
       />
 
       <TextInput
         ref={searchInput}
-        autoFocus
+        autoFocus={false}
         numberOfLines={1}
         value={query}
         onChangeText={handleQuery}
-        onFocus={() => onFocus(true)}
-        onBlur={() => onFocus(false)}
+        onFocus={() => onInputBoxFocus(true)}
+        onBlur={() => onInputBoxFocus(false)}
         placeholder="Search media, authors and artists"
         placeholderTextColor={colors.red300}
         selectionColor={colors.white}
