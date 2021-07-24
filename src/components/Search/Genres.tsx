@@ -19,7 +19,7 @@ const Genres = ({genres, onGenrePress}: GenreOption) => {
       <View style={styles.container}>
         {genres.map((genre, index) => (
           <TouchableWithoutFeedback
-            onPress={() => onGenrePress(genre.name)}
+            onPress={() => onGenrePress(genre.slug)}
             key={index}>
             <GradientCard name={genre.name} index={index} />
           </TouchableWithoutFeedback>

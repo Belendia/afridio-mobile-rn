@@ -20,7 +20,7 @@ const Formats = ({formats, onFormatPress}: FormatOption) => {
         {formats.map((format, index) => (
           <View style={{backgroundColor: 'transparent', margin: 2}} key={index}>
             <TouchableWithoutFeedback
-              onPress={() => onFormatPress(format.name)}>
+              onPress={() => onFormatPress(format.slug)}>
               <Chip
                 title={format.name}
                 type="outline"

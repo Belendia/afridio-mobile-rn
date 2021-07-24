@@ -94,9 +94,11 @@ export type Genre = {
 
 export type Language = {
   name: string;
+  slug: string;
 };
 
 export type Format = {
   name: string;
   sequence: number;
+  slug: string;
 };

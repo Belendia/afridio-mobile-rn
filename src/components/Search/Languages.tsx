@@ -20,7 +20,7 @@ const Languages = ({languages, onLanguagePress}: LanguageOption) => {
         {languages.map((lang, index) => (
           <View style={{backgroundColor: 'transparent', margin: 2}} key={index}>
             <TouchableWithoutFeedback
-              onPress={() => onLanguagePress(lang.name)}>
+              onPress={() => onLanguagePress(lang.slug)}>
               <Chip
                 title={lang.name}
                 type="outline"
