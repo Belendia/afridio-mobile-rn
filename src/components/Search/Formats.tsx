@@ -27,6 +27,12 @@ const Formats = ({formats, onFormatPress}: FormatOption) => {
                 titleStyle={{fontSize: 14}}
                 buttonStyle={{padding: 5}}
                 disabled
+                icon={{
+                  name: 'newspaper-o',
+                  type: 'font-awesome',
+                  size: 20,
+                  color: 'white',
+                }}
               />
             </TouchableWithoutFeedback>
           </View>

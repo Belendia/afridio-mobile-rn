@@ -15,7 +15,7 @@ const GradientCard = memo(({name, index}: GradientCardOption) => {
   return (
     <LinearGradient
       colors={[colors[0], colors[1]]}
-      start={{x: 1, y: 0}}
+      start={{x: 0, y: 0}}
       end={{x: 1, y: 1}}
       style={styles.container}>
       <Text>{name}</Text>

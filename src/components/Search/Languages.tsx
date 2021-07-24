@@ -27,6 +27,12 @@ const Languages = ({languages, onLanguagePress}: LanguageOption) => {
                 titleStyle={{fontSize: 14}}
                 buttonStyle={{padding: 5}}
                 disabled
+                icon={{
+                  name: 'language',
+                  type: 'font-awesome',
+                  size: 20,
+                  color: 'white',
+                }}
               />
             </TouchableWithoutFeedback>
           </View>
