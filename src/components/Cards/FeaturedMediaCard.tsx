@@ -69,7 +69,7 @@ const FeaturedMediaCard = memo(
             </View>
             <Text
               style={styles.cardDescription}
-              numberOfLines={3}
+              numberOfLines={2}
               ellipsizeMode="tail">
               {description}
             </Text>

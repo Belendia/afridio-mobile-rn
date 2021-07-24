@@ -55,7 +55,7 @@ const SearchInput = ({onChangeText, onFocus}: SearchInputProps) => {
         onChangeText={handleQuery}
         onFocus={() => onInputBoxFocus(true)}
         onBlur={() => onInputBoxFocus(false)}
-        placeholder="Search media, authors and artists"
+        placeholder="Search media"
         placeholderTextColor={colors.red300}
         selectionColor={colors.white}
         style={styles.searchInput}
