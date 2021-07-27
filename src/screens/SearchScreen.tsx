@@ -22,7 +22,8 @@ import {
 } from '../redux/slices';
 
 const SearchScreen = () => {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [showBack, setShowBack] = useState(false);
   const dispatch = useDispatch();
 
   //redux
@@ -58,25 +59,27 @@ const SearchScreen = () => {
     [],
   );
 
-  const onSubmitEditing = useCallback(
-    (text: string) => {
-      fetchData(text, null, null, null);
-    },
-    [], //[getQuery],
-  );
+  const onSubmitEditing = useCallback((text: string) => {
+    fetchData(text, null, null, null);
+  }, []);
 
-  const onFormatPress = useCallback((name: string) => {
-    console.log(name);
+  const onBackButtonPressed = useCallback(() => setShowBack(false), [showBack]);
+
+  const onFormatPress = useCallback((format: string) => {
+    fetchData(null, format, null, null);
+    setShowBack(true);
   }, []);
-  const onLanguagePress = useCallback((name: string) => {
-    console.log(name);
+  const onLanguagePress = useCallback((language: string) => {
+    fetchData(null, null, language, null);
+    setShowBack(true);
   }, []);
-  const onGenrePress = useCallback((name: string) => {
-    console.log(name);
+  const onGenrePress = useCallback((genre: string) => {
+    fetchData(null, null, null, genre);
+    setShowBack(true);
   }, []);
 
   const handleOnTextInputFocus = useCallback((focus: boolean) => {
-    setShowIntro(focus);
+    setShowMessage(focus);
     dispatch(clearSearchResult());
   }, []);
 
@@ -115,6 +118,8 @@ const SearchScreen = () => {
       <SearchInput
         onSubmitEditing={onSubmitEditing}
         onFocus={handleOnTextInputFocus}
+        showBackButton={showBack}
+        onBackButtonPressed={onBackButtonPressed}
       />
       {searchResult && searchResult.length > 0 ? (
         <FlatList
@@ -131,7 +136,7 @@ const SearchScreen = () => {
           style={styles.scrollView}>
           {searching ? (
             <ProgressBar />
-          ) : showIntro || loadingSearchBy ? (
+          ) : showMessage || loadingSearchBy ? (
             <SearchMessage
               info={searchResult && searchResult.length === 0 ? false : true}
             />

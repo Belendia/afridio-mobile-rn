@@ -6,11 +6,18 @@ import {colors} from '../../constants/Colors';
 import {View} from '../Themed';
 
 type SearchInputProps = {
+  showBackButton: boolean;
   onSubmitEditing: (value: string) => void;
   onFocus: (focus: boolean) => void;
+  onBackButtonPressed: () => void;
 };
 
-const SearchInput = ({onSubmitEditing, onFocus}: SearchInputProps) => {
+const SearchInput = ({
+  showBackButton,
+  onSubmitEditing,
+  onFocus,
+  onBackButtonPressed,
+}: SearchInputProps) => {
   const [showBack, setShowBack] = useState(false);
   const [query, setQuery] = useState('');
   const searchInput = useRef<TextInput>(null);
@@ -36,13 +43,14 @@ const SearchInput = ({onSubmitEditing, onFocus}: SearchInputProps) => {
 
   const onBackPress = useCallback(() => {
     handleClear();
+    onBackButtonPressed();
   }, [showBack, query]);
   return (
     <View style={styles.searchBarContainer}>
       <MaterialIcons
         onPress={onBackPress}
         style={[{bottom: 6}, styles.searchIcon]}
-        name={showBack ? 'arrow-back' : 'search'}
+        name={showBack || showBackButton ? 'arrow-back' : 'search'}
         size={26}
         color={colors.red300}
       />
@@ -74,6 +82,9 @@ const SearchInput = ({onSubmitEditing, onFocus}: SearchInputProps) => {
   );
 };
 
+SearchInput.defaultProps = {
+  showBackButton: false,
+};
 export {SearchInput};
 
 const styles = StyleSheet.create({

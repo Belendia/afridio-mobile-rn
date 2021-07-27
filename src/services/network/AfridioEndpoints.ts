@@ -33,7 +33,7 @@ class AfridioEndpoints {
     }
 
     if (genre) {
-      query = query ? `&genre=${genre}` : `?genre=${genre}`;
+      query = query ? `&genres=${genre}` : `?genres=${genre}`;
     }
     return `${this.V1}/medias/${query}`;
   };
