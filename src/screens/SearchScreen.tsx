@@ -68,14 +68,17 @@ const SearchScreen = () => {
   const onFormatPress = useCallback((format: string) => {
     fetchData(null, format, null, null);
     setShowBack(true);
+    setShowMessage(true);
   }, []);
   const onLanguagePress = useCallback((language: string) => {
     fetchData(null, null, language, null);
     setShowBack(true);
+    setShowMessage(true);
   }, []);
   const onGenrePress = useCallback((genre: string) => {
     fetchData(null, null, null, genre);
     setShowBack(true);
+    setShowMessage(true);
   }, []);
 
   const handleOnTextInputFocus = useCallback((focus: boolean) => {
