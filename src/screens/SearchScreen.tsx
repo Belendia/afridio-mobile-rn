@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, ScrollView, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {
   MediaListCard,
   ProgressBar,
   SearchInput,
-  SearchIntro,
+  SearchMessage,
   Languages,
   Genres,
   Formats,
@@ -15,26 +15,52 @@ import {
 import {View} from '../components/Themed';
 import {colors} from '../constants/Colors';
 import {RootStoreType} from '../redux/rootReducer';
-import {startToGetSearchBy} from '../redux/slices';
+import {
+  startToGetSearchBy,
+  startSearchingMedia,
+  clearSearchResult,
+} from '../redux/slices';
 
 const SearchScreen = () => {
   const [showIntro, setShowIntro] = useState(false);
-
   const dispatch = useDispatch();
 
   //redux
-  const {loadingSearchBy, searchBy} = useSelector((state: RootStoreType) => ({
-    loadingSearchBy: state.searchReducer.loadingSearchBy,
-    searchBy: state.searchReducer.searchBy,
-  }));
+  const {loadingSearchBy, searchBy, searchResult, searching} = useSelector(
+    (state: RootStoreType) => ({
+      loadingSearchBy: state.searchReducer.loadingSearchBy,
+      searchBy: state.searchReducer.searchBy,
+      searchResult: state.searchReducer.searchResult,
+      searching: state.searchReducer.searching,
+    }),
+  );
 
   useEffect(() => {
     dispatch(startToGetSearchBy());
   }, []);
 
-  const onChangeText = useCallback(
+  const fetchData = useCallback(
+    (
+      search: string | null,
+      format: string | null,
+      language: string | null,
+      genre: string | null,
+    ) => {
+      dispatch(
+        startSearchingMedia({
+          search: search,
+          format: format,
+          language: language,
+          genre: genre,
+        }),
+      );
+    },
+    [],
+  );
+
+  const onSubmitEditing = useCallback(
     (text: string) => {
-      console.log(text);
+      fetchData(text, null, null, null);
     },
     [], //[getQuery],
   );
@@ -51,6 +77,7 @@ const SearchScreen = () => {
 
   const handleOnTextInputFocus = useCallback((focus: boolean) => {
     setShowIntro(focus);
+    dispatch(clearSearchResult());
   }, []);
 
   let format = <></>;
@@ -86,15 +113,33 @@ const SearchScreen = () => {
   return (
     <View style={styles.container}>
       <SearchInput
-        onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
         onFocus={handleOnTextInputFocus}
       />
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        style={styles.scrollView}>
-        {showIntro || loadingSearchBy ? <SearchIntro /> : combinedComponents}
-        {/* { <ProgressBar />} */}
-      </ScrollView>
+      {searchResult && searchResult.length > 0 ? (
+        <FlatList
+          style={styles.container}
+          data={searchResult}
+          renderItem={({item}) => (
+            <MediaListCard key={item.slug} media={item} />
+          )}
+          keyExtractor={item => item.slug}
+        />
+      ) : (
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          style={styles.scrollView}>
+          {searching ? (
+            <ProgressBar />
+          ) : showIntro || loadingSearchBy ? (
+            <SearchMessage
+              info={searchResult && searchResult.length === 0 ? false : true}
+            />
+          ) : (
+            combinedComponents
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 };

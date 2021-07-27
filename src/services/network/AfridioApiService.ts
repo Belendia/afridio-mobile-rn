@@ -209,6 +209,20 @@ class AfridioApiService {
         withToken: true,
       }),
     );
+
+  mediaSearch = (
+    search: string | null,
+    format: string | null,
+    language: string | null,
+    genre: string | null,
+  ) =>
+    from(
+      this.api({
+        url: AfridioEndpoints.mediaSearch(search, format, language, genre),
+        verb: 'GET',
+        withToken: true,
+      }),
+    );
 }
 
 export default new AfridioApiService();

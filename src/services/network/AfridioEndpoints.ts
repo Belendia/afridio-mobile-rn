@@ -16,6 +16,27 @@ class AfridioEndpoints {
   home = () => `${this.V1}/home/`;
   resend = () => `${this.V1}/phone/resend/`;
   searchBy = () => `${this.V1}/searchby/`;
+  mediaSearch = (
+    search: string | null,
+    format: string | null,
+    language: string | null,
+    genre: string | null,
+  ) => {
+    let query = null;
+    if (search) query = `?search=${search}`;
+    if (format) {
+      query = query ? `&category=${format}` : `?category=${format}`;
+    }
+
+    if (language) {
+      query = query ? `&language=${language}` : `?language=${language}`;
+    }
+
+    if (genre) {
+      query = query ? `&genre=${genre}` : `?genre=${genre}`;
+    }
+    return `${this.V1}/medias/${query}`;
+  };
 }
 
 export default new AfridioEndpoints();

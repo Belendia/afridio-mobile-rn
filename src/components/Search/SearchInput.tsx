@@ -6,12 +6,12 @@ import {colors} from '../../constants/Colors';
 import {View} from '../Themed';
 
 type SearchInputProps = {
-  onChangeText: (value: string) => void;
+  onSubmitEditing: (value: string) => void;
   onFocus: (focus: boolean) => void;
 };
 
-const SearchInput = ({onChangeText, onFocus}: SearchInputProps) => {
-  const [focus, setFocus] = useState(false);
+const SearchInput = ({onSubmitEditing, onFocus}: SearchInputProps) => {
+  const [showBack, setShowBack] = useState(false);
   const [query, setQuery] = useState('');
   const searchInput = useRef<TextInput>(null);
 
@@ -19,30 +19,30 @@ const SearchInput = ({onChangeText, onFocus}: SearchInputProps) => {
     setQuery('');
     searchInput.current?.blur();
     Keyboard.dismiss();
+    setShowBack(false);
+    onFocus(false);
   }, []);
 
-  const onInputBoxFocus = useCallback(
-    (val: boolean) => {
-      setFocus(val);
-      onFocus(val);
-    },
-    [focus],
-  );
+  const onInputBoxFocus = useCallback(() => {
+    if (query.length === 0) {
+      setShowBack(true);
+      onFocus(true);
+    }
+  }, [showBack, query]);
 
   const handleQuery = useCallback((text: string) => {
     setQuery(text);
-    onChangeText(text);
   }, []);
 
   const onBackPress = useCallback(() => {
-    if (focus) handleClear();
-  }, [focus]);
+    handleClear();
+  }, [showBack, query]);
   return (
     <View style={styles.searchBarContainer}>
       <MaterialIcons
         onPress={onBackPress}
         style={[{bottom: 6}, styles.searchIcon]}
-        name={focus ? 'arrow-back' : 'search'}
+        name={showBack ? 'arrow-back' : 'search'}
         size={26}
         color={colors.red300}
       />
@@ -52,9 +52,10 @@ const SearchInput = ({onChangeText, onFocus}: SearchInputProps) => {
         autoFocus={false}
         numberOfLines={1}
         value={query}
+        returnKeyType={'search'}
         onChangeText={handleQuery}
-        onFocus={() => onInputBoxFocus(true)}
-        onBlur={() => onInputBoxFocus(false)}
+        onFocus={() => onInputBoxFocus()}
+        onSubmitEditing={e => onSubmitEditing(e.nativeEvent.text)}
         placeholder="Search media"
         placeholderTextColor={colors.red300}
         selectionColor={colors.white}
