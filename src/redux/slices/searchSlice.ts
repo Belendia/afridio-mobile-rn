@@ -17,7 +17,7 @@ type SearchReducerType = {
   searchBy: SearchBy | null;
   loadingSearchBy: boolean;
   searchResult: Media[] | null;
-  searchError: string | null;
+  error: string | null;
   searching: boolean;
 };
 
@@ -25,7 +25,7 @@ const initialState: SearchReducerType = {
   searchBy: null,
   loadingSearchBy: false,
   searchResult: null,
-  searchError: null,
+  error: null,
   searching: false,
 };
 
@@ -36,20 +36,22 @@ const searchSlice = createSlice({
     startToGetSearchBy: state => ({
       ...state,
       loadingSearchBy: true,
+      error: null,
     }),
     searchBySuccess: (state, action) => ({
       ...state,
       searchBy: action.payload,
       loadingSearchBy: false,
     }),
-    searchByFailed: state => ({
+    searchByFailed: (state, action) => ({
       ...state,
       loadingSearchBy: false,
+      error: action.payload,
     }),
     startSearchingMedia: (state, payload) => ({
       ...state,
       searching: true,
-      searchError: null,
+      error: null,
     }),
     searchMediaSuccess: (state, action) => ({
       ...state,
@@ -59,7 +61,7 @@ const searchSlice = createSlice({
     searchMediaFailed: (state, action) => ({
       ...state,
       searching: false,
-      searchError: action.payload,
+      error: action.payload,
     }),
     clearSearchResult: state => ({
       ...state,
@@ -78,10 +80,13 @@ export const getSearchByEpic = (action$: Observable<Action<any>>) =>
           return searchBySuccess(res);
         }),
         catchError(err => {
-          if (err && err._status === 401) {
+          let message = 'Something went wrong';
+          if (err && err._status === 'Offline') {
+            message = err._message;
+          } else if (err && err._status === 401) {
             return of(authLogout('logout'));
           }
-          return of(searchByFailed());
+          return of(searchByFailed(message));
         }),
       );
     }),
@@ -102,10 +107,13 @@ export const getSearchEpic = (action$: Observable<Action<any>>) =>
           return searchMediaSuccess(res.results);
         }),
         catchError(err => {
-          if (err && err._status === 401) {
+          let message = 'Something went wrong';
+          if (err && err._status === 'Offline') {
+            message = err._message;
+          } else if (err && err._status === 401) {
             return of(authLogout('logout'));
           }
-          return of(searchMediaFailed(err));
+          return of(searchMediaFailed(message));
         }),
       );
     }),

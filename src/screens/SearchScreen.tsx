@@ -10,6 +10,7 @@ import {
   Languages,
   Genres,
   Formats,
+  Error,
 } from '../components';
 
 import {View} from '../components/Themed';
@@ -27,17 +28,19 @@ const SearchScreen = () => {
   const dispatch = useDispatch();
 
   //redux
-  const {loadingSearchBy, searchBy, searchResult, searching} = useSelector(
-    (state: RootStoreType) => ({
+  const {loadingSearchBy, searchBy, searchResult, searching, error} =
+    useSelector((state: RootStoreType) => ({
       loadingSearchBy: state.searchReducer.loadingSearchBy,
       searchBy: state.searchReducer.searchBy,
       searchResult: state.searchReducer.searchResult,
       searching: state.searchReducer.searching,
-    }),
-  );
+      error: state.searchReducer.error,
+    }));
+
+  const fetchSearchBy = useCallback(() => dispatch(startToGetSearchBy()), []);
 
   useEffect(() => {
-    dispatch(startToGetSearchBy());
+    fetchSearchBy();
   }, []);
 
   const fetchData = useCallback(
@@ -85,6 +88,10 @@ const SearchScreen = () => {
     setShowMessage(focus);
     dispatch(clearSearchResult());
   }, []);
+
+  if (error && typeof error === 'string') {
+    return <Error title={'Error'} message={error} onRetry={fetchSearchBy} />;
+  }
 
   let format = <></>;
   if (searchBy && searchBy?.formats) {
