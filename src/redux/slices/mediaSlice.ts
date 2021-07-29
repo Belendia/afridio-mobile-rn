@@ -3,7 +3,7 @@ import {ofType} from 'redux-observable';
 import {of, Observable, from} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 
-import {Media} from '../../../types';
+import {Media, MediaSource} from '../../../types';
 import {Action} from '../rootReducer';
 import AfridioApiService from '../../services/network/AfridioApiService';
 import {authLogout} from './authSlice';
@@ -19,6 +19,7 @@ type MediaReducerType = {
   loadingList: boolean;
   next: number;
   library: Media[];
+  mediaSource: MediaSource;
 };
 
 const initialState: MediaReducerType = {
@@ -31,6 +32,7 @@ const initialState: MediaReducerType = {
   loadingList: false,
   next: 0,
   library: [],
+  mediaSource: MediaSource.Network,
 };
 
 const mediaSlice = createSlice({
@@ -110,6 +112,10 @@ const mediaSlice = createSlice({
         }
       }
     },
+    setMediaSource: (state, action) => ({
+      ...state,
+      mediaSource: action.payload,
+    }),
   },
 });
 
@@ -202,6 +208,7 @@ export const {
   startToRemoveFromLibrary,
   removeFromLibrary,
   markTrackAsDownloaded,
+  setMediaSource,
 } = mediaSlice.actions;
 
 export default mediaSlice.reducer;

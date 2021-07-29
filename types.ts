@@ -107,3 +107,8 @@ export type Format = {
   sequence: number;
   slug: string;
 };
+
+export enum MediaSource {
+  Network,
+  Local,
+}

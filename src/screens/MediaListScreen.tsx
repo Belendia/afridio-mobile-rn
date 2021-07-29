@@ -1,24 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
   Platform,
   FlatList,
   RefreshControl,
-} from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigation, useRoute } from "@react-navigation/native";
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-import { View } from "../components/Themed";
-import { ProgressBar, MediaListCard, Error } from "../components";
-import { colors } from "../constants/Colors";
-import { RootStoreType } from "../redux/rootReducer";
+import {View} from '../components/Themed';
+import {ProgressBar, MediaListCard, Error} from '../components';
+import {colors} from '../constants/Colors';
+import {RootStoreType} from '../redux/rootReducer';
 import {
   startToGetMediaListByFormat,
   clearMedia,
-} from "../redux/slices/mediaSlice";
+  setMediaSource,
+} from '../redux/slices/mediaSlice';
+import {MediaSource} from '../../types';
 
-const { height } = Dimensions.get("window");
+const {height} = Dimensions.get('window');
 
 const MediaListScreen = () => {
   const dispatch = useDispatch();
@@ -27,7 +29,7 @@ const MediaListScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
 
-  const { mediaListByFormat, mediaListByFormatError, next, loadingList } =
+  const {mediaListByFormat, mediaListByFormatError, next, loadingList} =
     useSelector((state: RootStoreType) => ({
       mediaListByFormat: state.mediaReducer.mediaListByFormat,
       mediaListByFormatError: state.mediaReducer.mediaListByFormatError,
@@ -39,7 +41,7 @@ const MediaListScreen = () => {
     setIsRefresingNextPage(true);
     if (next !== null) {
       dispatch(
-        startToGetMediaListByFormat({ slug: route.params?.slug, page: next })
+        startToGetMediaListByFormat({slug: route.params?.slug, page: next}),
       );
     } else {
       setIsRefresingNextPage(false);
@@ -49,7 +51,7 @@ const MediaListScreen = () => {
   const fetchData = useCallback(() => {
     if (route.params?.slug) {
       dispatch(
-        startToGetMediaListByFormat({ slug: route.params?.slug, page: null })
+        startToGetMediaListByFormat({slug: route.params?.slug, page: null}),
       );
     } else {
       navigation.goBack();
@@ -57,22 +59,22 @@ const MediaListScreen = () => {
   }, [route.params?.slug, dispatch, startToGetMediaListByFormat]);
 
   useEffect(() => {
+    dispatch(setMediaSource(MediaSource.Network));
     fetchData();
-    // return () => {};
   }, []);
 
   useEffect(
     () =>
-      navigation.addListener("beforeRemove", (e) => {
+      navigation.addListener('beforeRemove', e => {
         dispatch(clearMedia());
       }),
-    [navigation]
+    [navigation],
   );
 
-  if (mediaListByFormatError && typeof mediaListByFormatError === "string") {
+  if (mediaListByFormatError && typeof mediaListByFormatError === 'string') {
     return (
       <Error
-        title={"Error"}
+        title={'Error'}
         message={mediaListByFormatError}
         onRetry={fetchData}
       />
@@ -80,19 +82,17 @@ const MediaListScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1, height: height }}>
+    <View style={{flex: 1, height: height}}>
       <FlatList
         style={styles.container}
         onEndReached={() => fetchNextPage()}
         onEndReachedThreshold={0.5}
         data={mediaListByFormat}
-        renderItem={({ item }) => (
-          <MediaListCard key={item.slug} media={item} />
-        )}
-        keyExtractor={(item) => item.slug}
+        renderItem={({item}) => <MediaListCard key={item.slug} media={item} />}
+        keyExtractor={item => item.slug}
         ListFooterComponent={() =>
           isRefreshingNextPage ? (
-            <View style={{ height: 50 }}>
+            <View style={{height: 50}}>
               <ProgressBar />
             </View>
           ) : (
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   progressBar: {
     backgroundColor: colors.black800,
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
