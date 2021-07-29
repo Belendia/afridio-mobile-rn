@@ -31,6 +31,10 @@ export type SettingsParamList = {
   SettingsScreen: undefined;
 };
 
+export type LibraryParamList = {
+  LibraryScreen: undefined;
+};
+
 export type User = {
   name: string;
   phone_number: string;

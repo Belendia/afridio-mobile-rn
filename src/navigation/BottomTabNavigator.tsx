@@ -5,9 +5,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../constants/Colors';
 import HomeNavigator from './HomeNavigator';
 import SearchNavigator from './SearchNavigator';
-
-import {BottomTabParamList} from '../../types';
+import LibraryNavigator from './LibraryNavigator';
 import SettingsNavigator from './SettingsNavigator';
+import {BottomTabParamList} from '../../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -50,7 +50,7 @@ const BottomTabNavigator = () => {
       />
       <BottomTab.Screen
         name="Library"
-        component={SearchNavigator}
+        component={LibraryNavigator}
         options={{
           tabBarIcon: ({color, focused}) =>
             focused ? (
