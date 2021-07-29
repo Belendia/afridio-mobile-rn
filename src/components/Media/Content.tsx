@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import RNFS from 'react-native-fs';
 
 import {Chip} from './Chip';
 import {Cover} from './Cover';
@@ -12,6 +13,7 @@ import Info from './Info';
 import Tracks from './Tracks';
 import {Media} from '../../../types';
 import {Size} from '../../constants/Options';
+import {downloadTracks} from '../../helpers/Utils';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -22,6 +24,16 @@ type ContentProps = {
 };
 
 const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
+  const download = useCallback(() => {
+    console.log('downloading');
+    console.log(RNFS.DocumentDirectoryPath);
+    RNFS.readDir(RNFS.DocumentDirectoryPath).then(result => {
+      result.map(f => console.log(f));
+    });
+    if (media) {
+      downloadTracks(media);
+    }
+  }, []);
   return (
     <ScrollView
       style={styles.mainContainer}
@@ -68,7 +80,7 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
           <MediaButton
             name="arrow-down-circle"
             label="Download"
-            onPress={() => true}
+            onPress={download}
           />
         </View>
 

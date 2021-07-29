@@ -1,13 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ofType} from 'redux-observable';
-import {of, Observable} from 'rxjs';
+import {of, Observable, from} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 
 import {Media} from '../../../types';
 import {Action} from '../rootReducer';
 import AfridioApiService from '../../services/network/AfridioApiService';
 import {authLogout} from './authSlice';
-import {getQueryParam} from '../../helpers/Utils';
+import {deleteTracks, getQueryParam} from '../../helpers/Utils';
 
 type MediaReducerType = {
   media: Media | null;
@@ -18,6 +18,7 @@ type MediaReducerType = {
   loading: boolean;
   loadingList: boolean;
   next: number;
+  library: Media[];
 };
 
 const initialState: MediaReducerType = {
@@ -29,6 +30,7 @@ const initialState: MediaReducerType = {
   loading: false,
   loadingList: false,
   next: 0,
+  library: [],
 };
 
 const mediaSlice = createSlice({
@@ -89,6 +91,25 @@ const mediaSlice = createSlice({
       ...state,
       selectedMediaSlug: action.payload,
     }),
+    addToLibrary(state, action) {
+      state.library.push(action.payload);
+    },
+    startToRemoveFromLibrary: (state, action) => ({
+      ...state,
+    }),
+    removeFromLibrary(state, action) {
+      state.library.splice(action.payload, 1);
+    },
+    markTrackAsDownloaded(state, action) {
+      const m = state.library.find(m => m.slug === action.payload.media.slug);
+      if (m) {
+        const t = m.tracks.find(t => t.slug === action.payload.track.slug);
+        if (t) {
+          t.file_url = action.payload.track.file_url;
+          t.downloaded = true;
+        }
+      }
+    },
   },
 });
 
@@ -147,6 +168,24 @@ export const getMediaListByFormatEpic = (action$: Observable<Action<any>>) =>
     }),
   );
 
+export const deleteTracksEpic = (action$: Observable<Action<any>>) =>
+  action$.pipe(
+    ofType(startToRemoveFromLibrary.type),
+    switchMap(({payload}) => {
+      const {index, media} = payload;
+      return from(
+        new Promise(function (resolve, reject) {
+          deleteTracks(media);
+          resolve(index);
+        }),
+      ).pipe(
+        map(res => {
+          return removeFromLibrary(res);
+        }),
+      );
+    }),
+  );
+
 export const mediaEpics = [getMediaEpic, getMediaListByFormatEpic];
 
 export const {
@@ -159,6 +198,10 @@ export const {
   getMediaListByFormatFailed,
   clearMedia,
   setMediaSlug,
+  addToLibrary,
+  startToRemoveFromLibrary,
+  removeFromLibrary,
+  markTrackAsDownloaded,
 } = mediaSlice.actions;
 
 export default mediaSlice.reducer;

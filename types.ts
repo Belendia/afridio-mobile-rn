@@ -47,6 +47,7 @@ export type Track = {
   file_url: string;
   duration: number;
   sequence: number;
+  downloaded: boolean;
 };
 
 export type Image = {
