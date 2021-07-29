@@ -6,17 +6,18 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {View, Text} from '../Themed';
 import {colors} from '../../constants/Colors';
 import {Chip} from '../Media/Chip';
-import {Media} from '../../../types';
+import {Media, MediaSource} from '../../../types';
 import {Cover} from '../Media/Cover';
 import {useDispatch} from 'react-redux';
-import {setMediaSlug} from '../../redux/slices';
+import {setMediaSlug, setMediaSource} from '../../redux/slices';
 
 type MediaListCardProps = {
   media: Media;
+  mediaSource: MediaSource;
 };
 
 const MediaListCard = memo(
-  ({media}: MediaListCardProps) => {
+  ({media, mediaSource}: MediaListCardProps) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
@@ -26,6 +27,7 @@ const MediaListCard = memo(
           activeOpacity={0.9}
           onPress={() => {
             dispatch(setMediaSlug(media.slug));
+            dispatch(dispatch(setMediaSource(mediaSource)));
             navigation.navigate('MediaScreen', {
               slug: media.slug,
             });

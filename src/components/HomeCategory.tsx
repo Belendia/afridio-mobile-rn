@@ -1,12 +1,12 @@
-import React from "react";
-import { StyleSheet, FlatList, TouchableOpacity, Platform } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import React from 'react';
+import {StyleSheet, FlatList, TouchableOpacity, Platform} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch} from 'react-redux';
 
-import { View, Text } from "./Themed";
-import { SimpleMediaCard } from "./Cards/SimpleMediaCard";
-import { colors } from "../constants/Colors";
-import { Media } from "../../types";
+import {View, Text} from './Themed';
+import {SimpleMediaCard} from './Cards/SimpleMediaCard';
+import {colors} from '../constants/Colors';
+import {Media, MediaSource} from '../../types';
 
 type HomeCategoryProps = {
   id: string;
@@ -14,7 +14,7 @@ type HomeCategoryProps = {
   medias: Media[];
 };
 
-const HomeCategory = ({ id, title, medias }: HomeCategoryProps) => {
+const HomeCategory = ({id, title, medias}: HomeCategoryProps) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -26,20 +26,25 @@ const HomeCategory = ({ id, title, medias }: HomeCategoryProps) => {
           <Text
             style={styles.listHeadingRight}
             onPress={() => {
-              navigation.navigate("Home", {
-                screen: "MediaListScreen",
-                params: { slug: id },
+              navigation.navigate('Home', {
+                screen: 'MediaListScreen',
+                params: {slug: id},
               });
-            }}
-          >
+            }}>
             See all
           </Text>
         </TouchableOpacity>
       </View>
       <FlatList
         data={medias}
-        renderItem={({ item }) => <SimpleMediaCard key={item.slug} {...item} />}
-        keyExtractor={(item) => item.slug}
+        renderItem={({item}) => (
+          <SimpleMediaCard
+            key={item.slug}
+            media={item}
+            mediaSource={MediaSource.Network}
+          />
+        )}
+        keyExtractor={item => item.slug}
         horizontal
         showsHorizontalScrollIndicator={false}
       />
@@ -57,21 +62,21 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 170,
-    resizeMode: "cover",
+    resizeMode: 'cover',
     borderRadius: 5,
     margin: 5,
   },
   listHeading: {
     paddingHorizontal: 2,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 15,
     marginTop: 30,
   },
   listHeadingLeft: {
     color: colors.red300,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 18,
   },
   listHeadingRight: {

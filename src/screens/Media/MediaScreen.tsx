@@ -12,7 +12,6 @@ import {
   setPlaylistMedia,
   startTogglePlay,
   setCurrentTrackIndex,
-  setMediaSource,
 } from '../../redux/slices';
 import {
   ProgressBar,
@@ -23,7 +22,6 @@ import {
   Backdrop,
 } from '../../components';
 import {getTrack} from '../../helpers/Utils';
-import {MediaSource} from '../../../types';
 
 const MediaScreen = () => {
   const dispatch = useDispatch();
@@ -50,7 +48,6 @@ const MediaScreen = () => {
   }, [route.params?.slug]);
 
   useEffect(() => {
-    dispatch(setMediaSource(MediaSource.Network));
     fetchData();
   }, [fetchData]);
 

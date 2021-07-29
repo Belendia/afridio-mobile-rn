@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, ScrollView, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import {MediaSource} from '../../types';
 
 import {
   MediaListCard,
@@ -136,7 +137,11 @@ const SearchScreen = () => {
           style={styles.container}
           data={searchResult}
           renderItem={({item}) => (
-            <MediaListCard key={item.slug} media={item} />
+            <MediaListCard
+              key={item.slug}
+              media={item}
+              mediaSource={MediaSource.Network}
+            />
           )}
           keyExtractor={item => item.slug}
         />

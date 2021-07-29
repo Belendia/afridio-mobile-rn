@@ -9,23 +9,32 @@ import {useDispatch} from 'react-redux';
 
 import {View, Text} from '../Themed';
 import {colors} from '../../constants/Colors';
-import {Media} from '../../../types';
+import {Media, MediaSource} from '../../../types';
 import {Chip} from '../Media/Chip';
-import {setMediaLoadingTrue, setMediaSlug} from '../../redux/slices';
+import {
+  setMediaLoadingTrue,
+  setMediaSlug,
+  setMediaSource,
+} from '../../redux/slices';
+
+type FeaturedMediaCardProps = {
+  media: Media;
+  mediaSource: MediaSource;
+};
 
 const FeaturedMediaCard = memo(
-  ({slug, title, images, genres, description}: Media) => {
+  ({media, mediaSource}: FeaturedMediaCardProps) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
     let poster = null;
-    if (images?.length > 0) {
-      poster = images.find(img => img.width === 500);
+    if (media.images?.length > 0) {
+      poster = media.images.find(img => img.width === 500);
     }
 
     let cover = null;
-    if (images?.length > 0) {
-      cover = images.find(img => img.width === 300);
+    if (media.images?.length > 0) {
+      cover = media.images.find(img => img.width === 300);
     }
     return (
       <View>
@@ -57,9 +66,11 @@ const FeaturedMediaCard = memo(
           )}
           <View style={styles.cardDetails}>
             <Text style={styles.cardTitle} numberOfLines={2}>
-              {title}
+              {media.title}
             </Text>
-            {genres && genres.length > 0 && <Chip values={[genres[0]]} />}
+            {media.genres && media.genres.length > 0 && (
+              <Chip values={[media.genres[0]]} />
+            )}
 
             <View style={styles.cardNumbers}>
               <View style={styles.cardHeart}>
@@ -71,7 +82,7 @@ const FeaturedMediaCard = memo(
               style={styles.cardDescription}
               numberOfLines={2}
               ellipsizeMode="tail">
-              {description}
+              {media.description}
             </Text>
             <Button
               title="View Detail"
@@ -84,10 +95,11 @@ const FeaturedMediaCard = memo(
                  * that before it gets the latest data.
                  **/
 
+                dispatch(setMediaSource(mediaSource));
                 dispatch(setMediaLoadingTrue());
-                dispatch(setMediaSlug(slug));
+                dispatch(setMediaSlug(media.slug));
                 navigation.navigate('MediaScreen', {
-                  slug: slug,
+                  slug: media.slug,
                 });
               }}
             />

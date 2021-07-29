@@ -16,7 +16,6 @@ import {RootStoreType} from '../redux/rootReducer';
 import {
   startToGetMediaListByFormat,
   clearMedia,
-  setMediaSource,
 } from '../redux/slices/mediaSlice';
 import {MediaSource} from '../../types';
 
@@ -59,7 +58,6 @@ const MediaListScreen = () => {
   }, [route.params?.slug, dispatch, startToGetMediaListByFormat]);
 
   useEffect(() => {
-    dispatch(setMediaSource(MediaSource.Network));
     fetchData();
   }, []);
 
@@ -88,7 +86,13 @@ const MediaListScreen = () => {
         onEndReached={() => fetchNextPage()}
         onEndReachedThreshold={0.5}
         data={mediaListByFormat}
-        renderItem={({item}) => <MediaListCard key={item.slug} media={item} />}
+        renderItem={({item}) => (
+          <MediaListCard
+            key={item.slug}
+            media={item}
+            mediaSource={MediaSource.Network}
+          />
+        )}
         keyExtractor={item => item.slug}
         ListFooterComponent={() =>
           isRefreshingNextPage ? (

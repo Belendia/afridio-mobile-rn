@@ -1,15 +1,24 @@
-import React, { memo } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { useDispatch } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import React, {memo} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
-import { View, Text } from "../Themed";
-import { colors } from "../../constants/Colors";
-import { Media } from "../../../types";
-import { setMediaLoadingTrue, setMediaSlug } from "../../redux/slices";
-import { Cover } from "../Media/Cover";
+import {View, Text} from '../Themed';
+import {colors} from '../../constants/Colors';
+import {Media, MediaSource} from '../../../types';
+import {
+  setMediaLoadingTrue,
+  setMediaSlug,
+  setMediaSource,
+} from '../../redux/slices';
+import {Cover} from '../Media/Cover';
 
-const SimpleMediaCard = memo(({ slug, images, title }: Media) => {
+type SimpleMediaCardProps = {
+  media: Media;
+  mediaSource: MediaSource;
+};
+
+const SimpleMediaCard = memo(({media, mediaSource}: SimpleMediaCardProps) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
@@ -22,19 +31,19 @@ const SimpleMediaCard = memo(({ slug, images, title }: Media) => {
          * media data in the redux from the previous call. So the app will try to render
          * that before it gets the latest data.
          **/
+        dispatch(setMediaSource(mediaSource));
         dispatch(setMediaLoadingTrue());
-        dispatch(setMediaSlug(slug));
-        navigation.navigate("MediaScreen", {
-          slug: slug,
+        dispatch(setMediaSlug(media.slug));
+        navigation.navigate('MediaScreen', {
+          slug: media.slug,
         });
-      }}
-    >
+      }}>
       <View style={styles.cardContainer}>
-        <Cover images={images} />
+        <Cover images={media.images} />
 
         <View style={styles.cardTitleContainer}>
           <Text style={styles.cardTitle} numberOfLines={2}>
-            {title}
+            {media.title}
           </Text>
         </View>
       </View>
@@ -42,20 +51,20 @@ const SimpleMediaCard = memo(({ slug, images, title }: Media) => {
   );
 });
 
-export { SimpleMediaCard };
+export {SimpleMediaCard};
 
 const styles = StyleSheet.create({
   cardContainer: {
     height: 231,
     width: 135,
     backgroundColor: colors.black600,
-    flexDirection: "column",
+    flexDirection: 'column',
     marginRight: 10,
     borderRadius: 5,
   },
   cardTitleContainer: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     backgroundColor: colors.black600,
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
@@ -63,8 +72,8 @@ const styles = StyleSheet.create({
   cardTitle: {
     color: colors.red300,
     fontSize: 13,
-    fontWeight: "500",
-    textAlign: "center",
+    fontWeight: '500',
+    textAlign: 'center',
     paddingHorizontal: 3,
   },
 });

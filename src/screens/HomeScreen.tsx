@@ -13,6 +13,7 @@ import {RootStoreType} from '../redux/rootReducer';
 import {ProgressBar, Error} from '../components';
 import {setTabBarHeight} from '../redux/slices';
 import layout from '../constants/Layout';
+import {MediaSource} from '../../types';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,13 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <FlatList
         data={nonFeaturedMedias}
-        renderItem={({item}) => <HomeCategory key={item.id} {...item} />}
+        renderItem={({item}) => (
+          <HomeCategory
+            key={item.id}
+            mediaSource={MediaSource.Network}
+            {...item}
+          />
+        )}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -78,7 +85,11 @@ const HomeScreen = () => {
               autoplay={true}
               autoplayInterval={5000}>
               {featuredMedias[0].medias.map(item => (
-                <FeaturedMediaCard key={item.slug} {...item} />
+                <FeaturedMediaCard
+                  key={item.slug}
+                  media={item}
+                  mediaSource={MediaSource.Network}
+                />
               ))}
             </Carousel>
           ) : featuredMedias &&
@@ -87,7 +98,8 @@ const HomeScreen = () => {
             featuredMedias[0].medias.length === 1 ? (
             <FeaturedMediaCard
               key={featuredMedias[0].medias[0].slug}
-              {...featuredMedias[0].medias[0]}
+              media={featuredMedias[0].medias[0]}
+              mediaSource={MediaSource.Network}
             />
           ) : (
             <></>
