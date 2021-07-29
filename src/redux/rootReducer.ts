@@ -1,4 +1,6 @@
 import {combineReducers} from 'redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {persistReducer} from 'redux-persist';
 
 import authReducer from './slices/authSlice';
 import homeReducer from './slices/homeSlice';
@@ -7,10 +9,36 @@ import layoutReducer from './slices/layoutSlice';
 import playlistReducer from './slices/playlistSlice';
 import searchReducer from './slices/searchSlice';
 
+// Redux persist
+const rootPersistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  blacklist: [
+    'authReducer',
+    'homeReducer',
+    'mediaReducer',
+    'layoutReducer',
+    'playlistReducer',
+    'searchReducer',
+  ],
+};
+
+// mediaReducer
+const mediaReducerPersistConfig = {
+  key: 'mediaReducer',
+  storage: AsyncStorage,
+  whitelist: ['library'],
+};
+
+const persistedMediaReducer = persistReducer(
+  mediaReducerPersistConfig,
+  mediaReducer,
+);
+
 const rootReducer = combineReducers({
   authReducer,
   homeReducer,
-  mediaReducer,
+  mediaReducer: persistedMediaReducer,
   layoutReducer,
   playlistReducer,
   searchReducer,
@@ -19,4 +47,4 @@ const rootReducer = combineReducers({
 export type RootStoreType = ReturnType<typeof rootReducer>;
 export type Action<P> = {type: string; payload?: P};
 
-export default rootReducer;
+export default persistReducer(rootPersistConfig, rootReducer);

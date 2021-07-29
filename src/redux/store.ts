@@ -1,5 +1,6 @@
 import {combineEpics, createEpicMiddleware} from 'redux-observable';
 import {configureStore} from '@reduxjs/toolkit';
+import {persistStore} from 'redux-persist';
 
 import reactotron from '../../reactotron.config';
 import rootReducer from './rootReducer';
@@ -29,4 +30,7 @@ const store = configureStore({
 
 epicMiddleware.run(rootEpic);
 
-export {store};
+// Redux persist
+const persistor = persistStore(store);
+
+export {store, persistor};

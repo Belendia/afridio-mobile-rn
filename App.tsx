@@ -17,10 +17,12 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 // import reactotron from 'reactotron-react-native';
 import {Provider} from 'react-redux';
 import RNBootSplash from 'react-native-bootsplash';
+import {PersistGate} from 'redux-persist/integration/react';
 
 import Navigation from './src/navigation';
 import {theme} from './src/components/Themed';
-import {store} from './src/redux/store';
+import {persistor, store} from './src/redux/store';
+import {ProgressBar} from './src/components';
 
 function setup() {
   if (__DEV__) {
@@ -51,8 +53,10 @@ const App = () => {
     <SafeAreaProvider>
       <Provider store={store}>
         <ThemeProvider theme={theme} useDark={colorScheme === 'dark'}>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
+          <PersistGate loading={<ProgressBar />} persistor={persistor}>
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar />
+          </PersistGate>
         </ThemeProvider>
       </Provider>
     </SafeAreaProvider>
