@@ -51,13 +51,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <FlatList
         data={nonFeaturedMedias}
-        renderItem={({item}) => (
-          <HomeCategory
-            key={item.id}
-            mediaSource={MediaSource.Network}
-            {...item}
-          />
-        )}
+        renderItem={({item}) => <HomeCategory key={item.id} {...item} />}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
         refreshControl={
