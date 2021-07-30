@@ -41,7 +41,7 @@ const HomeCategory = ({id, title, medias}: HomeCategoryProps) => {
           <SimpleMediaCard
             key={item.slug}
             media={item}
-            mediaSource={MediaSource.Network}
+            mediaSource={MediaSource.Server}
           />
         )}
         keyExtractor={item => item.slug}

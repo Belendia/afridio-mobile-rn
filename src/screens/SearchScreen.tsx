@@ -140,7 +140,7 @@ const SearchScreen = () => {
             <MediaListCard
               key={item.slug}
               media={item}
-              mediaSource={MediaSource.Network}
+              mediaSource={MediaSource.Server}
             />
           )}
           keyExtractor={item => item.slug}

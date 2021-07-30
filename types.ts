@@ -109,6 +109,6 @@ export type Format = {
 };
 
 export enum MediaSource {
-  Network,
+  Server,
   Local,
 }

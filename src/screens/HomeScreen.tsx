@@ -82,7 +82,7 @@ const HomeScreen = () => {
                 <FeaturedMediaCard
                   key={item.slug}
                   media={item}
-                  mediaSource={MediaSource.Network}
+                  mediaSource={MediaSource.Server}
                 />
               ))}
             </Carousel>
@@ -93,7 +93,7 @@ const HomeScreen = () => {
             <FeaturedMediaCard
               key={featuredMedias[0].medias[0].slug}
               media={featuredMedias[0].medias[0]}
-              mediaSource={MediaSource.Network}
+              mediaSource={MediaSource.Server}
             />
           ) : (
             <></>
