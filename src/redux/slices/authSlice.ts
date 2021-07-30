@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { ofType } from "redux-observable";
-import { of, Observable } from "rxjs";
-import { catchError, map, switchMap } from "rxjs/operators";
-import AfridioAsyncStoreService from "../../services/asyncstorage/AfridioAsyncStoreService";
-import AfridioApiService from "../../services/network/AfridioApiService";
-import { Action } from "../rootReducer";
-import { User } from "../../../types";
+import {createSlice} from '@reduxjs/toolkit';
+import {ofType} from 'redux-observable';
+import {of, Observable} from 'rxjs';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import AfridioAsyncStoreService from '../../services/asyncstorage/AfridioAsyncStoreService';
+import AfridioApiService from '../../services/network/AfridioApiService';
+import {Action} from '../rootReducer';
+import {User} from '../../../types';
 
 type AuthReducerType = {
   user: User | null;
@@ -40,7 +40,7 @@ const initialState: AuthReducerType = {
 };
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     retrieveTokenSuccess: (state, action) => ({
@@ -81,12 +81,12 @@ const authSlice = createSlice({
         session_token: action.payload.session_token,
       },
     }),
-    authLogout: (state) => ({
+    authLogout: state => ({
       ...state,
       authenticated: false,
       user: null,
     }),
-    authLogoutDone: (state) => ({
+    authLogoutDone: state => ({
       ...state,
       token: null,
     }),
@@ -123,7 +123,7 @@ const authSlice = createSlice({
       ...state,
       regError: null,
     }),
-    resetAuthError: (state) => ({
+    resetAuthError: state => ({
       ...state,
       authError: null,
     }),
@@ -145,7 +145,7 @@ const authSlice = createSlice({
       ...state,
       resendingOTP: false,
     }),
-    resetRegistered: (state) => ({
+    resetRegistered: state => ({
       ...state,
       registered: false,
     }),
@@ -155,18 +155,18 @@ const authSlice = createSlice({
 export const loginEpic = (action$: Observable<Action<any>>) =>
   action$.pipe(
     ofType(authStart.type),
-    switchMap(({ payload }) => {
-      const { phone_number, password } = payload;
+    switchMap(({payload}) => {
+      const {phone_number, password} = payload;
       return AfridioApiService.login(phone_number, password).pipe(
-        map((res) => {
+        map(res => {
           AfridioAsyncStoreService.putToken(res.token);
           return authSuccess(res);
         }),
-        catchError((err) => {
-          let message = "Something went wrong.";
+        catchError(err => {
+          let message = 'Something went wrong.';
           let session_token = null;
           let otp_resend_time = 0;
-          if (err && err._status === "Offline") {
+          if (err && err._status === 'Offline') {
             message = err._message;
           } else if (err && err._status === 403) {
             message = err._message.detail;
@@ -181,11 +181,11 @@ export const loginEpic = (action$: Observable<Action<any>>) =>
               message: message,
               session_token: session_token,
               otp_resend_time: otp_resend_time,
-            })
+            }),
           );
-        })
+        }),
       );
-    })
+    }),
   );
 
 export const logoutEpic = (action$: Observable<Action<any>>) =>
@@ -193,26 +193,26 @@ export const logoutEpic = (action$: Observable<Action<any>>) =>
     ofType(authLogout.type),
     switchMap(() => {
       return AfridioApiService.logout().pipe(
-        map((res) => {
+        map(res => {
           AfridioAsyncStoreService.removeToken();
 
           return authLogoutDone(res);
         }),
-        catchError((err) => {
+        catchError(err => {
           AfridioAsyncStoreService.removeToken();
 
           return of(authLogoutDone(err));
-        })
+        }),
       );
-    })
+    }),
   );
 
 export const registerEpic = (action$: Observable<Action<any>>) =>
   action$.pipe(
     ofType(startRegistration.type),
-    switchMap(({ payload }) => {
+    switchMap(({payload}) => {
       return AfridioApiService.register(payload).pipe(
-        map((res) => {
+        map(res => {
           const userData = {
             user: {
               phone_number: res.phone_number,
@@ -227,9 +227,9 @@ export const registerEpic = (action$: Observable<Action<any>>) =>
 
           return registrationSuccess(userData);
         }),
-        catchError((err) => {
-          let message: any = "Something went wrong.";
-          if (err && err._status === "Offline") {
+        catchError(err => {
+          let message: any = 'Something went wrong.';
+          if (err && err._status === 'Offline') {
             message = err._message;
           } else if (err && err._status === 400) {
             message = {};
@@ -239,64 +239,60 @@ export const registerEpic = (action$: Observable<Action<any>>) =>
           }
 
           return of(registrationFailed(message));
-        })
+        }),
       );
-    })
+    }),
   );
 
 export const verifyEpic = (action$: Observable<Action<any>>) =>
   action$.pipe(
     ofType(startVerification.type),
-    switchMap(({ payload }) => {
+    switchMap(({payload}) => {
       return AfridioApiService.verify(payload).pipe(
-        map((res) => {
+        map(res => {
           AfridioAsyncStoreService.putToken(res.token);
           return authSuccess(res);
         }),
-        catchError((err) => {
-          let message: any = "Something went wrong.";
-          console.log(err);
-          if (err && err._status === "Offline") {
+        catchError(err => {
+          let message: any = 'Something went wrong.';
+          if (err && err._status === 'Offline') {
             message = err._message;
           } else if (err && err._status === 400) {
-            console.log(err._message.detail[0]);
             message = err._message.detail[0];
           }
 
           return of(verificationFailed(message));
-        })
+        }),
       );
-    })
+    }),
   );
 
 export const readToken = async () => {
   const token = await AfridioAsyncStoreService.getToken();
 
-  return { token: token };
+  return {token: token};
 };
 
 export const resendOTPEpic = (action$: Observable<Action<any>>) =>
   action$.pipe(
     ofType(startResendOTP.type),
-    switchMap(({ payload }) => {
+    switchMap(({payload}) => {
       return AfridioApiService.resendOTP(payload).pipe(
-        map((res) => {
-          console.log(res);
+        map(res => {
           return resendOTPSuccess(res);
         }),
-        catchError((err) => {
-          console.log(err);
-          let message: any = "Something went wrong.";
-          if (err && err._status === "Offline") {
+        catchError(err => {
+          let message: any = 'Something went wrong.';
+          if (err && err._status === 'Offline') {
             message = err._message;
           } else if (err && err._status === 400) {
             message = err._message.detail[0];
           }
 
           return of(resendOTPFailed(message));
-        })
+        }),
       );
-    })
+    }),
   );
 
 export const authEpics = [
