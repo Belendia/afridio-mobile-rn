@@ -11,17 +11,19 @@ import {
   startSetCurrentTrack,
   setPlaylistMedia,
   setCurrentTrackIndex,
+  setMediaSourcePlaylist,
 } from '../../redux/slices';
 import {getTrack} from '../../helpers/Utils';
 
 const Tracks = () => {
   const dispatch = useDispatch();
 
-  const {media, playlistMedia, currentTrackIndex} = useSelector(
+  const {media, playlistMedia, currentTrackIndex, mediaSource} = useSelector(
     (state: RootStoreType) => ({
       media: state.mediaReducer.media,
       playlistMedia: state.playlistReducer.playlistMedia,
       currentTrackIndex: state.playlistReducer.currentTrackIndex,
+      mediaSource: state.mediaReducer.mediaSource,
     }),
   );
 
@@ -35,6 +37,7 @@ const Tracks = () => {
        *  What is played is different from the media that is displayed
        *  in media screen. So set the media in the playlist.
        **/
+      dispatch(setMediaSourcePlaylist(mediaSource));
       dispatch(setPlaylistMedia(media));
       dispatch(startSetCurrentTrack(getTrack(media!, index)));
       dispatch(setCurrentTrackIndex(index));

@@ -7,11 +7,13 @@ import {View} from '../../components/Themed';
 import {RootStoreType} from '../../redux/rootReducer';
 import {
   setShowMiniPlayer,
-  startToGetMedia,
+  startToGetMediaFromServer,
   startSetCurrentTrack,
   setPlaylistMedia,
   startTogglePlay,
   setCurrentTrackIndex,
+  getMediaFromLocal,
+  setMediaSourcePlaylist,
 } from '../../redux/slices';
 import {
   ProgressBar,
@@ -22,26 +24,38 @@ import {
   Backdrop,
 } from '../../components';
 import {getTrack} from '../../helpers/Utils';
+import {MediaSource} from '../../../types';
 
 const MediaScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
 
-  const {loading, media, playlistMedia, currentTrackIndex, isPlaying, error} =
-    useSelector((state: RootStoreType) => ({
-      loading: state.mediaReducer.loading,
-      media: state.mediaReducer.media,
-      playlistMedia: state.playlistReducer.playlistMedia,
-      currentTrackIndex: state.playlistReducer.currentTrackIndex,
-      isPlaying: state.playlistReducer.isPlaying,
-
-      error: state.mediaReducer.error,
-    }));
+  const {
+    loading,
+    media,
+    playlistMedia,
+    isPlaying,
+    error,
+    mediaSourceMedia,
+    mediaSourcePlaylist,
+  } = useSelector((state: RootStoreType) => ({
+    loading: state.mediaReducer.loading,
+    media: state.mediaReducer.media,
+    playlistMedia: state.playlistReducer.playlistMedia,
+    isPlaying: state.playlistReducer.isPlaying,
+    error: state.mediaReducer.error,
+    mediaSourceMedia: state.mediaReducer.mediaSource,
+    mediaSourcePlaylist: state.playlistReducer.mediaSource,
+  }));
 
   const fetchData = useCallback(() => {
     if (route.params?.slug) {
-      dispatch(startToGetMedia(route.params?.slug));
+      if (mediaSourceMedia === MediaSource.Server) {
+        dispatch(startToGetMediaFromServer(route.params?.slug));
+      } else {
+        dispatch(getMediaFromLocal(route.params?.slug));
+      }
     } else {
       navigation.goBack();
     }
@@ -74,14 +88,19 @@ const MediaScreen = () => {
      *  Check what is played is different from the media that is displayed
      *  in media screen. If so, set the media in the playlist.
      **/
-    if (playlistMedia === null || media?.slug !== playlistMedia?.slug) {
+    if (
+      playlistMedia === null ||
+      media?.slug !== playlistMedia?.slug ||
+      mediaSourceMedia !== mediaSourcePlaylist
+    ) {
+      dispatch(setMediaSourcePlaylist(mediaSourceMedia));
       dispatch(setPlaylistMedia(media));
       dispatch(startSetCurrentTrack(getTrack(media!, 0)));
       dispatch(setCurrentTrackIndex(0));
     } else {
       dispatch(startTogglePlay(!isPlaying));
     }
-  }, [media, playlistMedia, isPlaying]);
+  }, [media, playlistMedia, isPlaying, mediaSourceMedia, mediaSourcePlaylist]);
 
   if (error && typeof error === 'string') {
     return <Error title={'Error'} message={error} onRetry={fetchData} />;

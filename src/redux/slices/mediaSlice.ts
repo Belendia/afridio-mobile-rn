@@ -13,7 +13,7 @@ type MediaReducerType = {
   media: Media | null;
   mediaListByFormat: Media[];
   selectedMediaSlug: string | null;
-  error: object | null;
+  error: string | null;
   mediaListByFormatError: object | null;
   loading: boolean;
   loadingList: boolean;
@@ -32,14 +32,14 @@ const initialState: MediaReducerType = {
   loadingList: false,
   next: 0,
   library: [],
-  mediaSource: MediaSource.Network,
+  mediaSource: MediaSource.Server,
 };
 
 const mediaSlice = createSlice({
   name: 'media',
   initialState,
   reducers: {
-    startToGetMedia: (state, _) => ({
+    startToGetMediaFromServer: (state, _) => ({
       ...state,
       loading: true,
       media: null,
@@ -116,12 +116,26 @@ const mediaSlice = createSlice({
       ...state,
       mediaSource: action.payload,
     }),
+    getMediaFromLocal(state, action) {
+      state.loading = true;
+      const media = state.library.find(m => m.slug === action.payload);
+      if (media) {
+        state.media = media;
+        state.error = null;
+      } else {
+        state.media = null;
+        state.error = 'Media not found';
+      }
+
+      state.loading = false;
+      state.mediaListByFormatError = null;
+    },
   },
 });
 
-export const getMediaEpic = (action$: Observable<Action<any>>) =>
+export const getMediaFromServerEpic = (action$: Observable<Action<any>>) =>
   action$.pipe(
-    ofType(startToGetMedia.type),
+    ofType(startToGetMediaFromServer.type),
     switchMap(({payload: slug}) => {
       return AfridioApiService.media(slug).pipe(
         map(res => {
@@ -192,10 +206,10 @@ export const deleteTracksEpic = (action$: Observable<Action<any>>) =>
     }),
   );
 
-export const mediaEpics = [getMediaEpic, getMediaListByFormatEpic];
+export const mediaEpics = [getMediaFromServerEpic, getMediaListByFormatEpic];
 
 export const {
-  startToGetMedia,
+  startToGetMediaFromServer,
   getMediaSuccess,
   getMediaFailed,
   setMediaLoadingTrue,
@@ -209,6 +223,7 @@ export const {
   removeFromLibrary,
   markTrackAsDownloaded,
   setMediaSource,
+  getMediaFromLocal,
 } = mediaSlice.actions;
 
 export default mediaSlice.reducer;

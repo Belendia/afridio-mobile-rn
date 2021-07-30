@@ -1,3 +1,4 @@
+import {MediaSource} from './../../../types';
 import {createSlice} from '@reduxjs/toolkit';
 import {ofType} from 'redux-observable';
 import {of, from, Observable} from 'rxjs';
@@ -16,6 +17,7 @@ type PlayerReducerType = {
   showMiniPlayer: boolean;
   currentTrackIndex: number;
   playbackSpeed: CheckboxOption;
+  mediaSource: MediaSource;
 };
 
 const initialState: PlayerReducerType = {
@@ -33,6 +35,7 @@ const initialState: PlayerReducerType = {
   showMiniPlayer: false,
   currentTrackIndex: 0,
   playbackSpeed: {key: 1, title: '1.0x'},
+  mediaSource: MediaSource.Server,
 };
 
 const playlistSlice = createSlice({
@@ -84,6 +87,10 @@ const playlistSlice = createSlice({
     setPlaybackSpeed: (state, action) => ({
       ...state,
       playbackSpeed: action.payload,
+    }),
+    setMediaSourcePlaylist: (state, action) => ({
+      ...state,
+      mediaSource: action.payload,
     }),
   },
 });
@@ -151,6 +158,7 @@ export const {
   setCurrentTrackIndex,
   setPlaylistMedia,
   setPlaybackSpeed,
+  setMediaSourcePlaylist,
 } = playlistSlice.actions;
 
 export default playlistSlice.reducer;
