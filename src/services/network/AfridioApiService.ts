@@ -121,7 +121,11 @@ class AfridioApiService {
 
       return this.processResponse(res);
     } else {
-      throw new OfflineException('Offline', 'Internet not reachable', url);
+      throw new OfflineException(
+        'Offline',
+        'Check your internet connection and try again.',
+        url,
+      );
     }
   };
 

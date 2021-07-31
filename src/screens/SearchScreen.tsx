@@ -91,7 +91,13 @@ const SearchScreen = () => {
   }, []);
 
   if (error && typeof error === 'string') {
-    return <Error title={'Error'} message={error} onRetry={fetchSearchBy} />;
+    return (
+      <Error
+        title={'Unable to load content'}
+        message={error}
+        onRetry={fetchSearchBy}
+      />
+    );
   }
 
   let format = <></>;

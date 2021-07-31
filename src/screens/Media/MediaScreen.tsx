@@ -103,7 +103,13 @@ const MediaScreen = () => {
   }, [media, playlistMedia, isPlaying, mediaSourceMedia, mediaSourcePlaylist]);
 
   if (error && typeof error === 'string') {
-    return <Error title={'Error'} message={error} onRetry={fetchData} />;
+    return (
+      <Error
+        title={'Unable to load content'}
+        message={error}
+        onRetry={fetchData}
+      />
+    );
   }
 
   return loading ? (

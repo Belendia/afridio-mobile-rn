@@ -15,12 +15,12 @@ type ErrorProps = {
 const Error = ({title, message, onRetry}: ErrorProps) => {
   let iconName = 'warning';
 
-  if (message === 'Internet not reachable') {
-    iconName = 'disconnect';
+  if (message === 'Check your internet connection and try again.') {
+    iconName = 'wifi';
   }
   return (
     <View style={styles.container}>
-      <AntDesign name={iconName} size={150} color={colors.red300} />
+      <AntDesign name={iconName} size={80} color={colors.red300} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
 
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black800,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
   title: {
     fontSize: 28,

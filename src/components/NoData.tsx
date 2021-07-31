@@ -10,10 +10,10 @@ const NoData = () => {
     <View style={styles.container}>
       <MaterialCommunityIcons
         name="database-remove"
-        size={150}
+        size={80}
         color={colors.red300}
       />
-      <Text style={styles.title}>Oops!</Text>
+      <Text style={styles.title}>Unable to load content</Text>
       <Text style={styles.message}>No Data Found</Text>
     </View>
   );
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black800,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
   title: {
     fontSize: 28,
