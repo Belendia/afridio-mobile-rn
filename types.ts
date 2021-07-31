@@ -112,3 +112,8 @@ export enum MediaSource {
   Server,
   Local,
 }
+
+export enum DownloadStatus {
+  DOWNLOADED = 'DOWNLOADED',
+  REMOVED = 'REMOVED',
+}

@@ -4,6 +4,7 @@ import NetworkHelper from '../../helpers/NetworkHelper';
 import AfridioEndpoints from './AfridioEndpoints';
 import AfridioHttpException from './exceptions/AfridioHttpException';
 import OfflineException from './exceptions/OfflineException';
+import {DownloadStatus} from '../../../types';
 
 type ContentType = 'JSON' | 'Text' | 'Unsupported';
 interface ApiConfig {
@@ -224,6 +225,16 @@ class AfridioApiService {
       this.api({
         url: AfridioEndpoints.mediaSearch(search, format, language, genre),
         verb: 'GET',
+        withToken: true,
+      }),
+    );
+
+  trackDownloadLog = (slug: string, status: DownloadStatus) =>
+    from(
+      this.api({
+        url: AfridioEndpoints.trackDownloadLog(slug),
+        verb: 'POST',
+        data: {status: status},
         withToken: true,
       }),
     );

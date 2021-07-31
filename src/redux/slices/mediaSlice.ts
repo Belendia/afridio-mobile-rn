@@ -116,6 +116,7 @@ const mediaSlice = createSlice({
       ...state,
       mediaSource: action.payload,
     }),
+
     getMediaFromLocal(state, action) {
       state.loading = true;
       const media = state.library.find(m => m.slug === action.payload);
@@ -130,6 +131,13 @@ const mediaSlice = createSlice({
       state.loading = false;
       state.mediaListByFormatError = null;
     },
+
+    startToSendDownloadTrackLog: (state, action) => ({
+      ...state,
+    }),
+    noAction: state => ({
+      ...state,
+    }),
   },
 });
 
@@ -206,7 +214,28 @@ export const deleteTracksEpic = (action$: Observable<Action<any>>) =>
     }),
   );
 
-export const mediaEpics = [getMediaFromServerEpic, getMediaListByFormatEpic];
+export const sendDownloadTrackLogEpic = (action$: Observable<Action<any>>) =>
+  action$.pipe(
+    ofType(startToSendDownloadTrackLog.type),
+    switchMap(({payload}) => {
+      const {slug, status} = payload;
+
+      return AfridioApiService.trackDownloadLog(slug, status).pipe(
+        map(res => {
+          return noAction();
+        }),
+        catchError(err => {
+          return of(noAction());
+        }),
+      );
+    }),
+  );
+
+export const mediaEpics = [
+  getMediaFromServerEpic,
+  getMediaListByFormatEpic,
+  sendDownloadTrackLogEpic,
+];
 
 export const {
   startToGetMediaFromServer,
@@ -224,6 +253,8 @@ export const {
   markTrackAsDownloaded,
   setMediaSource,
   getMediaFromLocal,
+  startToSendDownloadTrackLog,
+  noAction,
 } = mediaSlice.actions;
 
 export default mediaSlice.reducer;

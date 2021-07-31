@@ -1,7 +1,6 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, Platform} from 'react-native';
 import {ListItem, Avatar} from 'react-native-elements';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useSelector, useDispatch} from 'react-redux';
 
 import {Text} from '../Themed';
@@ -14,6 +13,8 @@ import {
   setMediaSourcePlaylist,
 } from '../../redux/slices';
 import {getTrack} from '../../helpers/Utils';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {trackForMutations} from '@reduxjs/toolkit/dist/immutableStateInvariantMiddleware';
 
 const Tracks = () => {
   const dispatch = useDispatch();
@@ -97,7 +98,13 @@ const Tracks = () => {
               </Text>
             </ListItem.Subtitle>
           </ListItem.Content>
-          <AntDesign name="clouddownloado" size={24} color={'gray'} />
+          {item.downloaded && (
+            <MaterialIcons
+              name={'file-download-done'}
+              size={24}
+              color={colors.black300}
+            />
+          )}
         </ListItem>
       ))}
     </>

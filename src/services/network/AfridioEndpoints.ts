@@ -6,7 +6,7 @@ class AfridioEndpoints {
   register = () => `${this.V1}/user/register/`;
   verify = () => `${this.V1}/phone/verify/`;
   genre = () => `${this.V1}/genres/`;
-  media = (slug: string) => `${this.V1}/medias/${slug}`;
+  media = (slug: string) => `${this.V1}/medias/${slug}/`;
   mediaListByFormat = (slug: string, page: string) => {
     if (page) {
       return `${this.V1}/medias/?category=${slug}&page=${page}`;
@@ -36,6 +36,9 @@ class AfridioEndpoints {
       query = query ? `&genres=${genre}` : `?genres=${genre}`;
     }
     return `${this.V1}/medias/${query}`;
+  };
+  trackDownloadLog = (slug: string) => {
+    return `${this.V1}/tracks/${slug}/download/`;
   };
 }
 

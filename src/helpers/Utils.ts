@@ -1,8 +1,12 @@
 import {Track} from 'react-native-track-player';
 import RNFS from 'react-native-fs';
 
-import {Image, Media} from '../../types';
-import {addToLibrary, markTrackAsDownloaded} from '../redux/slices';
+import {DownloadStatus, Image, Media} from '../../types';
+import {
+  addToLibrary,
+  markTrackAsDownloaded,
+  startToSendDownloadTrackLog,
+} from '../redux/slices';
 import {store} from '../redux/store';
 
 export const getPoster = (images: Image[]) => {
@@ -74,8 +78,7 @@ export const secToTime = (secs: number) => {
 };
 
 export const downloadTracks = async (media: Media) => {
-  const libMedia: Media = {...media};
-  for (const track of libMedia.tracks) {
+  for (const track of media.tracks) {
     const toFile = `${RNFS.DocumentDirectoryPath}/${track.file_url
       .split('/')
       .pop()}`;
@@ -84,19 +87,25 @@ export const downloadTracks = async (media: Media) => {
       toFile: toFile,
       background: true,
       discretionary: true,
-      progressDivider: 1,
+      progressDivider: 50,
     });
     result.promise.then(async r => {
       if (r && r.statusCode === 200 && r.bytesWritten > 0) {
         track.file_url = toFile;
-        store.dispatch(markTrackAsDownloaded({media: libMedia, track: track}));
-        console.log(track.slug);
+        track.downloaded = true;
+        store.dispatch(markTrackAsDownloaded({media: media, track: track}));
+        store.dispatch(
+          startToSendDownloadTrackLog({
+            slug: track.slug,
+            status: DownloadStatus.DOWNLOADED,
+          }),
+        );
       } else {
         track.downloaded = false;
       }
     });
   }
-  store.dispatch(addToLibrary(libMedia));
+  store.dispatch(addToLibrary(media));
 };
 
 export const deleteTracks = async (media: Media) => {
