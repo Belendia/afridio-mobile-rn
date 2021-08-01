@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Media, MediaSource} from '../../types';
 
 import {MediaListCard} from '../components';
-import {View} from '../components/Themed';
+import {Text, View} from '../components/Themed';
 import {colors} from '../constants/Colors';
 import {deleteTracks} from '../helpers/Utils';
 import {RootStoreType} from '../redux/rootReducer';
@@ -28,6 +28,7 @@ const LibraryScreen = () => {
     <View style={{flex: 1, height: height}}>
       <FlatList
         style={styles.container}
+        contentContainerStyle={styles.emptyContainer}
         data={library}
         renderItem={({item}) => (
           <MediaListCard
@@ -39,6 +40,14 @@ const LibraryScreen = () => {
           />
         )}
         keyExtractor={item => item.slug}
+        ListEmptyComponent={
+          <>
+            <Text style={styles.header}>No medias found</Text>
+            <Text style={styles.subheader}>
+              search the media you like and download it.
+            </Text>
+          </>
+        }
       />
     </View>
   );
@@ -56,5 +65,24 @@ const styles = StyleSheet.create({
         paddingBottom: 300,
       },
     }),
+  },
+  emptyContainer: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100%',
+  },
+  header: {
+    fontWeight: '600',
+    fontSize: 16,
+    color: colors.white,
+    letterSpacing: 0.3,
+    textAlign: 'center',
+  },
+  subheader: {
+    fontSize: 14,
+    color: colors.red300,
+    marginTop: 10,
+    textAlign: 'center',
   },
 });
