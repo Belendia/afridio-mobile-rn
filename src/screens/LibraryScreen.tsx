@@ -28,7 +28,9 @@ const LibraryScreen = () => {
     <View style={{flex: 1, height: height}}>
       <FlatList
         style={styles.container}
-        contentContainerStyle={styles.emptyContainer}
+        contentContainerStyle={{
+          minHeight: '100%',
+        }}
         data={library}
         renderItem={({item}) => (
           <MediaListCard
@@ -41,12 +43,12 @@ const LibraryScreen = () => {
         )}
         keyExtractor={item => item.slug}
         ListEmptyComponent={
-          <>
+          <View style={styles.emptyContainer}>
             <Text style={styles.header}>No medias found</Text>
             <Text style={styles.subheader}>
               search the media you like and download it.
             </Text>
-          </>
+          </View>
         }
       />
     </View>
@@ -70,19 +72,16 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: '100%',
   },
   header: {
     fontWeight: '600',
     fontSize: 16,
     color: colors.white,
     letterSpacing: 0.3,
-    textAlign: 'center',
   },
   subheader: {
     fontSize: 14,
     color: colors.red300,
     marginTop: 10,
-    textAlign: 'center',
   },
 });
