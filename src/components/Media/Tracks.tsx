@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {StyleSheet, Platform} from 'react-native';
 import {ListItem, Avatar} from 'react-native-elements';
 import {useSelector, useDispatch} from 'react-redux';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {Text} from '../Themed';
 import {colors} from '../../constants/Colors';
@@ -13,8 +14,6 @@ import {
   setMediaSourcePlaylist,
 } from '../../redux/slices';
 import {getTrack} from '../../helpers/Utils';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {trackForMutations} from '@reduxjs/toolkit/dist/immutableStateInvariantMiddleware';
 
 const Tracks = () => {
   const dispatch = useDispatch();

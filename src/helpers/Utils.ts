@@ -5,7 +5,7 @@ import {DownloadStatus, Image, Media} from '../../types';
 import {
   addToLibrary,
   markTrackAsDownloaded,
-  startToSendDownloadTrackLog,
+  startToSendTrackLogDownload,
 } from '../redux/slices';
 import {store} from '../redux/store';
 
@@ -95,7 +95,7 @@ export const downloadTracks = async (media: Media) => {
         track.downloaded = true;
         store.dispatch(markTrackAsDownloaded({media: media, track: track}));
         store.dispatch(
-          startToSendDownloadTrackLog({
+          startToSendTrackLogDownload({
             slug: track.slug,
             status: DownloadStatus.DOWNLOADED,
           }),
@@ -110,6 +110,14 @@ export const downloadTracks = async (media: Media) => {
 
 export const deleteTracks = async (media: Media) => {
   for (const track of media.tracks) {
-    return await RNFS.unlink(track.file_url);
+    if (await RNFS.exists(track.file_url)) {
+      store.dispatch(
+        startToSendTrackLogDownload({
+          slug: track.slug,
+          status: DownloadStatus.REMOVED,
+        }),
+      );
+      await RNFS.unlink(track.file_url);
+    }
   }
 };

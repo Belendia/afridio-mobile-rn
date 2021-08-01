@@ -99,9 +99,6 @@ const mediaSlice = createSlice({
     startToRemoveFromLibrary: (state, action) => ({
       ...state,
     }),
-    removeFromLibrary(state, action) {
-      state.library.splice(action.payload, 1);
-    },
     markTrackAsDownloaded(state, action) {
       const m = state.library.find(m => m.slug === action.payload.media.slug);
       if (m) {
@@ -132,12 +129,18 @@ const mediaSlice = createSlice({
       state.mediaListByFormatError = null;
     },
 
-    startToSendDownloadTrackLog: (state, action) => ({
+    startToSendTrackLogDownload: (state, action) => ({
       ...state,
     }),
     noAction: state => ({
       ...state,
     }),
+    deleteMediaFromLibrary(state, action) {
+      const index = state.library.findIndex(m => m.slug === action.payload);
+      if (index > -1) {
+        state.library.splice(index, 1);
+      }
+    },
   },
 });
 
@@ -196,27 +199,9 @@ export const getMediaListByFormatEpic = (action$: Observable<Action<any>>) =>
     }),
   );
 
-export const deleteTracksEpic = (action$: Observable<Action<any>>) =>
-  action$.pipe(
-    ofType(startToRemoveFromLibrary.type),
-    switchMap(({payload}) => {
-      const {index, media} = payload;
-      return from(
-        new Promise(function (resolve, reject) {
-          deleteTracks(media);
-          resolve(index);
-        }),
-      ).pipe(
-        map(res => {
-          return removeFromLibrary(res);
-        }),
-      );
-    }),
-  );
-
 export const sendDownloadTrackLogEpic = (action$: Observable<Action<any>>) =>
   action$.pipe(
-    ofType(startToSendDownloadTrackLog.type),
+    ofType(startToSendTrackLogDownload.type),
     switchMap(({payload}) => {
       const {slug, status} = payload;
 
@@ -249,11 +234,11 @@ export const {
   setMediaSlug,
   addToLibrary,
   startToRemoveFromLibrary,
-  removeFromLibrary,
   markTrackAsDownloaded,
   setMediaSource,
   getMediaFromLocal,
-  startToSendDownloadTrackLog,
+  startToSendTrackLogDownload,
+  deleteMediaFromLibrary,
   noAction,
 } = mediaSlice.actions;
 

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Dimensions, FlatList, Platform, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {MediaSource} from '../../types';
+import {Media, MediaSource} from '../../types';
 
 import {MediaListCard} from '../components';
 import {View} from '../components/Themed';
 import {colors} from '../constants/Colors';
+import {deleteTracks} from '../helpers/Utils';
 import {RootStoreType} from '../redux/rootReducer';
+import {deleteMediaFromLibrary} from '../redux/slices';
 
 const {height} = Dimensions.get('window');
 
@@ -16,6 +18,11 @@ const LibraryScreen = () => {
   const {library} = useSelector((state: RootStoreType) => ({
     library: state.mediaReducer.library,
   }));
+
+  const onDeletePressed = useCallback((media: Media) => {
+    dispatch(deleteMediaFromLibrary(media.slug));
+    deleteTracks(media);
+  }, []);
 
   return (
     <View style={{flex: 1, height: height}}>
@@ -27,6 +34,8 @@ const LibraryScreen = () => {
             key={item.slug}
             media={item}
             mediaSource={MediaSource.Local}
+            showDelete={true}
+            onDeletePressed={onDeletePressed}
           />
         )}
         keyExtractor={item => item.slug}

@@ -2,6 +2,7 @@ import React, {memo} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {View, Text} from '../Themed';
 import {colors} from '../../constants/Colors';
@@ -14,10 +15,12 @@ import {setMediaSlug, setMediaSource} from '../../redux/slices';
 type MediaListCardProps = {
   media: Media;
   mediaSource: MediaSource;
+  showDelete?: boolean;
+  onDeletePressed?: (media: Media) => void;
 };
 
 const MediaListCard = memo(
-  ({media, mediaSource}: MediaListCardProps) => {
+  ({media, mediaSource, showDelete, onDeletePressed}: MediaListCardProps) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
@@ -52,6 +55,17 @@ const MediaListCard = memo(
                 {media.description}
               </Text>
             </View>
+            {showDelete && (
+              <TouchableOpacity
+                style={styles.remove}
+                onPress={() => onDeletePressed && onDeletePressed(media)}>
+                <MaterialIcons
+                  name={'delete-outline'}
+                  size={24}
+                  color={colors.red300}
+                />
+              </TouchableOpacity>
+            )}
           </View>
         </TouchableOpacity>
       </View>
@@ -78,7 +92,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     minHeight: 148,
     flexDirection: 'row',
-    paddingRight: 16,
+    paddingRight: 2,
     overflow: 'hidden',
   },
   cardDetails: {
@@ -111,5 +125,9 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 12,
     color: colors.black300,
+  },
+  remove: {
+    marginTop: 5,
+    // alignSelf: 'center',
   },
 });
