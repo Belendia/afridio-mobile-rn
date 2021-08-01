@@ -1,8 +1,8 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {StyleSheet, ScrollView, TouchableOpacity, Alert} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import RNFS from 'react-native-fs';
+import {useSelector} from 'react-redux';
 
 import {Chip} from './Chip';
 import {Cover} from './Cover';
@@ -14,6 +14,7 @@ import Tracks from './Tracks';
 import {Media} from '../../../types';
 import {Size} from '../../constants/Options';
 import {downloadTracks} from '../../helpers/Utils';
+import {RootStoreType} from '../../redux/rootReducer';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,16 +25,20 @@ type ContentProps = {
 };
 
 const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
+  const {library} = useSelector((state: RootStoreType) => ({
+    library: state.mediaReducer.library,
+  }));
+
   const download = useCallback(() => {
-    console.log('downloading');
-    console.log(RNFS.DocumentDirectoryPath);
-    RNFS.readDir(RNFS.DocumentDirectoryPath).then(result => {
-      result.map(f => console.log(f));
-    });
     if (media) {
-      downloadTracks(media);
+      const searchMedia = library.find(m => m.slug === media.slug);
+      if (searchMedia) {
+        Alert.alert('This media is downloaded.');
+      } else {
+        downloadTracks(media);
+      }
     }
-  }, []);
+  }, [library, media]);
   return (
     <ScrollView
       style={styles.mainContainer}
