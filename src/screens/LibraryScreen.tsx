@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react';
 import {Dimensions, FlatList, Platform, StyleSheet} from 'react-native';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {Media, MediaSource} from '../../types';
 
@@ -44,9 +45,14 @@ const LibraryScreen = () => {
         keyExtractor={item => item.slug}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
+            <SimpleLineIcons
+              name={'book-open'}
+              size={80}
+              color={colors.red300}
+            />
             <Text style={styles.header}>No medias found</Text>
             <Text style={styles.subheader}>
-              search the media you like and download it.
+              Search and download the media you like.
             </Text>
           </View>
         }
@@ -75,12 +81,14 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 28,
     color: colors.white,
     letterSpacing: 0.3,
+    marginTop: 30,
+    marginBottom: 10,
   },
   subheader: {
-    fontSize: 14,
+    fontSize: 18,
     color: colors.red300,
     marginTop: 10,
   },
