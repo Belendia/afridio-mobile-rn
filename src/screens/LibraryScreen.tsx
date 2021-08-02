@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight: '600',
-    fontSize: 28,
+    fontSize: 26,
     color: colors.white,
     letterSpacing: 0.3,
     marginTop: 30,
