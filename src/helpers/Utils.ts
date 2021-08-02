@@ -107,6 +107,7 @@ export const downloadTracks = (media: Media) => {
                 progressDivider: 50,
               }).promise.then(r => {
                 if (r && r.statusCode === 200 && r.bytesWritten > 0) {
+                  track.downloaded = true; // to mark the track as downloaded on the media screen if it is displayed currently
                   store.dispatch(
                     markTrackAsDownloaded({
                       mediaSlug: media.slug,
