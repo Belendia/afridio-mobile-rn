@@ -142,16 +142,34 @@ export const downloadTracks = (media: Media) => {
   }
 };
 
-export const deleteTracks = async (media: Media) => {
-  for (const track of media.tracks) {
-    if (await RNFS.exists(track.file_url)) {
-      store.dispatch(
-        startToSendTrackLogDownload({
-          slug: track.slug,
-          status: DownloadStatus.REMOVED,
-        }),
+export const deleteTracks = (media: Media) => {
+  if (media && media.tracks && media.tracks.length! > 0) {
+    for (let i = 0, p = Promise.resolve(); i < media.tracks.length!; i++) {
+      p = p.then(
+        _ =>
+          new Promise(resolve => {
+            const track = media.tracks[i];
+
+            RNFS.exists(track.file_url).then(exists => {
+              if (exists) {
+                // if file exists, delete it and finally resolve the promise
+                RNFS.unlink(track.file_url)
+                  .then(res => {
+                    store.dispatch(
+                      startToSendTrackLogDownload({
+                        slug: track.slug,
+                        status: DownloadStatus.REMOVED,
+                      }),
+                    );
+                  })
+                  .finally(() => resolve());
+              } else {
+                //if the file doesn't exist, resolve the promise
+                resolve();
+              }
+            });
+          }),
       );
-      await RNFS.unlink(track.file_url);
     }
   }
 };
