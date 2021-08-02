@@ -23,32 +23,40 @@ const Tracks = () => {
     media,
     playlistMedia,
     currentTrackIndex,
-    mediaSource,
+    mediaSourceMedia,
+    mediaSourcePlaylist,
     trackSlugDownloading,
   } = useSelector((state: RootStoreType) => ({
     media: state.mediaReducer.media,
     playlistMedia: state.playlistReducer.playlistMedia,
     currentTrackIndex: state.playlistReducer.currentTrackIndex,
-    mediaSource: state.mediaReducer.mediaSource,
+    mediaSourceMedia: state.mediaReducer.mediaSource,
+    mediaSourcePlaylist: state.playlistReducer.mediaSource,
     trackSlugDownloading: state.mediaReducer.trackSlugDownloading,
   }));
 
-  const setTrack = useCallback(index => {
-    if (media?.slug === playlistMedia?.slug) {
-      // what is playing is the same as the what is displayed in media screen
-      dispatch(startSetCurrentTrack(getTrack(playlistMedia!, index)));
-      dispatch(setCurrentTrackIndex(index));
-    } else {
-      /**
-       *  What is played is different from the media that is displayed
-       *  in media screen. So set the media in the playlist.
-       **/
-      dispatch(setMediaSourcePlaylist(mediaSource));
-      dispatch(setPlaylistMedia(media));
-      dispatch(startSetCurrentTrack(getTrack(media!, index)));
-      dispatch(setCurrentTrackIndex(index));
-    }
-  }, []);
+  const setTrack = useCallback(
+    index => {
+      if (
+        media?.slug === playlistMedia?.slug &&
+        mediaSourceMedia === mediaSourcePlaylist
+      ) {
+        // what is playing is the same as the what is displayed in media screen
+        dispatch(startSetCurrentTrack(getTrack(playlistMedia!, index)));
+        dispatch(setCurrentTrackIndex(index));
+      } else {
+        /**
+         *  What is played is different from the media that is displayed
+         *  in media screen. So set the media in the playlist.
+         **/
+        dispatch(setMediaSourcePlaylist(mediaSourceMedia));
+        dispatch(setPlaylistMedia(media));
+        dispatch(startSetCurrentTrack(getTrack(media!, index)));
+        dispatch(setCurrentTrackIndex(index));
+      }
+    },
+    [media, playlistMedia, mediaSourceMedia, mediaSourcePlaylist],
+  );
 
   return (
     <>
