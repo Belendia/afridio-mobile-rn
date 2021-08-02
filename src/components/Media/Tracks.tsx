@@ -3,6 +3,7 @@ import {StyleSheet, Platform} from 'react-native';
 import {ListItem, Avatar} from 'react-native-elements';
 import {useSelector, useDispatch} from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {Text} from '../Themed';
 import {colors} from '../../constants/Colors';
@@ -18,14 +19,19 @@ import {getTrack} from '../../helpers/Utils';
 const Tracks = () => {
   const dispatch = useDispatch();
 
-  const {media, playlistMedia, currentTrackIndex, mediaSource} = useSelector(
-    (state: RootStoreType) => ({
-      media: state.mediaReducer.media,
-      playlistMedia: state.playlistReducer.playlistMedia,
-      currentTrackIndex: state.playlistReducer.currentTrackIndex,
-      mediaSource: state.mediaReducer.mediaSource,
-    }),
-  );
+  const {
+    media,
+    playlistMedia,
+    currentTrackIndex,
+    mediaSource,
+    trackSlugDownloading,
+  } = useSelector((state: RootStoreType) => ({
+    media: state.mediaReducer.media,
+    playlistMedia: state.playlistReducer.playlistMedia,
+    currentTrackIndex: state.playlistReducer.currentTrackIndex,
+    mediaSource: state.mediaReducer.mediaSource,
+    trackSlugDownloading: state.mediaReducer.trackSlugDownloading,
+  }));
 
   const setTrack = useCallback(index => {
     if (media?.slug === playlistMedia?.slug) {
@@ -97,13 +103,19 @@ const Tracks = () => {
               </Text>
             </ListItem.Subtitle>
           </ListItem.Content>
-          {item.downloaded && (
+          {item.slug === trackSlugDownloading ? (
+            <MaterialCommunityIcons
+              name={'progress-download'}
+              size={24}
+              color={colors.black300}
+            />
+          ) : item.downloaded ? (
             <MaterialIcons
               name={'file-download-done'}
               size={24}
               color={colors.black300}
             />
-          )}
+          ) : null}
         </ListItem>
       ))}
     </>

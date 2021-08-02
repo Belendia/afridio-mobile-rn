@@ -5,9 +5,13 @@ import {DownloadStatus, Image, Media} from '../../types';
 import {
   addToLibrary,
   markTrackAsDownloaded,
+  setMediaSlugDownloading,
+  setMediaDownloadProgress,
+  setTrackSlugDownloading,
   startToSendTrackLogDownload,
 } from '../redux/slices';
 import {store} from '../redux/store';
+import {MediaDownloadProgress} from '../components/Media/MediaDownloadProgress';
 
 export const getPoster = (images: Image[]) => {
   const poster = images?.filter(img => img.width === 500);
@@ -77,35 +81,65 @@ export const secToTime = (secs: number) => {
   return seconds <= 9 ? `${minutes}:0${seconds}` : `${minutes}:${seconds}`;
 };
 
-export const downloadTracks = async (media: Media) => {
-  for (const track of media.tracks) {
-    const toFile = `${RNFS.DocumentDirectoryPath}/${track.file_url
-      .split('/')
-      .pop()}`;
-    const result = await RNFS.downloadFile({
-      fromUrl: track.file_url,
-      toFile: toFile,
-      background: true,
-      discretionary: true,
-      progressDivider: 50,
-    });
-    result.promise.then(async r => {
-      if (r && r.statusCode === 200 && r.bytesWritten > 0) {
-        track.file_url = toFile;
-        track.downloaded = true;
-        store.dispatch(markTrackAsDownloaded({media: media, track: track}));
-        store.dispatch(
-          startToSendTrackLogDownload({
-            slug: track.slug,
-            status: DownloadStatus.DOWNLOADED,
-          }),
-        );
-      } else {
-        track.downloaded = false;
-      }
-    });
-  }
+export const downloadTracks = (media: Media) => {
   store.dispatch(addToLibrary(media));
+  store.dispatch(setMediaSlugDownloading(media.slug));
+
+  if (media && media.tracks && media.tracks.length! > 0) {
+    for (let i = 0, p = Promise.resolve(); i < media.tracks.length!; i++) {
+      p = p.then(
+        _ =>
+          new Promise(resolve => {
+            const track = media.tracks[i];
+            if (track) {
+              i === 0 && store.dispatch(setMediaDownloadProgress(0));
+              store.dispatch(setTrackSlugDownloading(track?.slug));
+
+              const toFile = `${RNFS.DocumentDirectoryPath}/${track.file_url
+                .split('/')
+                .pop()}`;
+
+              RNFS.downloadFile({
+                fromUrl: track.file_url,
+                toFile: toFile,
+                background: true,
+                discretionary: true,
+                progressDivider: 50,
+              }).promise.then(r => {
+                if (r && r.statusCode === 200 && r.bytesWritten > 0) {
+                  track.file_url = toFile;
+                  track.downloaded = true;
+                  store.dispatch(
+                    markTrackAsDownloaded({media: media, track: track}),
+                  );
+                  store.dispatch(
+                    startToSendTrackLogDownload({
+                      slug: track.slug,
+                      status: DownloadStatus.DOWNLOADED,
+                    }),
+                  );
+                  store.dispatch(
+                    setMediaDownloadProgress((i + 1) / media.tracks.length!),
+                  );
+                } else {
+                  track.downloaded = false;
+                }
+
+                if (i + 1 === media.tracks.length) {
+                  // We finish downloading the last track. Therefore, we should reset
+                  // all currently downloading variables in the redux store
+                  store.dispatch(setMediaSlugDownloading(null));
+                  store.dispatch(setMediaDownloadProgress(null));
+                  store.dispatch(setTrackSlugDownloading(null));
+                }
+
+                resolve();
+              });
+            }
+          }),
+      );
+    }
+  }
 };
 
 export const deleteTracks = async (media: Media) => {

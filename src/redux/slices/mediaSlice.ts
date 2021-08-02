@@ -20,6 +20,10 @@ type MediaReducerType = {
   next: number;
   library: Media[];
   mediaSource: MediaSource;
+  // current download status update
+  mediaSlugDownloading: string | null;
+  mediaDownloadProgress: number | null;
+  trackSlugDownloading: string | null;
 };
 
 const initialState: MediaReducerType = {
@@ -33,6 +37,10 @@ const initialState: MediaReducerType = {
   next: 0,
   library: [],
   mediaSource: MediaSource.Server,
+  // current download status update
+  mediaSlugDownloading: null,
+  mediaDownloadProgress: null,
+  trackSlugDownloading: null,
 };
 
 const mediaSlice = createSlice({
@@ -141,6 +149,19 @@ const mediaSlice = createSlice({
         state.library.splice(index, 1);
       }
     },
+    // current download status update
+    setMediaSlugDownloading: (state, action) => ({
+      ...state,
+      mediaSlugDownloading: action.payload,
+    }),
+    setMediaDownloadProgress: (state, action) => ({
+      ...state,
+      mediaDownloadProgress: action.payload,
+    }),
+    setTrackSlugDownloading: (state, action) => ({
+      ...state,
+      trackSlugDownloading: action.payload,
+    }),
   },
 });
 
@@ -240,6 +261,10 @@ export const {
   startToSendTrackLogDownload,
   deleteMediaFromLibrary,
   noAction,
+  // current download status update
+  setMediaSlugDownloading,
+  setMediaDownloadProgress,
+  setTrackSlugDownloading,
 } = mediaSlice.actions;
 
 export default mediaSlice.reducer;

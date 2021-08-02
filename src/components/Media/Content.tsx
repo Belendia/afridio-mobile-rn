@@ -7,11 +7,12 @@ import {useSelector} from 'react-redux';
 import {Chip} from './Chip';
 import {Cover} from './Cover';
 import {MediaButton} from './MediaButton';
+import {MediaDownloadProgress} from './MediaDownloadProgress';
 import {colors} from '../../constants/Colors';
 import {View, Text} from '../Themed';
 import Info from './Info';
 import Tracks from './Tracks';
-import {Media} from '../../../types';
+import {Media, MediaSource} from '../../../types';
 import {Size} from '../../constants/Options';
 import {downloadTracks} from '../../helpers/Utils';
 import {RootStoreType} from '../../redux/rootReducer';
@@ -25,15 +26,23 @@ type ContentProps = {
 };
 
 const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
-  const {library} = useSelector((state: RootStoreType) => ({
-    library: state.mediaReducer.library,
-  }));
+  const {library, mediaSlugDownloading, mediaDownloadProgress, mediaSource} =
+    useSelector((state: RootStoreType) => ({
+      library: state.mediaReducer.library,
+      mediaSlugDownloading: state.mediaReducer.mediaSlugDownloading,
+      mediaDownloadProgress: state.mediaReducer.mediaDownloadProgress,
+      mediaSource: state.mediaReducer.mediaSource,
+    }));
 
   const download = useCallback(() => {
     if (media) {
       const searchMedia = library.find(m => m.slug === media.slug);
       if (searchMedia) {
         Alert.alert('This media is downloaded.');
+      } else if (mediaSlugDownloading) {
+        Alert.alert(
+          'Please wait until the current media finished downloading.',
+        );
       } else {
         downloadTracks(media);
       }
@@ -79,15 +88,26 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
       </View>
 
       <View style={styles.contentContainer}>
-        <View style={styles.mediaButtons}>
-          <MediaButton name="heart" label="like" onPress={() => true} />
-          <MediaButton name="share" label="share" onPress={() => true} />
-          <MediaButton
-            name="arrow-down-circle"
-            label="Download"
-            onPress={download}
-          />
-        </View>
+        {mediaSource === MediaSource.Server ? (
+          <View style={styles.mediaButtons}>
+            <MediaButton name="heart" label="like" onPress={() => true} />
+            <MediaButton name="share" label="share" onPress={() => true} />
+            {mediaSlugDownloading &&
+            mediaSlugDownloading === media?.slug &&
+            mediaDownloadProgress !== null ? (
+              <MediaDownloadProgress
+                label="Downloading"
+                progress={mediaDownloadProgress}
+              />
+            ) : (
+              <MediaButton
+                name="arrow-down-circle"
+                label="Download"
+                onPress={download}
+              />
+            )}
+          </View>
+        ) : null}
 
         <Tab.Navigator
           initialRouteName="Chapter"
