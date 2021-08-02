@@ -20,7 +20,7 @@ const Error = ({title, message, onRetry}: ErrorProps) => {
   }
   return (
     <View style={styles.container}>
-      <AntDesign name={iconName} size={80} color={colors.red300} />
+      <AntDesign name={iconName} size={70} color={colors.red300} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.message}>{message}</Text>
 
@@ -51,14 +51,14 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: 'bold',
     color: colors.white,
     marginTop: 30,
     marginBottom: 10,
   },
   message: {
-    fontSize: 18,
+    fontSize: 16,
     color: colors.red300,
     marginTop: 14,
     textAlign: 'center',

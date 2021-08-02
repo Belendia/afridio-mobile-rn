@@ -47,7 +47,7 @@ const LibraryScreen = () => {
           <View style={styles.emptyContainer}>
             <SimpleLineIcons
               name={'book-open'}
-              size={80}
+              size={70}
               color={colors.red300}
             />
             <Text style={styles.header}>No medias found</Text>
@@ -81,14 +81,14 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight: '600',
-    fontSize: 26,
+    fontSize: 22,
     color: colors.white,
     letterSpacing: 0.3,
     marginTop: 30,
     marginBottom: 10,
   },
   subheader: {
-    fontSize: 18,
+    fontSize: 16,
     color: colors.red300,
     marginTop: 10,
   },
