@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {colors} from '../../constants/Colors';
 
 import {Text, View} from '../Themed';
@@ -18,9 +19,10 @@ const SearchMessage = ({info}: SearchMessageProps) => {
         </>
       ) : (
         <>
+          <MaterialIcons name={'search-off'} size={80} color={colors.red300} />
           <Text style={styles.header}>No results found</Text>
           <Text style={styles.subheader}>
-            please check you have the right spelling, or try different
+            Please check you have the right spelling, or try different
             keyworkds.
           </Text>
         </>
@@ -41,16 +43,16 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 24,
     color: colors.white,
     letterSpacing: 0.3,
-    textAlign: 'center',
+    marginTop: 10,
+    marginBottom: 10,
   },
   subheader: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.red300,
     marginTop: 10,
-    textAlign: 'center',
   },
 });
 
