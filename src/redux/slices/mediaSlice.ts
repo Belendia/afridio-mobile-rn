@@ -108,11 +108,11 @@ const mediaSlice = createSlice({
       ...state,
     }),
     markTrackAsDownloaded(state, action) {
-      const m = state.library.find(m => m.slug === action.payload.media.slug);
+      const m = state.library.find(m => m.slug === action.payload.mediaSlug);
       if (m) {
-        const t = m.tracks.find(t => t.slug === action.payload.track.slug);
+        const t = m.tracks.find(t => t.slug === action.payload.trackSlug);
         if (t) {
-          t.file_url = action.payload.track.file_url;
+          t.file_url = action.payload.trackFile;
           t.downloaded = true;
         }
       }

@@ -107,10 +107,12 @@ export const downloadTracks = (media: Media) => {
                 progressDivider: 50,
               }).promise.then(r => {
                 if (r && r.statusCode === 200 && r.bytesWritten > 0) {
-                  track.file_url = toFile;
-                  track.downloaded = true;
                   store.dispatch(
-                    markTrackAsDownloaded({media: media, track: track}),
+                    markTrackAsDownloaded({
+                      mediaSlug: media.slug,
+                      trackSlug: track.slug,
+                      trackFile: toFile,
+                    }),
                   );
                   store.dispatch(
                     startToSendTrackLogDownload({
@@ -121,8 +123,6 @@ export const downloadTracks = (media: Media) => {
                   store.dispatch(
                     setMediaDownloadProgress((i + 1) / media.tracks.length!),
                   );
-                } else {
-                  track.downloaded = false;
                 }
 
                 if (i + 1 === media.tracks.length) {
