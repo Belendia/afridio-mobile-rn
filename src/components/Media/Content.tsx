@@ -36,10 +36,7 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
 
   const download = useCallback(() => {
     if (media) {
-      const searchMedia = library.find(m => m.slug === media.slug);
-      if (searchMedia) {
-        Alert.alert('This media is downloaded.');
-      } else if (mediaSlugDownloading) {
+      if (mediaSlugDownloading) {
         Alert.alert(
           'Please wait until the current media finished downloading.',
         );
@@ -47,7 +44,7 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
         downloadTracks(media);
       }
     }
-  }, [library, media]);
+  }, [mediaSlugDownloading, media]);
   return (
     <ScrollView
       style={styles.mainContainer}

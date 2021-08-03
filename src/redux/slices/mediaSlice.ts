@@ -102,7 +102,10 @@ const mediaSlice = createSlice({
       selectedMediaSlug: action.payload,
     }),
     addToLibrary(state, action) {
-      state.library.push(action.payload);
+      const m = state.library.find(m => m.slug === action.payload.slug);
+      if (!m) {
+        state.library.push(action.payload);
+      }
     },
     startToRemoveFromLibrary: (state, action) => ({
       ...state,

@@ -1,7 +1,7 @@
 import {Track} from 'react-native-track-player';
 import RNFS from 'react-native-fs';
 
-import {DownloadStatus, Image, Media} from '../../types';
+import {DownloadStatus, Image, Media, Track as MediaTrack} from '../../types';
 import {
   addToLibrary,
   markTrackAsDownloaded,
@@ -81,6 +81,35 @@ export const secToTime = (secs: number) => {
   return seconds <= 9 ? `${minutes}:0${seconds}` : `${minutes}:${seconds}`;
 };
 
+const markAsDownloaded = (
+  media: Media,
+  track: MediaTrack,
+  toFile: string,
+  i: number,
+) => {
+  track.downloaded = true; // to mark the track as downloaded on the media screen if it is displayed currently
+  store.dispatch(
+    markTrackAsDownloaded({
+      mediaSlug: media.slug,
+      trackSlug: track.slug,
+      trackFile: toFile,
+    }),
+  );
+  store.dispatch(
+    startToSendTrackLogDownload({
+      slug: track.slug,
+      status: DownloadStatus.DOWNLOADED,
+    }),
+  );
+  store.dispatch(setMediaDownloadProgress((i + 1) / media.tracks.length!));
+};
+
+const resetCurrentDownload = () => {
+  store.dispatch(setMediaSlugDownloading(null));
+  store.dispatch(setMediaDownloadProgress(null));
+  store.dispatch(setTrackSlugDownloading(null));
+};
+
 export const downloadTracks = (media: Media) => {
   store.dispatch(addToLibrary(media));
   store.dispatch(setMediaSlugDownloading(media.slug));
@@ -99,42 +128,38 @@ export const downloadTracks = (media: Media) => {
                 .split('/')
                 .pop()}`;
 
-              RNFS.downloadFile({
-                fromUrl: track.file_url,
-                toFile: toFile,
-                background: true,
-                discretionary: true,
-                progressDivider: 50,
-              }).promise.then(r => {
-                if (r && r.statusCode === 200 && r.bytesWritten > 0) {
-                  track.downloaded = true; // to mark the track as downloaded on the media screen if it is displayed currently
-                  store.dispatch(
-                    markTrackAsDownloaded({
-                      mediaSlug: media.slug,
-                      trackSlug: track.slug,
-                      trackFile: toFile,
-                    }),
-                  );
-                  store.dispatch(
-                    startToSendTrackLogDownload({
-                      slug: track.slug,
-                      status: DownloadStatus.DOWNLOADED,
-                    }),
-                  );
-                  store.dispatch(
-                    setMediaDownloadProgress((i + 1) / media.tracks.length!),
-                  );
-                }
+              RNFS.exists(toFile).then(exists => {
+                if (exists) {
+                  // if the track exists, don't download it again.
+                  markAsDownloaded(media, track, toFile, i);
+                  if (i + 1 === media.tracks.length) {
+                    // We finish downloading the last track. Therefore, we should reset
+                    // all currently downloading variables in the redux store
+                    resetCurrentDownload();
+                  }
+                  resolve();
+                } else {
+                  //other wise download the track
+                  RNFS.downloadFile({
+                    fromUrl: track.file_url,
+                    toFile: toFile,
+                    background: true,
+                    discretionary: true,
+                    progressDivider: 50,
+                  }).promise.then(r => {
+                    if (r && r.statusCode === 200 && r.bytesWritten > 0) {
+                      markAsDownloaded(media, track, toFile, i);
+                    }
 
-                if (i + 1 === media.tracks.length) {
-                  // We finish downloading the last track. Therefore, we should reset
-                  // all currently downloading variables in the redux store
-                  store.dispatch(setMediaSlugDownloading(null));
-                  store.dispatch(setMediaDownloadProgress(null));
-                  store.dispatch(setTrackSlugDownloading(null));
-                }
+                    if (i + 1 === media.tracks.length) {
+                      // We finish downloading the last track. Therefore, we should reset
+                      // all currently downloading variables in the redux store
+                      resetCurrentDownload();
+                    }
 
-                resolve();
+                    resolve();
+                  });
+                }
               });
             }
           }),
