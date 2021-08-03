@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     backgroundColor: colors.black800,
+    marginHorizontal: 5,
   },
   scrollContent: {flexGrow: 1},
   loading: {
