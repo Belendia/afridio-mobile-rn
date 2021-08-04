@@ -171,9 +171,10 @@ const mediaSlice = createSlice({
       ...state,
       likingMedia: true,
     }),
-    likeMediaSuccess: state => {
+    likeMediaSuccess: (state, action) => {
       if (state.media) {
         state.media.liked = !state.media.liked;
+        state.media.rating = action.payload.rating;
       }
 
       state.likingMedia = false;
@@ -264,7 +265,7 @@ export const likeMediaEpic = (action$: Observable<Action<any>>) =>
       const {slug, liked} = payload;
       return AfridioApiService.likeMedia(slug, liked).pipe(
         map(res => {
-          return likeMediaSuccess();
+          return likeMediaSuccess(res);
         }),
         catchError(err => {
           return of(likeMediaFailed());
