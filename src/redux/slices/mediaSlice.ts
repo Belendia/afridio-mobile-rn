@@ -24,6 +24,7 @@ type MediaReducerType = {
   mediaSlugDownloading: string | null;
   mediaDownloadProgress: number | null;
   trackSlugDownloading: string | null;
+  likingMedia: boolean;
 };
 
 const initialState: MediaReducerType = {
@@ -41,6 +42,7 @@ const initialState: MediaReducerType = {
   mediaSlugDownloading: null,
   mediaDownloadProgress: null,
   trackSlugDownloading: null,
+  likingMedia: false,
 };
 
 const mediaSlice = createSlice({
@@ -165,6 +167,21 @@ const mediaSlice = createSlice({
       ...state,
       trackSlugDownloading: action.payload,
     }),
+    startToLikeMedia: (state, _) => ({
+      ...state,
+      likingMedia: true,
+    }),
+    likeMediaSuccess: state => {
+      if (state.media) {
+        state.media.liked = !state.media.liked;
+      }
+
+      state.likingMedia = false;
+    },
+    likeMediaFailed: state => ({
+      ...state,
+      likingMedia: false,
+    }),
   },
 });
 
@@ -240,10 +257,27 @@ export const sendDownloadTrackLogEpic = (action$: Observable<Action<any>>) =>
     }),
   );
 
+export const likeMediaEpic = (action$: Observable<Action<any>>) =>
+  action$.pipe(
+    ofType(startToLikeMedia.type),
+    switchMap(({payload}) => {
+      const {slug, liked} = payload;
+      return AfridioApiService.likeMedia(slug, liked).pipe(
+        map(res => {
+          return likeMediaSuccess();
+        }),
+        catchError(err => {
+          return of(likeMediaFailed());
+        }),
+      );
+    }),
+  );
+
 export const mediaEpics = [
   getMediaFromServerEpic,
   getMediaListByFormatEpic,
   sendDownloadTrackLogEpic,
+  likeMediaEpic,
 ];
 
 export const {
@@ -268,6 +302,9 @@ export const {
   setMediaSlugDownloading,
   setMediaDownloadProgress,
   setTrackSlugDownloading,
+  startToLikeMedia,
+  likeMediaSuccess,
+  likeMediaFailed,
 } = mediaSlice.actions;
 
 export default mediaSlice.reducer;

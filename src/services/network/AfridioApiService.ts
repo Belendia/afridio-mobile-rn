@@ -26,7 +26,7 @@ type HeaderType = {
 
 class AfridioApiService {
   defaultTimeout = 30;
-  BASE_URL = 'http://192.168.8.102:8000/api/';
+  BASE_URL = 'http://192.168.8.117:8000/api/';
 
   getHttpConfig = (
     token: string,
@@ -235,6 +235,16 @@ class AfridioApiService {
         url: AfridioEndpoints.trackDownloadLog(slug),
         verb: 'POST',
         data: {status: status},
+        withToken: true,
+      }),
+    );
+
+  likeMedia = (slug: string, liked: boolean) =>
+    from(
+      this.api({
+        url: AfridioEndpoints.likeMedia(slug),
+        verb: 'POST',
+        data: {liked: liked},
         withToken: true,
       }),
     );

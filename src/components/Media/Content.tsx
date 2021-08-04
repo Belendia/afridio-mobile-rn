@@ -1,21 +1,30 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, ScrollView, TouchableOpacity, Alert} from 'react-native';
+import {
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useSelector} from 'react-redux';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {Chip} from './Chip';
 import {Cover} from './Cover';
 import {MediaButton} from './MediaButton';
-import {MediaDownloadProgress} from './MediaDownloadProgress';
+import {MediaProgress} from './MediaProgress';
 import {colors} from '../../constants/Colors';
 import {View, Text} from '../Themed';
 import Info from './Info';
 import Tracks from './Tracks';
-import {Media, MediaSource} from '../../../types';
+import {Media, MediaSource, ProgressType} from '../../../types';
 import {Size} from '../../constants/Options';
 import {downloadTracks} from '../../helpers/Utils';
 import {RootStoreType} from '../../redux/rootReducer';
+import {startToLikeMedia} from '../../redux/slices';
+import {ProgressBar} from '../ProgressBar';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -26,13 +35,19 @@ type ContentProps = {
 };
 
 const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
-  const {library, mediaSlugDownloading, mediaDownloadProgress, mediaSource} =
-    useSelector((state: RootStoreType) => ({
-      library: state.mediaReducer.library,
-      mediaSlugDownloading: state.mediaReducer.mediaSlugDownloading,
-      mediaDownloadProgress: state.mediaReducer.mediaDownloadProgress,
-      mediaSource: state.mediaReducer.mediaSource,
-    }));
+  const dispatch = useDispatch();
+
+  const {
+    mediaSlugDownloading,
+    mediaDownloadProgress,
+    mediaSource,
+    likingMedia,
+  } = useSelector((state: RootStoreType) => ({
+    mediaSlugDownloading: state.mediaReducer.mediaSlugDownloading,
+    mediaDownloadProgress: state.mediaReducer.mediaDownloadProgress,
+    mediaSource: state.mediaReducer.mediaSource,
+    likingMedia: state.mediaReducer.likingMedia,
+  }));
 
   const download = useCallback(() => {
     if (media) {
@@ -45,6 +60,11 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
       }
     }
   }, [mediaSlugDownloading, media]);
+
+  const likeMedia = useCallback(() => {
+    dispatch(startToLikeMedia({slug: media?.slug, liked: !media?.liked}));
+  }, [media?.liked]);
+
   return (
     <ScrollView
       style={styles.mainContainer}
@@ -66,8 +86,8 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
           <Chip values={media?.genres} style={{marginTop: 5}} />
           <View style={styles.cardNumbers}>
             <View style={styles.ratingContainer}>
-              <Ionicons name="heart" size={20} color={colors.red800} />
-              <Text style={styles.ratingText}>1.2K</Text>
+              <AntDesign name="heart" size={16} color={colors.red800} />
+              <Text style={styles.ratingText}>{media?.rating}</Text>
             </View>
           </View>
         </View>
@@ -87,14 +107,29 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
       <View style={styles.contentContainer}>
         {mediaSource === MediaSource.Server ? (
           <View style={styles.mediaButtons}>
-            <MediaButton name="heart" label="like" onPress={() => true} />
-            <MediaButton name="share" label="share" onPress={() => true} />
+            {likingMedia ? (
+              <MediaProgress
+                label="Like"
+                type={ProgressType.ActivityIndicator}
+              />
+            ) : (
+              <MediaButton
+                name="heart"
+                label="Like"
+                color={media?.liked ? colors.red800 : undefined}
+                solid={media?.liked ? true : false}
+                onPress={likeMedia}
+              />
+            )}
+
+            <MediaButton name="share" label="Share" onPress={() => true} />
             {mediaSlugDownloading &&
             mediaSlugDownloading === media?.slug &&
             mediaDownloadProgress !== null ? (
-              <MediaDownloadProgress
-                label="Downloading"
+              <MediaProgress
+                label="Download"
                 progress={mediaDownloadProgress}
+                type={ProgressType.Pie}
               />
             ) : (
               <MediaButton
@@ -174,8 +209,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   ratingText: {
-    marginLeft: 2,
-    fontSize: 12,
+    marginLeft: 6,
+    fontSize: 14,
     fontWeight: 'bold',
     color: colors.red300,
   },
@@ -187,6 +222,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    marginHorizontal: 30,
   },
   playContainer: {
     flexDirection: 'column-reverse',

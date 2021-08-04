@@ -113,9 +113,9 @@ const Tracks = () => {
           </ListItem.Content>
           {item.slug === trackSlugDownloading ? (
             <MaterialCommunityIcons
-              name={'progress-download'}
+              name={'download'}
               size={24}
-              color={colors.black300}
+              color={colors.red900}
             />
           ) : item.downloaded ? (
             <MaterialIcons

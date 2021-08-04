@@ -1,24 +1,45 @@
 import React, {PureComponent} from 'react';
-import {View, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  TouchableHighlight,
+} from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {colors} from '../../constants/Colors';
 
 type MediaButtonProps = {
   name: string;
   label: string;
+  color?: string | undefined;
+  solid?: boolean | undefined;
   onPress: () => void;
 };
 
 class MediaButton extends PureComponent<MediaButtonProps> {
   render() {
-    const {name, label, onPress} = this.props;
+    const {name, label, color, solid, onPress} = this.props;
     return (
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableHighlight onPress={onPress}>
         <View style={styles.container}>
-          <SimpleLineIcons style={styles.icon} name={name} />
+          {solid ? (
+            <AntDesign
+              style={styles.icon}
+              color={color ? color : colors.red300}
+              name={name}
+            />
+          ) : (
+            <SimpleLineIcons
+              style={styles.icon}
+              color={color ? color : colors.red300}
+              name={name}
+            />
+          )}
           <Text style={styles.label}>{label}</Text>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableHighlight>
     );
   }
 }
@@ -32,7 +53,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 24,
-    color: colors.red300,
   },
   label: {
     color: colors.red300,

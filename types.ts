@@ -78,7 +78,8 @@ export type Media = {
   description: string;
   slug: string;
   estimated_length_in_seconds: number;
-  rating: number | null;
+  liked: boolean | null;
+  rating: string | null;
   release_date: string;
   language: string;
   media_format: string;
@@ -116,4 +117,9 @@ export enum MediaSource {
 export enum DownloadStatus {
   DOWNLOADED = 'DOWNLOADED',
   REMOVED = 'REMOVED',
+}
+
+export enum ProgressType {
+  ActivityIndicator = 1,
+  Pie = 2,
 }

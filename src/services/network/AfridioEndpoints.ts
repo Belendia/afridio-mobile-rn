@@ -40,6 +40,9 @@ class AfridioEndpoints {
   trackDownloadLog = (slug: string) => {
     return `${this.V1}/tracks/${slug}/download/`;
   };
+  likeMedia = (slug: string) => {
+    return `${this.V1}/medias/${slug}/like/`;
+  };
 }
 
 export default new AfridioEndpoints();
