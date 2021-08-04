@@ -2,8 +2,6 @@ import React, {memo} from 'react';
 import {StyleSheet, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import {Button} from 'react-native-elements';
 import {useDispatch} from 'react-redux';
 
@@ -16,6 +14,7 @@ import {
   setMediaSlug,
   setMediaSource,
 } from '../../redux/slices';
+import {Rating} from '../Media/Rating';
 
 type FeaturedMediaCardProps = {
   media: Media;
@@ -73,10 +72,7 @@ const FeaturedMediaCard = memo(
             )}
 
             <View style={styles.cardNumbers}>
-              <View style={styles.cardHeart}>
-                <Ionicons name="heart" size={20} color={colors.red800} />
-                <Text style={styles.cardRatings}>1.2K</Text>
-              </View>
+              <Rating rating={media?.rating} />
             </View>
             <Text
               style={styles.cardDescription}
@@ -161,15 +157,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
     backgroundColor: 'transparent',
-  },
-  cardHeart: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  cardRatings: {
-    marginLeft: 5,
-    fontSize: 12,
-    color: colors.white,
   },
 });

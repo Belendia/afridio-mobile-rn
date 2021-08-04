@@ -25,6 +25,7 @@ import {downloadTracks} from '../../helpers/Utils';
 import {RootStoreType} from '../../redux/rootReducer';
 import {startToLikeMedia} from '../../redux/slices';
 import {ProgressBar} from '../ProgressBar';
+import {Rating} from './Rating';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -85,10 +86,7 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
           </Text>
           <Chip values={media?.genres} style={{marginTop: 5}} />
           <View style={styles.cardNumbers}>
-            <View style={styles.ratingContainer}>
-              <AntDesign name="heart" size={16} color={colors.red800} />
-              <Text style={styles.ratingText}>{media?.rating}</Text>
-            </View>
+            <Rating rating={media?.rating} />
           </View>
         </View>
         <View style={styles.playContainer}>
@@ -202,17 +200,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 5,
     backgroundColor: 'transparent',
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  ratingText: {
-    marginLeft: 6,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: colors.red300,
   },
   contentContainer: {
     flex: 1,
