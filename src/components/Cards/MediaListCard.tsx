@@ -11,6 +11,7 @@ import {Media, MediaSource} from '../../../types';
 import {Cover} from '../Media/Cover';
 import {useDispatch} from 'react-redux';
 import {setMediaSlug, setMediaSource} from '../../redux/slices';
+import {Rating} from '../Media/Rating';
 
 type MediaListCardProps = {
   media: Media;
@@ -46,12 +47,7 @@ const MediaListCard = ({
               {media.title}
             </Text>
             <Chip values={media.genres} />
-            <View style={styles.cardNumbers}>
-              <View style={styles.cardHeart}>
-                <Ionicons name="heart" size={20} color={colors.red800} />
-                <Text style={styles.cardRatings}>1.2k</Text>
-              </View>
-            </View>
+            <Rating rating={media.rating} />
             <Text
               style={styles.cardDescription}
               numberOfLines={3}
@@ -107,21 +103,6 @@ const styles = StyleSheet.create({
     color: colors.black300,
     fontSize: 13,
     marginTop: 5,
-  },
-  cardNumbers: {
-    flexDirection: 'row',
-    marginTop: 5,
-    backgroundColor: 'transparent',
-  },
-  cardHeart: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-  cardRatings: {
-    marginLeft: 5,
-    fontSize: 12,
-    color: colors.black300,
   },
   remove: {
     marginTop: 5,

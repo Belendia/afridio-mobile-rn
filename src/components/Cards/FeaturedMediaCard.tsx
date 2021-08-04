@@ -71,9 +71,8 @@ const FeaturedMediaCard = memo(
               <Chip values={[media.genres[0]]} />
             )}
 
-            <View style={styles.cardNumbers}>
-              <Rating rating={media?.rating} />
-            </View>
+            <Rating rating={media?.rating} />
+
             <Text
               style={styles.cardDescription}
               numberOfLines={2}
@@ -152,10 +151,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 5,
     marginBottom: 10,
-  },
-  cardNumbers: {
-    flexDirection: 'row',
-    marginTop: 5,
-    backgroundColor: 'transparent',
   },
 });

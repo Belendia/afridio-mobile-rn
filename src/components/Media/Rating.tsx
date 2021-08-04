@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'transparent',
+    marginTop: 5,
   },
   ratingText: {
     marginLeft: 6,

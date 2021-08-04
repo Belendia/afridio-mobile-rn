@@ -85,9 +85,8 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
             {media?.description}
           </Text>
           <Chip values={media?.genres} style={{marginTop: 5}} />
-          <View style={styles.cardNumbers}>
-            <Rating rating={media?.rating} />
-          </View>
+
+          <Rating rating={media?.rating} />
         </View>
         <View style={styles.playContainer}>
           {/* <View style={styles.outerCircle}></View> */}
@@ -195,11 +194,6 @@ const styles = StyleSheet.create({
   cardTagline: {
     color: colors.red300,
     fontSize: 15,
-  },
-  cardNumbers: {
-    flexDirection: 'row',
-    marginTop: 5,
-    backgroundColor: 'transparent',
   },
   contentContainer: {
     flex: 1,
