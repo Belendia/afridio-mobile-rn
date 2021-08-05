@@ -1,5 +1,11 @@
 #import "AppDelegate.h"
 
+// Added to solve the "RCTBridge required dispatch_sync to load RCTDevLoadingView"
+#if RCT_DEV
+#import <React/RCTDevLoadingView.h>
+#endif
+// TILL HERE
+
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -34,14 +40,20 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
+  // Added to solve the "RCTBridge required dispatch_sync to load RCTDevLoadingView"
+  #if RCT_DEV
+    [bridge moduleForClass:[RCTDevLoadingView class]];
+  #endif
+  // TILL HERE
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"Afridio"
                                             initialProperties:nil];
 
+  //make the background black in both cases since it was showing white background in black theme
   if (@available(iOS 13.0, *)) {
-      rootView.backgroundColor = [UIColor systemBackgroundColor];
+      rootView.backgroundColor = [UIColor blackColor];
   } else {
-      rootView.backgroundColor = [UIColor whiteColor];
+      rootView.backgroundColor = [UIColor blackColor];
   }
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
