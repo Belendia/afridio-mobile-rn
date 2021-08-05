@@ -4,11 +4,10 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
-  ActivityIndicator,
+  Share,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {Chip} from './Chip';
@@ -24,7 +23,6 @@ import {Size} from '../../constants/Options';
 import {downloadTracks} from '../../helpers/Utils';
 import {RootStoreType} from '../../redux/rootReducer';
 import {startToLikeMedia} from '../../redux/slices';
-import {ProgressBar} from '../ProgressBar';
 import {Rating} from './Rating';
 
 const Tab = createMaterialTopTabNavigator();
@@ -61,6 +59,25 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
       }
     }
   }, [mediaSlugDownloading, media]);
+
+  const onShare = useCallback(async () => {
+    try {
+      const result = await Share.share({
+        message: `afridio://Media?id=${media?.slug}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  }, [media?.slug]);
 
   const likeMedia = useCallback(() => {
     dispatch(startToLikeMedia({slug: media?.slug, liked: !media?.liked}));
@@ -119,7 +136,8 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
               />
             )}
 
-            <MediaButton name="share" label="Share" onPress={() => true} />
+            <MediaButton name="share" label="Share" onPress={onShare} />
+
             {mediaSlugDownloading &&
             mediaSlugDownloading === media?.slug &&
             mediaDownloadProgress !== null ? (

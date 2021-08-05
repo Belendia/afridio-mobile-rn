@@ -36,7 +36,7 @@ const MediaListCard = ({
         onPress={() => {
           dispatch(setMediaSlug(media.slug));
           dispatch(dispatch(setMediaSource(mediaSource)));
-          navigation.navigate('MediaScreen', {
+          navigation.navigate('Media', {
             slug: media.slug,
           });
         }}>

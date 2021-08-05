@@ -42,6 +42,7 @@
 		657C2A37F969C0F07FD20CE4 /* Pods-Afridio-AfridioTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Afridio-AfridioTests.release.xcconfig"; path = "Target Support Files/Pods-Afridio-AfridioTests/Pods-Afridio-AfridioTests.release.xcconfig"; sourceTree = "<group>"; };
 		7B69863B269A28F800993560 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		7B8B88B8269CB10A00D6D2AD /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = Afridio/BootSplash.storyboard; sourceTree = "<group>"; };
+		7BDBCC4626BBB23200BE518C /* Afridio.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Afridio.entitlements; path = Afridio/Afridio.entitlements; sourceTree = "<group>"; };
 		B7294774C0F63D748B407AAA /* libPods-Afridio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Afridio.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA692093714276804106FB9A /* Pods-Afridio-AfridioTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Afridio-AfridioTests.debug.xcconfig"; path = "Target Support Files/Pods-Afridio-AfridioTests/Pods-Afridio-AfridioTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -88,6 +89,7 @@
 		13B07FAE1A68108700A75B9A /* Afridio */ = {
 			isa = PBXGroup;
 			children = (
+				7BDBCC4626BBB23200BE518C /* Afridio.entitlements */,
 				7B8B88B8269CB10A00D6D2AD /* BootSplash.storyboard */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -489,6 +491,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Afridio/Afridio.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Afridio/Info.plist;
@@ -515,6 +518,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Afridio/Afridio.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Afridio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

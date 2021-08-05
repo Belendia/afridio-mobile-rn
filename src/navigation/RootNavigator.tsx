@@ -18,7 +18,7 @@ const RootNavigator = () => {
       // mode="modal"
     >
       <Stack.Screen name="Root" component={BottomTabNavigator} />
-      <Stack.Screen name="MediaScreen" component={MediaScreen} />
+      <Stack.Screen name="Media" component={MediaScreen} />
       <Stack.Screen name="PlayerScreen" component={PlayerScreen} />
       <Stack.Screen
         name="NotFound"

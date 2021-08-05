@@ -34,7 +34,7 @@ const SimpleMediaCard = memo(({media, mediaSource}: SimpleMediaCardProps) => {
         dispatch(setMediaSource(mediaSource));
         dispatch(setMediaLoadingTrue());
         dispatch(setMediaSlug(media.slug));
-        navigation.navigate('MediaScreen', {
+        navigation.navigate('Media', {
           slug: media.slug,
         });
       }}>

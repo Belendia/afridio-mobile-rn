@@ -42,7 +42,7 @@ export const PlayerScreen = () => {
      * should not show the mini player because when the main screen
      * is closing, it will return back to the main player again.
      */
-    navigation.navigate('MediaScreen', {
+    navigation.navigate('Media', {
       slug: playlistMedia?.slug,
       disableShowMiniPlayer: true,
     });
