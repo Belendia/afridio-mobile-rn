@@ -133,10 +133,6 @@ const Tracks = () => {
 export default Tracks;
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-    marginHorizontal: 16,
-  },
   title: {
     color: colors.red300,
   },
