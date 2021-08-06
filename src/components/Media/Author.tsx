@@ -1,13 +1,17 @@
-import React, { memo } from "react";
-import { StyleSheet } from "react-native";
-import { Avatar } from "react-native-elements";
+import React, {memo} from 'react';
+import {StyleSheet} from 'react-native';
+import {Avatar} from 'react-native-elements';
 
-import { Author as AuthorType } from "../../../types";
-import { colors } from "../../constants/Colors";
-import { View, Text } from "../Themed";
+import {Author as AuthorType} from '../../../types';
+import {colors} from '../../constants/Colors';
+import {View, Text} from '../Themed';
+
+type AuthorProps = {
+  size: ('small' | 'medium' | 'large' | 'xlarge') | number;
+};
 
 const Author = memo(
-  ({ name, slug, photo }: AuthorType) => {
+  ({name, slug, photo, size}: AuthorType & AuthorProps) => {
     let cover = null;
     if (photo && photo?.length > 0) {
       cover = photo[0].file;
@@ -21,13 +25,13 @@ const Author = memo(
             source={{
               uri: `${cover}`,
             }}
-            size="large"
+            size={size}
           />
         ) : (
           <Avatar
             rounded
-            source={require("../../../assets/images/male-avatar.png")}
-            size="large"
+            source={require('../../../assets/images/male-avatar.png')}
+            size={size}
           />
         )}
         <View style={styles.characterContainer}>
@@ -45,25 +49,25 @@ const Author = memo(
       return false;
     }
     return true;
-  }
+  },
 );
 
-export { Author };
+export {Author};
 
 const styles = StyleSheet.create({
   castContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginBottom: 15,
   },
   characterContainer: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     paddingLeft: 16,
   },
   characterName: {
     color: colors.red300,
-    flexDirection: "column",
+    flexDirection: 'column',
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
   },
 });

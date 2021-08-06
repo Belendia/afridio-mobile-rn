@@ -21,8 +21,10 @@ const BottomTabNavigator = () => {
       //     <BottomTabBar {...props} />
       //   </>
       // )}
-      tabBarOptions={{
-        activeTintColor: Colors['dark'].tint,
+
+      screenOptions={{
+        tabBarActiveTintColor: Colors['dark'].tint,
+        headerShown: false,
       }}>
       <BottomTab.Screen
         name="Home"

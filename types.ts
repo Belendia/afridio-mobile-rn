@@ -1,6 +1,7 @@
 export type RootStackParamList = {
   Root: undefined;
   Media: undefined;
+  Info: undefined;
   PlayerScreen: undefined;
   NotFound: undefined;
 };

@@ -6,9 +6,9 @@ import {
   Alert,
   Share,
 } from 'react-native';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 import {Chip} from './Chip';
 import {Cover} from './Cover';
@@ -25,8 +25,6 @@ import {RootStoreType} from '../../redux/rootReducer';
 import {startToLikeMedia} from '../../redux/slices';
 import {Rating} from './Rating';
 
-const Tab = createMaterialTopTabNavigator();
-
 type ContentProps = {
   media: Media | undefined;
   isPlaying: boolean | undefined;
@@ -35,6 +33,7 @@ type ContentProps = {
 
 const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const {
     mediaSlugDownloading,
@@ -59,6 +58,10 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
       }
     }
   }, [mediaSlugDownloading, media]);
+
+  const onInfo = useCallback(() => {
+    navigation.navigate('Info');
+  }, []);
 
   const onShare = useCallback(async () => {
     try {
@@ -89,7 +92,7 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
       scrollEventThrottle={100}
       bounces={false}
       showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}>
+      showsVerticalScrollIndicator={true}>
       <View style={styles.cardContainer}>
         <Cover images={media?.images} size={Size.Medium} />
 
@@ -106,7 +109,6 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
           <Rating rating={media?.rating} />
         </View>
         <View style={styles.playContainer}>
-          {/* <View style={styles.outerCircle}></View> */}
           <TouchableOpacity onPress={onPlayPress} style={styles.outerCircle}>
             <Ionicons
               name={isPlaying ? 'pause' : 'play'}
@@ -136,6 +138,8 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
               />
             )}
 
+            <MediaButton name="info" label="Detail" onPress={onInfo} />
+
             <MediaButton name="share" label="Share" onPress={onShare} />
 
             {mediaSlugDownloading &&
@@ -155,29 +159,9 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
             )}
           </View>
         ) : null}
-
-        <Tab.Navigator
-          initialRouteName="Chapter"
-          tabBarOptions={{
-            activeTintColor: 'white',
-            labelStyle: {fontSize: 12},
-            style: {backgroundColor: colors.black600},
-            indicatorStyle: {
-              backgroundColor: colors.red800,
-            },
-          }}>
-          <Tab.Screen
-            name="Chapter"
-            component={Tracks}
-            options={{tabBarLabel: 'Chapters'}}
-          />
-          <Tab.Screen
-            name="Info"
-            component={Info}
-            options={{tabBarLabel: 'Info'}}
-          />
-        </Tab.Navigator>
       </View>
+      <View style={styles.divider} />
+      <Tracks />
     </ScrollView>
   );
 };
@@ -239,5 +223,10 @@ const styles = StyleSheet.create({
   },
   playIcon: {
     marginLeft: 3,
+  },
+  divider: {
+    paddingTop: 5,
+    borderTopColor: colors.black700,
+    borderTopWidth: 0.5,
   },
 });

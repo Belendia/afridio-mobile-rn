@@ -18,6 +18,7 @@ const PlayerContainer = ({
   iconName,
   showRightButton,
   onRightButtonPressed,
+
   children,
 }: PlayerContainerProps) => {
   const navigation = useNavigation();
