@@ -16,9 +16,9 @@ class MediaProgress extends PureComponent<MediaProgressProps> {
     return (
       <View style={styles.container}>
         {type == ProgressType.ActivityIndicator ? (
-          <ActivityIndicator size={24} color={colors.red900} />
+          <ActivityIndicator size={22} color={colors.red900} />
         ) : (
-          <Progress.Pie progress={progress} size={24} color={colors.red800} />
+          <Progress.Pie progress={progress} size={22} color={colors.red900} />
         )}
         <Text style={styles.label}>{label}</Text>
       </View>

@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     flexDirection: 'row',
-    marginHorizontal: 10,
-    backgroundColor: colors.black600,
+    marginHorizontal: 5,
+    backgroundColor: colors.black700,
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
     paddingVertical: 5,
