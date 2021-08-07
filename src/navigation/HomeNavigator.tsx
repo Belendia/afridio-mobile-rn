@@ -9,7 +9,10 @@ const HomeStack = createStackNavigator<HomeParamList>();
 
 const HomeNavigator = () => {
   return (
-    <HomeStack.Navigator>
+    <HomeStack.Navigator
+      screenOptions={{
+        headerTintColor: 'white',
+      }}>
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen} //HomeScreen
