@@ -43,6 +43,7 @@ class AfridioEndpoints {
   likeMedia = (slug: string) => {
     return `${this.V1}/medias/${slug}/like/`;
   };
+  updateUser = () => `${this.V1}/user/update/`;
 }
 
 export default new AfridioEndpoints();

@@ -3,6 +3,7 @@ import {StyleSheet, ScrollView, SafeAreaView} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 import {Text, View} from '../../components/Themed';
 import {
@@ -10,6 +11,7 @@ import {
   setDateOfBirth,
   setName,
   setSex,
+  startUpdatingUser,
 } from '../../redux/slices/authSlice';
 import {
   DateInput,
@@ -24,6 +26,8 @@ import {formatDate, titleCase} from '../../helpers/Utils';
 
 const SettingsScreen = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   const [sex, setSexOption] = useState<SexOption>({key: 'male', value: 'Male'});
 
   const moreOptionsLength = SettingsMoreOptions.length;
@@ -44,6 +48,22 @@ const SettingsScreen = () => {
       setSexOption({key: user?.sex.toUpperCase(), value: titleCase(user?.sex)});
     }
   }, [user?.sex]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      if (userDataSynced === false) {
+        dispatch(
+          startUpdatingUser({
+            name: user?.name,
+            sex: user?.sex,
+            date_of_birth: user?.date_of_birth,
+          }),
+        );
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, userDataSynced, user?.name, user?.sex, user?.date_of_birth]);
 
   return (
     <SafeAreaView style={styles.container}>

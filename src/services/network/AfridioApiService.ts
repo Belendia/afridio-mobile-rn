@@ -107,7 +107,7 @@ class AfridioApiService {
       const reqTimeout = timeoutInSeconds || this.defaultTimeout;
 
       const contoller = new AbortController();
-      if (verb === 'POST' && data) {
+      if ((verb === 'POST' || verb === 'PUT') && data) {
         data = {body: JSON.stringify(data)};
       }
       const finalConfig = {signal: contoller.signal, ...reqConfig, ...data};
@@ -245,6 +245,16 @@ class AfridioApiService {
         url: AfridioEndpoints.likeMedia(slug),
         verb: 'POST',
         data: {liked: liked},
+        withToken: true,
+      }),
+    );
+
+  updateUser = (data: object) =>
+    from(
+      this.api({
+        url: AfridioEndpoints.updateUser(),
+        verb: 'PUT',
+        data: {...data},
         withToken: true,
       }),
     );

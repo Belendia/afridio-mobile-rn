@@ -11,7 +11,7 @@ import {colors} from '../constants/Colors';
 import {startToGetHomeScreenData} from '../redux/slices/homeSlice';
 import {RootStoreType} from '../redux/rootReducer';
 import {ProgressBar, Error} from '../components';
-import {setTabBarHeight} from '../redux/slices';
+import {setTabBarHeight, startUpdatingUser} from '../redux/slices';
 import layout from '../constants/Layout';
 import {MediaSource} from '../constants/Options';
 
@@ -20,14 +20,21 @@ const HomeScreen = () => {
   const tabBarHeight = useBottomTabBarHeight();
 
   //redux
-  const {loading, featuredMedias, nonFeaturedMedias, error} = useSelector(
-    (state: RootStoreType) => ({
-      loading: state.homeReducer.loading,
-      featuredMedias: state.homeReducer.featuredMedias,
-      nonFeaturedMedias: state.homeReducer.nonFeaturedMedias,
-      error: state.homeReducer.error,
-    }),
-  );
+  const {
+    loading,
+    featuredMedias,
+    nonFeaturedMedias,
+    error,
+    userDataSynced,
+    user,
+  } = useSelector((state: RootStoreType) => ({
+    loading: state.homeReducer.loading,
+    featuredMedias: state.homeReducer.featuredMedias,
+    nonFeaturedMedias: state.homeReducer.nonFeaturedMedias,
+    error: state.homeReducer.error,
+    userDataSynced: state.authReducer.userDataSynced,
+    user: state.authReducer.user,
+  }));
 
   const fetchData = useCallback(() => {
     dispatch(startToGetHomeScreenData());
@@ -36,6 +43,19 @@ const HomeScreen = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // If there is unsynced user data, sync it.
+  useEffect(() => {
+    if (userDataSynced === false) {
+      dispatch(
+        startUpdatingUser({
+          name: user?.name,
+          sex: user?.sex,
+          date_of_birth: user?.date_of_birth,
+        }),
+      );
+    }
+  }, [userDataSynced, user?.name, user?.sex, user?.date_of_birth]);
 
   useEffect(() => {
     // tabBarHeight is required by the MiniPlayer component to set its bottom

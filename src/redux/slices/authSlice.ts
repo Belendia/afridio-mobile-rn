@@ -176,6 +176,17 @@ const authSlice = createSlice({
       },
       userDataSynced: false,
     }),
+    startUpdatingUser: (state, action) => ({
+      ...state,
+    }),
+    updateUserSuccess: (state, action) => ({
+      ...state,
+      userDataSynced: true,
+    }),
+    updateUserFailed: (state, action) => ({
+      ...state,
+      userDataSynced: false,
+    }),
   },
 });
 
@@ -322,12 +333,28 @@ export const resendOTPEpic = (action$: Observable<Action<any>>) =>
     }),
   );
 
+export const updateUserEpic = (action$: Observable<Action<any>>) =>
+  action$.pipe(
+    ofType(startUpdatingUser.type),
+    switchMap(({payload}) => {
+      return AfridioApiService.updateUser(payload).pipe(
+        map(res => {
+          return updateUserSuccess(res);
+        }),
+        catchError(err => {
+          return of(updateUserFailed(err));
+        }),
+      );
+    }),
+  );
+
 export const authEpics = [
   loginEpic,
   logoutEpic,
   registerEpic,
   verifyEpic,
   resendOTPEpic,
+  updateUserEpic,
 ];
 
 export const {
@@ -351,6 +378,9 @@ export const {
   setSex,
   setName,
   setDateOfBirth,
+  startUpdatingUser,
+  updateUserSuccess,
+  updateUserFailed,
 } = authSlice.actions;
 
 export default authSlice.reducer;
