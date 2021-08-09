@@ -23,6 +23,18 @@ const rootPersistConfig = {
   ],
 };
 
+// authReducer
+const authReducerPersistConfig = {
+  key: 'authReducer',
+  storage: AsyncStorage,
+  whitelist: ['user', 'userDataSynced'],
+};
+
+const persistedAuthReducer = persistReducer(
+  authReducerPersistConfig,
+  authReducer,
+);
+
 // mediaReducer
 const mediaReducerPersistConfig = {
   key: 'mediaReducer',
@@ -36,7 +48,7 @@ const persistedMediaReducer = persistReducer(
 );
 
 const rootReducer = combineReducers({
-  authReducer,
+  authReducer: persistedAuthReducer,
   homeReducer,
   mediaReducer: persistedMediaReducer,
   layoutReducer,

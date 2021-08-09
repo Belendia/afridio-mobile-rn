@@ -199,3 +199,25 @@ export const deleteTracks = (media: Media) => {
     }
   }
 };
+
+export const titleCase = (str: string) => {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => {
+      return word.replace(word[0], word[0].toUpperCase());
+    })
+    .join(' ');
+};
+
+export const formatDate = (date: Date) => {
+  var d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
+};

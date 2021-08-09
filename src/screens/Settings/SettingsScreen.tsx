@@ -1,26 +1,50 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, ScrollView, SafeAreaView} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {Text, View} from '../../components/Themed';
-import {authLogout} from '../../redux/slices/authSlice';
-import {DateInput, EditableText, OptionsInput, Option} from '../../components';
+import {
+  authLogout,
+  setDateOfBirth,
+  setName,
+  setSex,
+} from '../../redux/slices/authSlice';
+import {
+  DateInput,
+  EditableText,
+  OptionsInput,
+  SexOption,
+} from '../../components';
 import {SexOptions, SettingsMoreOptions} from '../../constants/Options';
 import {colors} from '../../constants/Colors';
+import {RootStoreType} from '../../redux/rootReducer';
+import {formatDate, titleCase} from '../../helpers/Utils';
 
 const SettingsScreen = () => {
   const dispatch = useDispatch();
-  const [sex, setSex] = useState<Option>({key: 'male', value: 'Male'});
+  const [sex, setSexOption] = useState<SexOption>({key: 'male', value: 'Male'});
 
   const moreOptionsLength = SettingsMoreOptions.length;
+
+  const {user, userDataSynced} = useSelector((state: RootStoreType) => ({
+    user: state.authReducer.user,
+    userDataSynced: state.authReducer.userDataSynced,
+  }));
 
   const menuActions = (menu: string) => {
     if (menu == 'Sign out') {
       dispatch(authLogout('logout'));
     }
   };
+
+  useEffect(() => {
+    if (user?.sex) {
+      setSexOption({key: user?.sex.toUpperCase(), value: titleCase(user?.sex)});
+    }
+  }, [user?.sex]);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
@@ -30,25 +54,27 @@ const SettingsScreen = () => {
           <View style={styles.inputsContainer}>
             <EditableText
               bottomDivider
-              onChangeText={text => console.log(text)}
+              title="Phone"
+              value={user?.phone_number}
+              iconName={'phone'}
+              editable={false}
+              keyboardType={'phone-pad'}
+            />
+            <EditableText
+              bottomDivider
+              onChangeText={text => dispatch(setName(text))}
               title="Name"
-              value="Belendia"
+              value={user?.name}
               iconName={'user'}
             />
             <DateInput
               title="Birth date"
               bottomDivider
               iconName={'event'}
-              onSubmit={date => console.log(date)}
-            />
-            <EditableText
-              bottomDivider
-              onChangeText={text => console.log(text)}
-              title="Phone"
-              value={'+251923157725'}
-              iconName={'phone'}
-              editable={false}
-              keyboardType={'phone-pad'}
+              value={
+                user?.date_of_birth ? new Date(user.date_of_birth) : undefined
+              }
+              onSubmit={date => dispatch(setDateOfBirth(formatDate(date)))}
             />
             <OptionsInput
               title={'Sex'}
@@ -57,7 +83,9 @@ const SettingsScreen = () => {
               bottomDivider={false}
               defaultValue={sex}
               style={{marginLeft: 30}}
-              onPress={selectedSex => setSex(selectedSex)}
+              onPress={selectedSex => {
+                dispatch(setSex(selectedSex.key));
+              }}
             />
           </View>
         </View>
