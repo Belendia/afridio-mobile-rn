@@ -13,7 +13,7 @@ import {RootStoreType} from '../redux/rootReducer';
 import {ProgressBar, Error} from '../components';
 import {setTabBarHeight} from '../redux/slices';
 import layout from '../constants/Layout';
-import {MediaSource} from '../../types';
+import {MediaSource} from '../constants/Options';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();

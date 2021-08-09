@@ -1,13 +1,13 @@
 import React, {PureComponent} from 'react';
 import {View, StyleSheet, Text, ActivityIndicator} from 'react-native';
 import * as Progress from 'react-native-progress';
-import {ProgressType} from '../../../types';
 import {colors} from '../../constants/Colors';
+import {ProgressIndicator} from '../../constants/Options';
 
 type MediaProgressProps = {
   label: string;
   progress?: number | undefined;
-  type: ProgressType;
+  type: ProgressIndicator;
 };
 
 class MediaProgress extends PureComponent<MediaProgressProps> {
@@ -15,7 +15,7 @@ class MediaProgress extends PureComponent<MediaProgressProps> {
     const {label, progress, type} = this.props;
     return (
       <View style={styles.container}>
-        {type == ProgressType.ActivityIndicator ? (
+        {type == ProgressIndicator.ActivityIndicator ? (
           <ActivityIndicator size={22} color={colors.red900} />
         ) : (
           <Progress.Pie progress={progress} size={22} color={colors.red900} />

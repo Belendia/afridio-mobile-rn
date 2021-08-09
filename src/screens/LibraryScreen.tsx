@@ -2,11 +2,12 @@ import React, {useCallback} from 'react';
 import {Dimensions, FlatList, Platform, StyleSheet} from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import {useDispatch, useSelector} from 'react-redux';
-import {Media, MediaSource} from '../../types';
+import {Media} from '../../types';
 
 import {MediaListCard} from '../components';
 import {Text, View} from '../components/Themed';
 import {colors} from '../constants/Colors';
+import {MediaSource} from '../constants/Options';
 import {deleteTracks} from '../helpers/Utils';
 import {RootStoreType} from '../redux/rootReducer';
 import {deleteMediaFromLibrary} from '../redux/slices';

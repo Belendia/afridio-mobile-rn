@@ -1,7 +1,7 @@
 import {Track} from 'react-native-track-player';
 import RNFS from 'react-native-fs';
 
-import {DownloadStatus, Image, Media, Track as MediaTrack} from '../../types';
+import {Image, Media, Track as MediaTrack} from '../../types';
 import {
   addToLibrary,
   markTrackAsDownloaded,
@@ -11,7 +11,7 @@ import {
   startToSendTrackLogDownload,
 } from '../redux/slices';
 import {store} from '../redux/store';
-import {MediaDownloadProgress} from '../components/Media/MediaDownloadProgress';
+import {DownloadStatus} from '../constants/Options';
 
 export const getPoster = (images: Image[]) => {
   const poster = images?.filter(img => img.width === 500);

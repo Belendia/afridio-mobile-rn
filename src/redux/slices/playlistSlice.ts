@@ -1,4 +1,3 @@
-import {MediaSource} from './../../../types';
 import {createSlice} from '@reduxjs/toolkit';
 import {ofType} from 'redux-observable';
 import {of, from, Observable} from 'rxjs';
@@ -8,6 +7,7 @@ import {Action} from '../rootReducer';
 import {Media} from '../../../types';
 import setupPlayer from '../../services/player/SetupPlayer';
 import {CheckboxOption} from '../../components';
+import {MediaSource} from '../../constants/Options';
 
 type PlayerReducerType = {
   playlistMedia: Media | null;

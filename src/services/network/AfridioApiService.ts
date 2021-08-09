@@ -4,7 +4,7 @@ import NetworkHelper from '../../helpers/NetworkHelper';
 import AfridioEndpoints from './AfridioEndpoints';
 import AfridioHttpException from './exceptions/AfridioHttpException';
 import OfflineException from './exceptions/OfflineException';
-import {DownloadStatus} from '../../../types';
+import {DownloadStatus} from '../../constants/Options';
 
 type ContentType = 'JSON' | 'Text' | 'Unsupported';
 interface ApiConfig {

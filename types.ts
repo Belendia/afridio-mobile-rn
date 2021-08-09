@@ -109,18 +109,3 @@ export type Format = {
   sequence: number;
   slug: string;
 };
-
-export enum MediaSource {
-  Server,
-  Local,
-}
-
-export enum DownloadStatus {
-  DOWNLOADED = 'DOWNLOADED',
-  REMOVED = 'REMOVED',
-}
-
-export enum ProgressType {
-  ActivityIndicator = 1,
-  Pie = 2,
-}

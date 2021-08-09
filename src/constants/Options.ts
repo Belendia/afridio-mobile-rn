@@ -37,3 +37,18 @@ export enum Size {
   Medium,
   Small,
 }
+
+export enum MediaSource {
+  Server,
+  Local,
+}
+
+export enum DownloadStatus {
+  DOWNLOADED = 'DOWNLOADED',
+  REMOVED = 'REMOVED',
+}
+
+export enum ProgressIndicator {
+  ActivityIndicator = 1,
+  Pie = 2,
+}

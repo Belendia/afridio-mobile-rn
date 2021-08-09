@@ -6,7 +6,8 @@ import {useDispatch} from 'react-redux';
 import {View, Text} from './Themed';
 import {SimpleMediaCard} from './Cards/SimpleMediaCard';
 import {colors} from '../constants/Colors';
-import {Media, MediaSource} from '../../types';
+import {Media} from '../../types';
+import {MediaSource} from '../constants/Options';
 
 type HomeCategoryProps = {
   id: string;

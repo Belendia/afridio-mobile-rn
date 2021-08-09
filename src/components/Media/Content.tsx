@@ -16,10 +16,9 @@ import {MediaButton} from './MediaButton';
 import {MediaProgress} from './MediaProgress';
 import {colors} from '../../constants/Colors';
 import {View, Text} from '../Themed';
-import Info from './Info';
 import Tracks from './Tracks';
-import {Media, MediaSource, ProgressType} from '../../../types';
-import {Size} from '../../constants/Options';
+import {Media} from '../../../types';
+import {MediaSource, ProgressIndicator, Size} from '../../constants/Options';
 import {downloadTracks} from '../../helpers/Utils';
 import {RootStoreType} from '../../redux/rootReducer';
 import {startToLikeMedia} from '../../redux/slices';
@@ -126,7 +125,7 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
             {likingMedia ? (
               <MediaProgress
                 label="Like"
-                type={ProgressType.ActivityIndicator}
+                type={ProgressIndicator.ActivityIndicator}
               />
             ) : (
               <MediaButton
@@ -148,7 +147,7 @@ const Content = ({media, isPlaying, onPlayPress}: ContentProps) => {
               <MediaProgress
                 label="Download"
                 progress={mediaDownloadProgress}
-                type={ProgressType.Pie}
+                type={ProgressIndicator.Pie}
               />
             ) : (
               <MediaButton

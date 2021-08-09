@@ -17,7 +17,7 @@ import {
   startToGetMediaListByFormat,
   clearMedia,
 } from '../redux/slices/mediaSlice';
-import {MediaSource} from '../../types';
+import {MediaSource} from '../constants/Options';
 
 const {height} = Dimensions.get('window');
 

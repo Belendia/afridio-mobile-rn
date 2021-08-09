@@ -24,7 +24,7 @@ import {
   Backdrop,
 } from '../../components';
 import {getTrack} from '../../helpers/Utils';
-import {MediaSource} from '../../../types';
+import {MediaSource} from '../../constants/Options';
 
 const MediaScreen = () => {
   const dispatch = useDispatch();

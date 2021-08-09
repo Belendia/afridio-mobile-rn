@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, ScrollView, FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {MediaSource} from '../../types';
 
 import {
   MediaListCard,
@@ -16,6 +15,7 @@ import {
 
 import {View} from '../components/Themed';
 import {colors} from '../constants/Colors';
+import {MediaSource} from '../constants/Options';
 import {RootStoreType} from '../redux/rootReducer';
 import {
   startToGetSearchBy,

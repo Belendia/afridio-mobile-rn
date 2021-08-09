@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 
 import {View, Text} from '../Themed';
 import {colors} from '../../constants/Colors';
-import {Media, MediaSource} from '../../../types';
+import {Media} from '../../../types';
 import {Chip} from '../Media/Chip';
 import {
   setMediaLoadingTrue,
@@ -15,6 +15,7 @@ import {
   setMediaSource,
 } from '../../redux/slices';
 import {Rating} from '../Media/Rating';
+import {MediaSource} from '../../constants/Options';
 
 type FeaturedMediaCardProps = {
   media: Media;

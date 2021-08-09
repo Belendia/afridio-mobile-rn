@@ -5,13 +5,14 @@ import {useNavigation} from '@react-navigation/native';
 
 import {View, Text} from '../Themed';
 import {colors} from '../../constants/Colors';
-import {Media, MediaSource} from '../../../types';
+import {Media} from '../../../types';
 import {
   setMediaLoadingTrue,
   setMediaSlug,
   setMediaSource,
 } from '../../redux/slices';
 import {Cover} from '../Media/Cover';
+import {MediaSource} from '../../constants/Options';
 
 type SimpleMediaCardProps = {
   media: Media;

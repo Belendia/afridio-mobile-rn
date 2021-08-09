@@ -3,11 +3,12 @@ import {ofType} from 'redux-observable';
 import {of, Observable, from} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 
-import {Media, MediaSource} from '../../../types';
+import {Media} from '../../../types';
 import {Action} from '../rootReducer';
 import AfridioApiService from '../../services/network/AfridioApiService';
 import {authLogout} from './authSlice';
-import {deleteTracks, getQueryParam} from '../../helpers/Utils';
+import {getQueryParam} from '../../helpers/Utils';
+import {MediaSource} from '../../constants/Options';
 
 type MediaReducerType = {
   media: Media | null;

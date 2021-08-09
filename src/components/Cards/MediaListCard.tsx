@@ -7,11 +7,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {View, Text} from '../Themed';
 import {colors} from '../../constants/Colors';
 import {Chip} from '../Media/Chip';
-import {Media, MediaSource} from '../../../types';
+import {Media} from '../../../types';
 import {Cover} from '../Media/Cover';
 import {useDispatch} from 'react-redux';
 import {setMediaSlug, setMediaSource} from '../../redux/slices';
 import {Rating} from '../Media/Rating';
+import {MediaSource} from '../../constants/Options';
 
 type MediaListCardProps = {
   media: Media;
