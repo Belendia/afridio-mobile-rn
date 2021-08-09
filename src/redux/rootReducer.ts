@@ -27,7 +27,7 @@ const rootPersistConfig = {
 const authReducerPersistConfig = {
   key: 'authReducer',
   storage: AsyncStorage,
-  whitelist: ['user', 'userDataSynced'],
+  whitelist: ['user', 'syncUserData'],
 };
 
 const persistedAuthReducer = persistReducer(

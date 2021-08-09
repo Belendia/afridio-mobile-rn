@@ -32,9 +32,9 @@ const SettingsScreen = () => {
 
   const moreOptionsLength = SettingsMoreOptions.length;
 
-  const {user, userDataSynced} = useSelector((state: RootStoreType) => ({
+  const {user, syncUserData} = useSelector((state: RootStoreType) => ({
     user: state.authReducer.user,
-    userDataSynced: state.authReducer.userDataSynced,
+    syncUserData: state.authReducer.syncUserData,
   }));
 
   const menuActions = (menu: string) => {
@@ -51,7 +51,7 @@ const SettingsScreen = () => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
-      if (userDataSynced === false) {
+      if (syncUserData) {
         dispatch(
           startUpdatingUser({
             name: user?.name,
@@ -63,7 +63,7 @@ const SettingsScreen = () => {
     });
 
     return unsubscribe;
-  }, [navigation, userDataSynced, user?.name, user?.sex, user?.date_of_birth]);
+  }, [navigation, syncUserData, user?.name, user?.sex, user?.date_of_birth]);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -21,7 +21,7 @@ type AuthReducerType = {
   password: string | null;
   otp_resend_time: number;
   resendingOTP: boolean;
-  userDataSynced: boolean;
+  syncUserData: boolean;
 };
 
 const initialState: AuthReducerType = {
@@ -38,7 +38,7 @@ const initialState: AuthReducerType = {
   password: null,
   otp_resend_time: 0,
   resendingOTP: false,
-  userDataSynced: true,
+  syncUserData: false,
 };
 
 const authSlice = createSlice({
@@ -158,7 +158,7 @@ const authSlice = createSlice({
         ...state.user,
         sex: action.payload,
       },
-      userDataSynced: false,
+      syncUserData: true,
     }),
     setName: (state, action) => ({
       ...state,
@@ -166,7 +166,7 @@ const authSlice = createSlice({
         ...state.user,
         name: action.payload,
       },
-      userDataSynced: false,
+      syncUserData: true,
     }),
     setDateOfBirth: (state, action) => ({
       ...state,
@@ -174,18 +174,17 @@ const authSlice = createSlice({
         ...state.user,
         date_of_birth: action.payload,
       },
-      userDataSynced: false,
+      syncUserData: true,
     }),
     startUpdatingUser: (state, action) => ({
       ...state,
     }),
     updateUserSuccess: (state, action) => ({
       ...state,
-      userDataSynced: true,
+      syncUserData: false,
     }),
     updateUserFailed: (state, action) => ({
       ...state,
-      userDataSynced: false,
     }),
   },
 });

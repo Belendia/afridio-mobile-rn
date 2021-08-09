@@ -25,14 +25,14 @@ const HomeScreen = () => {
     featuredMedias,
     nonFeaturedMedias,
     error,
-    userDataSynced,
+    syncUserData,
     user,
   } = useSelector((state: RootStoreType) => ({
     loading: state.homeReducer.loading,
     featuredMedias: state.homeReducer.featuredMedias,
     nonFeaturedMedias: state.homeReducer.nonFeaturedMedias,
     error: state.homeReducer.error,
-    userDataSynced: state.authReducer.userDataSynced,
+    syncUserData: state.authReducer.syncUserData,
     user: state.authReducer.user,
   }));
 
@@ -46,7 +46,7 @@ const HomeScreen = () => {
 
   // If there is unsynced user data, sync it.
   useEffect(() => {
-    if (userDataSynced === false) {
+    if (syncUserData) {
       dispatch(
         startUpdatingUser({
           name: user?.name,
@@ -55,7 +55,7 @@ const HomeScreen = () => {
         }),
       );
     }
-  }, [userDataSynced, user?.name, user?.sex, user?.date_of_birth]);
+  }, []);
 
   useEffect(() => {
     // tabBarHeight is required by the MiniPlayer component to set its bottom
