@@ -22,7 +22,8 @@ import {
 import {SexOptions, SettingsMoreOptions} from '../../constants/Options';
 import {colors} from '../../constants/Colors';
 import {RootStoreType} from '../../redux/rootReducer';
-import {formatDate, titleCase} from '../../helpers/Utils';
+import {deleteTracks, formatDate, titleCase} from '../../helpers/Utils';
+import {deleteMediaFromLibrary} from '../../redux/slices';
 
 const SettingsScreen = () => {
   const dispatch = useDispatch();
@@ -32,13 +33,18 @@ const SettingsScreen = () => {
 
   const moreOptionsLength = SettingsMoreOptions.length;
 
-  const {user, syncUserData} = useSelector((state: RootStoreType) => ({
+  const {user, syncUserData, library} = useSelector((state: RootStoreType) => ({
     user: state.authReducer.user,
     syncUserData: state.authReducer.syncUserData,
+    library: state.mediaReducer.library,
   }));
 
   const menuActions = (menu: string) => {
     if (menu == 'Sign out') {
+      for (let i = 0; i < library.length; i++) {
+        deleteTracks(library[i]);
+        dispatch(deleteMediaFromLibrary(library[i].slug));
+      }
       dispatch(authLogout('logout'));
     }
   };
