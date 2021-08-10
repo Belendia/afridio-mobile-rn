@@ -7,15 +7,7 @@ import {useFormik} from 'formik';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 
-import {
-  AuthContainer,
-  DateInput,
-  OptionsInput,
-  Option,
-  FormError,
-  PhoneInput,
-} from '../../components';
-import {SexOptions} from '../../constants/Options';
+import {AuthContainer, FormError, PhoneInput} from '../../components';
 import {colors} from '../../constants/Colors';
 import {RootStoreType} from '../../redux/rootReducer';
 import {startRegistration, resetRegError} from '../../redux/slices/authSlice';
@@ -38,8 +30,6 @@ let SignUpSchema = Yup.object().shape({
       value =>
         value != undefined && value != null && value.toString().length <= 15,
     ),
-  date_of_birth: Yup.string().required('Required'),
-  sex: Yup.string().required('Required'),
   password: Yup.string()
     .min(8, 'Too short!')
     .max(30, 'Too long!')
@@ -52,7 +42,6 @@ let SignUpSchema = Yup.object().shape({
 const SignUpScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [sex, setSex] = useState<Option | undefined>(undefined);
   const [countryCode, setCountryCode] = useState<string>('251');
 
   const {
@@ -68,8 +57,6 @@ const SignUpScreen = () => {
     initialValues: {
       name: '',
       phone_number: '',
-      sex: '',
-      date_of_birth: '',
       password: '',
       password2: '',
     },
@@ -79,8 +66,6 @@ const SignUpScreen = () => {
         startRegistration({
           phone_number: '+' + countryCode + values.phone_number,
           name: values.name,
-          date_of_birth: values.date_of_birth,
-          sex: values.sex,
           password: values.password,
           password2: values.password2,
         }),
@@ -138,34 +123,6 @@ const SignUpScreen = () => {
         }}
         onChangeCountryCode={code => {
           setCountryCode(code);
-        }}
-      />
-      <DateInput
-        title="Birth date"
-        bottomDivider={false}
-        iconName={'event'}
-        errorMessage={errors.date_of_birth}
-        onSubmit={date => {
-          setFieldValue(
-            'date_of_birth',
-            date.getFullYear() +
-              '-' +
-              (date.getMonth() + 1) +
-              '-' +
-              date.getDate(),
-          );
-        }}
-      />
-      <OptionsInput
-        title={'Sex'}
-        iconName={'user-female'}
-        values={SexOptions}
-        defaultValue={sex}
-        bottomDivider={false}
-        errorMessage={errors.sex}
-        onPress={selectedSex => {
-          setFieldValue('sex', selectedSex.key);
-          setSex(selectedSex);
         }}
       />
       <Input
