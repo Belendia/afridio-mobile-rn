@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   group: {
     flexDirection: 'row',
     borderRadius: 14,
-    borderWidth: 1,
+    borderWidth: 0.3,
     borderColor: colors.red800,
     justifyContent: 'space-between',
     backgroundColor: 'transparent',

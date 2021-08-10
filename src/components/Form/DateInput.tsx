@@ -58,7 +58,9 @@ const DateInput = ({
           </View>
         </View>
       </View>
-      {bottomDivider && <Divider style={{backgroundColor: colors.black700}} />}
+      {bottomDivider && (
+        <Divider style={{backgroundColor: colors.black700, borderWidth: 0.3}} />
+      )}
     </>
   );
 };
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     width: '30%',
     borderRadius: 8,
     borderColor: colors.red800,
-    borderWidth: 1,
+    borderWidth: 0.3,
     marginBottom: 5,
     color: colors.red300,
     height: 30,

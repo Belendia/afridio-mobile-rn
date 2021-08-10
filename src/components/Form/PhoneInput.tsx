@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { StyleSheet, TextInput, ViewStyle } from "react-native";
+import React, {useState} from 'react';
+import {StyleSheet, TextInput, ViewStyle} from 'react-native';
 import CountryPicker, {
   Country,
   CountryCode,
   DARK_THEME,
-} from "react-native-country-picker-modal";
+} from 'react-native-country-picker-modal';
 
-import { Text, View } from "../Themed";
-import { colors } from "../../constants/Colors";
+import {Text, View} from '../Themed';
+import {colors} from '../../constants/Colors';
 
 const DARK_THEME_COUNTRY = {
   ...DARK_THEME,
@@ -31,7 +31,7 @@ const PhoneInput = ({
   onChangeCountryCode,
   onChangePhoneNumber,
 }: PhoneInputProps) => {
-  const [countryCode, setCountryCode] = useState<CountryCode>("ET");
+  const [countryCode, setCountryCode] = useState<CountryCode>('ET');
 
   return (
     <View style={[styles.container, style]}>
@@ -52,7 +52,7 @@ const PhoneInput = ({
         />
         <TextInput
           placeholder="912345678"
-          onChangeText={(phoneNumber) =>
+          onChangeText={phoneNumber =>
             onChangePhoneNumber && onChangePhoneNumber(phoneNumber)
           }
           style={styles.input}
@@ -71,17 +71,17 @@ const PhoneInput = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     marginLeft: 10,
     marginRight: 10,
     marginBottom: 8,
   },
   content: {
-    flexDirection: "row",
-    justifyContent: "center",
-    backgroundColor: "transparent",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
     paddingBottom: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.3,
     borderBottomColor: colors.red800,
   },
   input: {
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { PhoneInput };
+export {PhoneInput};

@@ -223,6 +223,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     borderBottomColor: colors.red800,
+    borderBottomWidth: 0.3,
   },
   phone: {
     marginBottom: 20,

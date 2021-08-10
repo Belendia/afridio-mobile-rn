@@ -59,7 +59,9 @@ const EditableText = ({
           </Text>
         )}
       </View>
-      {bottomDivider && <Divider style={{backgroundColor: colors.black700}} />}
+      {bottomDivider && (
+        <Divider style={{backgroundColor: colors.black700, borderWidth: 0.3}} />
+      )}
     </>
   );
 };
@@ -113,5 +115,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     borderBottomColor: colors.red800,
+    borderBottomWidth: 0.3,
   },
 });
