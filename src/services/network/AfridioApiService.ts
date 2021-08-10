@@ -258,6 +258,16 @@ class AfridioApiService {
         withToken: true,
       }),
     );
+
+  changePassword = (data: object) =>
+    from(
+      this.api({
+        url: AfridioEndpoints.changePassword(),
+        verb: 'PUT',
+        data: {...data},
+        withToken: true,
+      }),
+    );
 }
 
 export default new AfridioApiService();

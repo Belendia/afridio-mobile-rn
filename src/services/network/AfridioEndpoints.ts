@@ -44,6 +44,7 @@ class AfridioEndpoints {
     return `${this.V1}/medias/${slug}/like/`;
   };
   updateUser = () => `${this.V1}/user/update/`;
+  changePassword = () => `${this.V1}/user/change_password/`;
 }
 
 export default new AfridioEndpoints();

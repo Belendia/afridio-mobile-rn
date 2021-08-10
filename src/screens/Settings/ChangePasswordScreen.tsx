@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, ScrollView, SafeAreaView} from 'react-native';
-import {Input, Button, Divider} from 'react-native-elements';
+import {StyleSheet, ScrollView, SafeAreaView, Alert} from 'react-native';
+import {Input, Button} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -10,6 +10,11 @@ import * as Yup from 'yup';
 import {Text, View} from '../../components/Themed';
 import {colors} from '../../constants/Colors';
 import {RootStoreType} from '../../redux/rootReducer';
+import {
+  setChangePasswordSuccess,
+  startChangingPassword,
+} from '../../redux/slices';
+import {FormError} from '../../components';
 
 let ChangePasswordSchema = Yup.object().shape({
   old_password: Yup.string()
@@ -21,8 +26,7 @@ let ChangePasswordSchema = Yup.object().shape({
     .max(30, 'Too long!')
     .required('Required'),
   password2: Yup.string()
-    .min(8, 'Too short!')
-    .max(30, 'Too long!')
+    .equals([Yup.ref('password')], "Passwords don't match")
     .required('Required'),
 });
 
@@ -38,24 +42,42 @@ const ChangePasswordScreen = () => {
     errors,
     touched,
     setFieldValue,
+    setErrors,
   } = useFormik({
     initialValues: {old_password: '', password: '', password2: ''},
     validationSchema: ChangePasswordSchema,
     onSubmit: values => {
-      // dispatch(
-      //   authStart({
-      //     phone_number: '+' + countryCode + values.phone_number,
-      //     password: values.password,
-      //   }),
-      // );
+      dispatch(
+        startChangingPassword({
+          old_password: values.old_password,
+          password: values.password,
+          password2: values.password2,
+        }),
+      );
     },
   });
 
-  const {user, syncUserData, library} = useSelector((state: RootStoreType) => ({
-    user: state.authReducer.user,
-    syncUserData: state.authReducer.syncUserData,
-    library: state.mediaReducer.library,
-  }));
+  const {changingPassword, changePasswordSuccess, changingPasswordError} =
+    useSelector((state: RootStoreType) => ({
+      changingPassword: state.authReducer.changingPassword,
+      changePasswordSuccess: state.authReducer.changePasswordSuccess,
+      changingPasswordError: state.authReducer.changingPasswordError,
+    }));
+
+  useEffect(() => {
+    if (changingPasswordError) {
+      setErrors(changingPasswordError);
+    }
+  }, [changingPasswordError]);
+
+  useEffect(() => {
+    if (changePasswordSuccess) {
+      Alert.alert('Success', 'Your password has been successfully updated.', [
+        {text: 'OK', onPress: () => navigation.goBack()},
+      ]);
+      dispatch(setChangePasswordSuccess(false));
+    }
+  }, [changePasswordSuccess]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -134,13 +156,14 @@ const ChangePasswordScreen = () => {
               titleStyle={{fontSize: 16, fontWeight: '600'}}
               containerStyle={{marginTop: 10}}
               onPress={() => {
-                // if (!authenticating) handleSubmit();
+                if (!changingPassword) handleSubmit();
               }}
-              loading={false}
+              loading={changingPassword}
             />
-            {/* {authError && typeof authError == 'string' && (
-        <FormError error={authError} />
-      )} */}
+            {changingPasswordError &&
+              typeof changingPasswordError == 'string' && (
+                <FormError error={changingPasswordError} />
+              )}
           </View>
         </View>
       </ScrollView>

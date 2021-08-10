@@ -22,6 +22,9 @@ type AuthReducerType = {
   otp_resend_time: number;
   resendingOTP: boolean;
   syncUserData: boolean;
+  changingPassword: boolean;
+  changePasswordSuccess: boolean;
+  changingPasswordError: object | null;
 };
 
 const initialState: AuthReducerType = {
@@ -39,6 +42,9 @@ const initialState: AuthReducerType = {
   otp_resend_time: 0,
   resendingOTP: false,
   syncUserData: false,
+  changingPassword: false,
+  changePasswordSuccess: false,
+  changingPasswordError: null,
 };
 
 const authSlice = createSlice({
@@ -185,6 +191,27 @@ const authSlice = createSlice({
     }),
     updateUserFailed: (state, action) => ({
       ...state,
+    }),
+    startChangingPassword: (state, action) => ({
+      ...state,
+      changingPassword: true,
+      changingPasswordError: null,
+      changePasswordSuccess: false,
+    }),
+    changingPasswordSuccess: (state, action) => ({
+      ...state,
+      changingPassword: false,
+      changePasswordSuccess: true,
+    }),
+    changingPasswordFailed: (state, action) => ({
+      ...state,
+      changingPassword: false,
+      changingPasswordError: action.payload,
+      changePasswordSuccess: false,
+    }),
+    setChangePasswordSuccess: (state, action) => ({
+      ...state,
+      changePasswordSuccess: action.payload,
     }),
   },
 });
@@ -347,6 +374,35 @@ export const updateUserEpic = (action$: Observable<Action<any>>) =>
     }),
   );
 
+export const changePasswordEpic = (action$: Observable<Action<any>>) =>
+  action$.pipe(
+    ofType(startChangingPassword.type),
+    switchMap(({payload}) => {
+      return AfridioApiService.changePassword(payload).pipe(
+        map(res => {
+          console.log(res);
+          return changingPasswordSuccess(res);
+        }),
+        catchError(err => {
+          console.log(err);
+          let message: any = 'Something went wrong.';
+          if (err && err._status === 'Offline') {
+            message = err._message;
+          } else if (err && err._status === 400) {
+            message = {};
+            for (const e in err._message) {
+              message[e] = err.message[e][0];
+            }
+          } else if (err && err._status === 401) {
+            return of(authLogout('logout'));
+          }
+          console.log(message);
+          return of(changingPasswordFailed(message));
+        }),
+      );
+    }),
+  );
+
 export const authEpics = [
   loginEpic,
   logoutEpic,
@@ -354,6 +410,7 @@ export const authEpics = [
   verifyEpic,
   resendOTPEpic,
   updateUserEpic,
+  changePasswordEpic,
 ];
 
 export const {
@@ -380,6 +437,10 @@ export const {
   startUpdatingUser,
   updateUserSuccess,
   updateUserFailed,
+  startChangingPassword,
+  changingPasswordSuccess,
+  changingPasswordFailed,
+  setChangePasswordSuccess,
 } = authSlice.actions;
 
 export default authSlice.reducer;
