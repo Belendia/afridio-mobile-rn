@@ -30,6 +30,7 @@ export type AuthParamList = {
 
 export type SettingsParamList = {
   SettingsScreen: undefined;
+  ChangePasswordScreen: undefined;
 };
 
 export type LibraryParamList = {

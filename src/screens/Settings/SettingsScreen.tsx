@@ -40,12 +40,14 @@ const SettingsScreen = () => {
   }));
 
   const menuActions = (menu: string) => {
-    if (menu == 'Sign out') {
+    if (menu === 'Sign out') {
       for (let i = 0; i < library.length; i++) {
         deleteTracks(library[i]);
         dispatch(deleteMediaFromLibrary(library[i].slug));
       }
       dispatch(authLogout('logout'));
+    } else if (menu === 'Change password') {
+      navigation.navigate('ChangePasswordScreen');
     }
   };
 
