@@ -380,7 +380,6 @@ export const changePasswordEpic = (action$: Observable<Action<any>>) =>
     switchMap(({payload}) => {
       return AfridioApiService.changePassword(payload).pipe(
         map(res => {
-          console.log(res);
           return changingPasswordSuccess(res);
         }),
         catchError(err => {
@@ -396,7 +395,7 @@ export const changePasswordEpic = (action$: Observable<Action<any>>) =>
           } else if (err && err._status === 401) {
             return of(authLogout('logout'));
           }
-          console.log(message);
+
           return of(changingPasswordFailed(message));
         }),
       );
