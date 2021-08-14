@@ -1,17 +1,23 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Chip} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import TrackPlayer from 'react-native-track-player';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
 
 import {View} from '../Themed';
 import {colors} from '../../constants/Colors';
 import {CheckboxList, CheckboxOption} from '../Form/CheckboxList';
 import {SpeedOptions} from '../../constants/Options';
 import {RootStoreType} from '../../redux/rootReducer';
-import {setPlaybackSpeed} from '../../redux/slices';
+import {
+  setMediaSlug,
+  setPlaybackSpeed,
+  setShowMiniPlayer,
+} from '../../redux/slices';
+import {modalRef} from '../../services/navigation/ModalizeService';
 
 type SupportPlaybackControlProps = {
   loop: boolean;
@@ -23,10 +29,14 @@ const SupportPlaybackControl = ({
   onLoopPressed,
 }: SupportPlaybackControlProps) => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-  const {playbackSpeed} = useSelector((state: RootStoreType) => ({
-    playbackSpeed: state.playlistReducer.playbackSpeed,
-  }));
+  const {playbackSpeed, playlistMedia} = useSelector(
+    (state: RootStoreType) => ({
+      playbackSpeed: state.playlistReducer.playbackSpeed,
+      playlistMedia: state.playlistReducer.playlistMedia,
+    }),
+  );
 
   const [showModal, setShowModal] = useState(false);
 
@@ -35,6 +45,16 @@ const SupportPlaybackControl = ({
     TrackPlayer.setRate(option.key);
     setShowModal(false);
   };
+
+  const onPlaylistPressed = useCallback(() => {
+    dispatch(setMediaSlug(playlistMedia?.slug));
+    modalRef.current?.close();
+
+    navigation.navigate('Media', {
+      slug: playlistMedia?.slug,
+    });
+    dispatch(setShowMiniPlayer(false));
+  }, [playlistMedia?.slug]);
 
   return (
     <View style={styles.container}>
@@ -56,7 +76,7 @@ const SupportPlaybackControl = ({
           />
         </View>
       </TouchableWithoutFeedback>
-      <TouchableWithoutFeedback onPress={() => setShowModal(true)}>
+      <TouchableWithoutFeedback onPress={() => onPlaylistPressed()}>
         <MaterialIcons name="playlist-play" size={30} color={colors.red200} />
       </TouchableWithoutFeedback>
       <CheckboxList

@@ -72,14 +72,7 @@ const MediaScreen = () => {
   useEffect(() => {
     dispatch(setShowMiniPlayer(false));
     return () => {
-      /**
-       * If the media screen is called from the main player, the app
-       * should not show the mini player because when the main screen
-       * is closing, it will return back to the main player again.
-       */
-      if (!route.params?.disableShowMiniPlayer) {
-        dispatch(setShowMiniPlayer(isPlaying));
-      }
+      dispatch(setShowMiniPlayer(isPlaying));
     };
   }, [isPlaying]);
 

@@ -10,12 +10,11 @@ import {
   Backdrop,
   Chip,
   SupportPlaybackControl,
-  PlayerContainer,
 } from '../../components';
 import {RootStoreType} from '../../redux/rootReducer';
 import {colors} from '../../constants/Colors';
 import {Text, View} from '../../components/Themed';
-import {setLoop, setMediaSlug, setShowMiniPlayer} from '../../redux/slices';
+import {setLoop} from '../../redux/slices';
 
 const {height} = Dimensions.get('window');
 
@@ -37,31 +36,10 @@ export const PlayerScreen = () => {
     dispatch(setLoop(!loop));
   }, [loop]);
 
-  const onPlaylistPressed = useCallback(() => {
-    dispatch(setMediaSlug(playlistMedia?.slug));
-    /**
-     * If the media screen is called from the main player, the app
-     * should not show the mini player because when the main screen
-     * is closing, it will return back to the main player again.
-     */
-    navigation.navigate('Media', {
-      slug: playlistMedia?.slug,
-      disableShowMiniPlayer: true,
-    });
-    dispatch(setShowMiniPlayer(false));
-  }, [playlistMedia?.slug]);
-
   const goBack = useCallback(() => {
     navigation.goBack();
     return true;
   }, [navigation]);
-
-  // useEffect(() => {
-  //   dispatch(setShowMiniPlayer(false));
-  //   return () => {
-  //     dispatch(setShowMiniPlayer(isPlaying));
-  //   };
-  // }, [isPlaying]);
 
   useLayoutEffect(() => {
     const didFocusSub = navigation.addListener('focus', () => {
@@ -111,6 +89,7 @@ const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
     height: height - 100,
+    marginTop: 30,
   },
   titleWrapper: {
     alignItems: 'center',

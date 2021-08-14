@@ -19,6 +19,7 @@ import {Host, Portal} from 'react-native-portalize';
 import {PlayerScreen} from '../screens/Media/PlayerScreen';
 import {Modalize} from 'react-native-modalize';
 import {colors} from '../constants/Colors';
+import {modalRef} from '../services/navigation/ModalizeService';
 
 const {height} = Dimensions.get('window');
 
@@ -26,13 +27,6 @@ const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
   // const linking = {
   //   prefixes: ['https://afridio.com', 'afridio://'],
   // };
-
-  const modalRef = useRef<Modalize>(null);
-  const [handle, setHandle] = useState(false);
-
-  const handlePosition = (position: string) => {
-    setHandle(position === 'top');
-  };
 
   useAutoLogin();
 
@@ -63,11 +57,10 @@ const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
   }));
 
   const onPressMiniPlayer = useCallback(() => {
-    console.log('Opening .........');
     if (modalRef.current) {
       modalRef.current.open();
     }
-  }, [modalRef.current]);
+  }, [modalRef]);
 
   return (
     <NavigationContainer
@@ -85,15 +78,13 @@ const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
               withHandle={true}
               withOverlay={false}
               handlePosition="inside"
-              modalStyle={{flex: 1, backgroundColor: 'black'}}
+              modalStyle={{backgroundColor: 'black'}}
               handleStyle={{
                 top: 13,
                 width: 60,
-                height: handle ? 6 : 0,
-                backgroundColor: colors.red800,
-                shadowColor: colors.black600,
-              }}
-              onPositionChange={handlePosition}>
+                height: 6,
+                backgroundColor: colors.black700,
+              }}>
               {<PlayerScreen />}
             </Modalize>
           </Portal>
