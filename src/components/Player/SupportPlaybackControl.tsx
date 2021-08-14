@@ -54,13 +54,6 @@ const SupportPlaybackControl = ({
             buttonStyle={{padding: 5}}
             disabled
           />
-
-          <Ionicons
-            name="speedometer-outline"
-            size={25}
-            color={colors.red200}
-            style={styles.speedIcon}
-          />
         </View>
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPress={() => setShowModal(true)}>

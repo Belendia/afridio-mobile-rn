@@ -1,6 +1,5 @@
 import React, {memo, useCallback, useRef, useState} from 'react';
 import {
-  Animated,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -12,13 +11,10 @@ import {useTrackPlayerProgress} from 'react-native-track-player';
 import {View, Text} from '../Themed';
 import {RootStoreType} from '../../redux/rootReducer';
 import {colors} from '../../constants/Colors';
-import {setShowMiniPlayer, startTogglePlay} from '../../redux/slices';
-import {navigate} from '../../services/navigation/NavigationService';
+import {startTogglePlay} from '../../redux/slices';
+
 import {Cover} from '../Media/Cover';
 import {Size} from '../../constants/Options';
-import {Portal} from 'react-native-portalize';
-import {Modalize} from 'react-native-modalize';
-import {PlayerScreen} from '../../screens/Media/PlayerScreen';
 
 type MiniPlayerProps = {
   onPressMiniPlayer: () => void;

@@ -4,7 +4,7 @@ import {
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
-import {Animated, ColorSchemeName, Dimensions, Linking} from 'react-native';
+import {ColorSchemeName, Dimensions, Linking} from 'react-native';
 
 import AuthNavigator from './AuthNavigator';
 import useAutoLogin from '../hooks/useAutoLogin';
@@ -19,7 +19,6 @@ import {Host, Portal} from 'react-native-portalize';
 import {PlayerScreen} from '../screens/Media/PlayerScreen';
 import {Modalize} from 'react-native-modalize';
 import {colors} from '../constants/Colors';
-import {View} from '../components/Themed';
 
 const {height} = Dimensions.get('window');
 
@@ -28,7 +27,6 @@ const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
   //   prefixes: ['https://afridio.com', 'afridio://'],
   // };
 
-  const animated = useRef(new Animated.Value(0)).current;
   const modalRef = useRef<Modalize>(null);
   const [handle, setHandle] = useState(false);
 
@@ -83,7 +81,6 @@ const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
             <MiniPlayer onPressMiniPlayer={onPressMiniPlayer} />
             <Modalize
               ref={modalRef}
-              // panGestureAnimatedValue={animated}
               snapPoint={height}
               withHandle={true}
               withOverlay={false}
@@ -91,9 +88,10 @@ const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
               modalStyle={{flex: 1, backgroundColor: 'black'}}
               handleStyle={{
                 top: 13,
-                width: 40,
+                width: 60,
                 height: handle ? 6 : 0,
                 backgroundColor: colors.red800,
+                shadowColor: colors.black600,
               }}
               onPositionChange={handlePosition}>
               {<PlayerScreen />}
