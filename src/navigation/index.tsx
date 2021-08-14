@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
 } from '@react-navigation/native';
-import {ColorSchemeName, Linking} from 'react-native';
+import {Animated, ColorSchemeName, Dimensions, Linking} from 'react-native';
 
 import AuthNavigator from './AuthNavigator';
 import useAutoLogin from '../hooks/useAutoLogin';
@@ -15,11 +15,26 @@ import {MiniPlayer} from '../components';
 import RootNavigator from './RootNavigator';
 import {navigationRef} from '../services/navigation/NavigationService';
 import {getQueryParam} from '../helpers/Utils';
+import {Host, Portal} from 'react-native-portalize';
+import {PlayerScreen} from '../screens/Media/PlayerScreen';
+import {Modalize} from 'react-native-modalize';
+import {colors} from '../constants/Colors';
+import {View} from '../components/Themed';
+
+const {height} = Dimensions.get('window');
 
 const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
   // const linking = {
   //   prefixes: ['https://afridio.com', 'afridio://'],
   // };
+
+  const animated = useRef(new Animated.Value(0)).current;
+  const modalRef = useRef<Modalize>(null);
+  const [handle, setHandle] = useState(false);
+
+  const handlePosition = (position: string) => {
+    setHandle(position === 'top');
+  };
 
   useAutoLogin();
 
@@ -49,16 +64,42 @@ const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
     token: state.authReducer.token,
   }));
 
+  const onPressMiniPlayer = useCallback(() => {
+    console.log('Opening .........');
+    if (modalRef.current) {
+      modalRef.current.open();
+    }
+  }, [modalRef.current]);
+
   return (
     <NavigationContainer
       ref={navigationRef}
       // linking={linking}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       {token ? (
-        <>
-          <RootNavigator />
-          <MiniPlayer />
-        </>
+        <Host>
+          <Portal>
+            <RootNavigator />
+            <MiniPlayer onPressMiniPlayer={onPressMiniPlayer} />
+            <Modalize
+              ref={modalRef}
+              // panGestureAnimatedValue={animated}
+              snapPoint={height}
+              withHandle={true}
+              withOverlay={false}
+              handlePosition="inside"
+              modalStyle={{flex: 1, backgroundColor: 'black'}}
+              handleStyle={{
+                top: 13,
+                width: 40,
+                height: handle ? 6 : 0,
+                backgroundColor: colors.red800,
+              }}
+              onPositionChange={handlePosition}>
+              {<PlayerScreen />}
+            </Modalize>
+          </Portal>
+        </Host>
       ) : (
         <AuthNavigator />
       )}

@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Chip} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import TrackPlayer from 'react-native-track-player';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {View} from '../Themed';
 import {colors} from '../../constants/Colors';
@@ -44,15 +45,26 @@ const SupportPlaybackControl = ({
           color={loop ? colors.red800 : colors.black300}
         />
       </TouchableWithoutFeedback>
-      <Chip
-        title={'Speed ' + playbackSpeed.title}
-        type="outline"
-        titleStyle={{fontSize: 12}}
-        buttonStyle={{padding: 5}}
-        disabled
-      />
       <TouchableWithoutFeedback onPress={() => setShowModal(true)}>
-        <Ionicons name="speedometer-outline" size={25} color={colors.red200} />
+        <View style={styles.speedContainer}>
+          <Chip
+            title={'Speed ' + playbackSpeed.title}
+            type="outline"
+            titleStyle={{fontSize: 12}}
+            buttonStyle={{padding: 5}}
+            disabled
+          />
+
+          <Ionicons
+            name="speedometer-outline"
+            size={25}
+            color={colors.red200}
+            style={styles.speedIcon}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback onPress={() => setShowModal(true)}>
+        <MaterialIcons name="playlist-play" size={30} color={colors.red200} />
       </TouchableWithoutFeedback>
       <CheckboxList
         options={SpeedOptions}
@@ -73,5 +85,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
     backgroundColor: 'transparent',
+  },
+  speedContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+  },
+  speedIcon: {
+    marginLeft: 5,
   },
 });

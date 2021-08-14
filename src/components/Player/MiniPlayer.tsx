@@ -1,5 +1,6 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo, useCallback, useRef, useState} from 'react';
 import {
+  Animated,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -15,8 +16,14 @@ import {setShowMiniPlayer, startTogglePlay} from '../../redux/slices';
 import {navigate} from '../../services/navigation/NavigationService';
 import {Cover} from '../Media/Cover';
 import {Size} from '../../constants/Options';
+import {Portal} from 'react-native-portalize';
+import {Modalize} from 'react-native-modalize';
+import {PlayerScreen} from '../../screens/Media/PlayerScreen';
 
-const MiniPlayer = memo(() => {
+type MiniPlayerProps = {
+  onPressMiniPlayer: () => void;
+};
+const MiniPlayer = memo(({onPressMiniPlayer}: MiniPlayerProps) => {
   const dispatch = useDispatch();
   const {position, duration} = useTrackPlayerProgress();
 
@@ -43,10 +50,12 @@ const MiniPlayer = memo(() => {
     }
   }, [playlistMedia, isPlaying]);
 
-  const onPressMiniPlayer = useCallback(() => {
+  const onPressMiniPlayerHandler = useCallback(() => {
     // dispatch(setMediaSlug(playlistMedia?.slug));
-    navigate('PlayerScreen', {});
-    dispatch(setShowMiniPlayer(false));
+    // navigate('PlayerScreen', {});
+    // dispatch(setShowMiniPlayer(false));
+
+    if (onPressMiniPlayer) onPressMiniPlayer();
   }, [playlistMedia?.slug]);
 
   if (!playlistMedia || showMiniPlayer === false) {
@@ -54,7 +63,7 @@ const MiniPlayer = memo(() => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={onPressMiniPlayer}>
+    <TouchableWithoutFeedback onPress={onPressMiniPlayerHandler}>
       <View style={[styles.container, {bottom: tabBarHeight}]}>
         <View style={[styles.progress, {width: `${getProgress()}%`}]} />
 

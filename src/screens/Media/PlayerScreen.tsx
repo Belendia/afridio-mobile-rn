@@ -1,5 +1,5 @@
 import React, {useLayoutEffect, useCallback, useEffect} from 'react';
-import {BackHandler, StyleSheet} from 'react-native';
+import {BackHandler, Dimensions, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,15 +7,17 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   ProgressSlider,
   PlaybackControl,
-  PlayerContainer,
   Backdrop,
   Chip,
   SupportPlaybackControl,
+  PlayerContainer,
 } from '../../components';
 import {RootStoreType} from '../../redux/rootReducer';
 import {colors} from '../../constants/Colors';
 import {Text, View} from '../../components/Themed';
 import {setLoop, setMediaSlug, setShowMiniPlayer} from '../../redux/slices';
+
+const {height} = Dimensions.get('window');
 
 export const PlayerScreen = () => {
   const dispatch = useDispatch();
@@ -54,12 +56,12 @@ export const PlayerScreen = () => {
     return true;
   }, [navigation]);
 
-  useEffect(() => {
-    dispatch(setShowMiniPlayer(false));
-    return () => {
-      dispatch(setShowMiniPlayer(isPlaying));
-    };
-  }, [isPlaying]);
+  // useEffect(() => {
+  //   dispatch(setShowMiniPlayer(false));
+  //   return () => {
+  //     dispatch(setShowMiniPlayer(isPlaying));
+  //   };
+  // }, [isPlaying]);
 
   useLayoutEffect(() => {
     const didFocusSub = navigation.addListener('focus', () => {
@@ -73,36 +75,30 @@ export const PlayerScreen = () => {
   }, [goBack, navigation]);
 
   return (
-    <PlayerContainer
-      iconName="chevron-down"
-      showRightButton={true}
-      onRightButtonPressed={onPlaylistPressed}>
-      <LinearGradient
-        colors={['rgba(255,255,255, 0.3)', 'rgba(0, 0, 0, 0.3)']}
-        style={styles.linearGradient}>
-        <View style={styles.container}>
-          <Backdrop images={playlistMedia?.images} />
+    <LinearGradient
+      colors={['rgba(255,255,255, 0.3)', 'rgba(0, 0, 0, 0.3)']}
+      style={styles.linearGradient}>
+      <View style={styles.container}>
+        <Backdrop images={playlistMedia?.images} />
 
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>{playlistMedia?.title}</Text>
-            <Text style={styles.trackTitle}>
-              {playlistMedia?.tracks[currentTrackIndex].name}
-            </Text>
-            <View style={styles.authorsWrapper}>
-              <Chip values={playlistMedia?.authors.map(a => a.name)} />
-            </View>
-          </View>
-          <View style={styles.progressSliderWrapper}>
-            <ProgressSlider style={styles.progressSlider} />
-            <SupportPlaybackControl loop={loop} onLoopPressed={onLoopPressed} />
-          </View>
-          <View
-            style={[styles.controlsContainer, {marginBottom: tabBarHeight}]}>
-            <PlaybackControl />
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>{playlistMedia?.title}</Text>
+          <Text style={styles.trackTitle}>
+            {playlistMedia?.tracks[currentTrackIndex].name}
+          </Text>
+          <View style={styles.authorsWrapper}>
+            <Chip values={playlistMedia?.authors.map(a => a.name)} />
           </View>
         </View>
-      </LinearGradient>
-    </PlayerContainer>
+        <View style={styles.progressSliderWrapper}>
+          <ProgressSlider style={styles.progressSlider} />
+          <SupportPlaybackControl loop={loop} onLoopPressed={onLoopPressed} />
+        </View>
+        <View style={[styles.controlsContainer, {marginBottom: tabBarHeight}]}>
+          <PlaybackControl />
+        </View>
+      </View>
+    </LinearGradient>
   );
 };
 
@@ -114,6 +110,7 @@ const styles = StyleSheet.create({
   },
   linearGradient: {
     flex: 1,
+    height: height - 100,
   },
   titleWrapper: {
     alignItems: 'center',
