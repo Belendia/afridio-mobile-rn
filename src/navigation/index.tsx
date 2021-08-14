@@ -84,6 +84,14 @@ const Navigation = ({colorScheme}: {colorScheme: ColorSchemeName}) => {
                 width: 60,
                 height: 6,
                 backgroundColor: colors.black700,
+                // top: 0,
+                // borderLeftWidth: 40,
+                // borderRightWidth: 40,
+                // borderBottomWidth: 10,
+                // borderLeftColor: 'transparent',
+                // borderRightColor: 'transparent',
+                // borderBottomColor: colors.black700,
+                // transform: [{rotate: '180deg'}],
               }}>
               {<PlayerScreen />}
             </Modalize>
