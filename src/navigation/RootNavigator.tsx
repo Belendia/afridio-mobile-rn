@@ -5,7 +5,7 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import {RootStackParamList} from '../../types';
 import BottomTabNavigator from './BottomTabNavigator';
 import MediaScreen from '../screens/Media/MediaScreen';
-import {PlayerScreen} from '../screens/Media/PlayerScreen';
+// import {PlayerScreen} from '../screens/Media/PlayerScreen';
 import Info from '../components/Media/Info';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -21,7 +21,7 @@ const RootNavigator = () => {
       <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen name="Media" component={MediaScreen} />
       <Stack.Screen name="Info" component={Info} />
-      <Stack.Screen name="PlayerScreen" component={PlayerScreen} />
+      {/* <Stack.Screen name="PlayerScreen" component={PlayerScreen} /> */}
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}

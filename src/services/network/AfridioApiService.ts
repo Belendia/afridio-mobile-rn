@@ -26,7 +26,7 @@ type HeaderType = {
 
 class AfridioApiService {
   defaultTimeout = 30;
-  BASE_URL = 'http://192.168.8.118:8000/api/';
+  BASE_URL = 'http://192.168.8.120:8000/api/';
 
   getHttpConfig = (
     token: string,
