@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, TextInput, ViewStyle} from 'react-native';
+import {Platform, StyleSheet, TextInput, ViewStyle} from 'react-native';
 import CountryPicker, {
   Country,
   CountryCode,
@@ -37,6 +37,7 @@ const PhoneInput = ({
     <View style={[styles.container, style]}>
       <View style={styles.content}>
         <CountryPicker
+          containerButtonStyle={styles.containerButton}
           countryCode={countryCode}
           withFilter={true}
           withFlag={true}
@@ -80,9 +81,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    paddingBottom: 10,
+    ...Platform.select({
+      ios: {
+        paddingBottom: 10,
+      },
+      android: {
+        paddingBottom: 0,
+      },
+    }),
     borderBottomWidth: 0.3,
     borderBottomColor: colors.red800,
+  },
+  containerButton: {
+    ...Platform.select({
+      ios: {
+        marginTop: 0,
+        width: 36,
+      },
+      android: {
+        marginTop: 14,
+        width: 32,
+      },
+    }),
   },
   input: {
     flex: 1,

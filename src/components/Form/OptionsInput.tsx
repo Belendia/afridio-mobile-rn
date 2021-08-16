@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    padding: 8,
+    padding: 10,
     alignContent: 'center',
     alignItems: 'center',
   },

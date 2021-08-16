@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     marginBottom: 5,
     color: colors.red300,
-    height: 30,
+    height: 40,
   },
   errorMessage: {
     fontSize: 12,
